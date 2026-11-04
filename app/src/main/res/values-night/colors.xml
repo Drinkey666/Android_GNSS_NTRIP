@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="screen_background">#101820</color>
+    <color name="surface">#17222D</color>
+    <color name="surface_soft">#213340</color>
+    <color name="text_primary">#E9F2F8</color>
+    <color name="text_secondary">#AFC3D0</color>
+    <color name="outline">#334B5A</color>
+    <color name="teal">#7BD0C7</color>
+    <color name="gnss_text">#E9F2F8</color>
+    <color name="gnss_muted">#AFC3D0</color>
+</resources>

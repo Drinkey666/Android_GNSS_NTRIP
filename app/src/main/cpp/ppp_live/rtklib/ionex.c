@@ -1,0 +1,612 @@
+/*------------------------------------------------------------------------------
+* ionex.c : ionex functions
+*
+*          Copyright (C) 2011-2013 by T.TAKASU, All rights reserved.
+*
+* references:
+*     [1] S.Schear, W.Gurtner and J.Feltens, IONEX: The IONosphere Map EXchange
+*         Format Version 1, February 25, 1998
+*     [2] S.Schaer, R.Markus, B.Gerhard and A.S.Timon, Daily Global Ionosphere
+*         Maps based on GPS Carrier Phase Data Routinely produced by CODE
+*         Analysis Center, Proceeding of the IGS Analysis Center Workshop, 1996
+*
+* version : $Revision:$ $Date:$
+* history : 2011/03/29 1.0 new
+*           2013/03/05 1.1 change api readtec()
+*                          fix problem in case of lat>85deg or lat<-85deg
+*           2014/02/22 1.2 fix problem on compiled as C++
+*-----------------------------------------------------------------------------*/
+#include "rtklib.h"
+#include <ctype.h>
+
+#define SQR(x)      ((x)*(x))
+#define VAR_NOTEC   SQR(30.0)   /* variance of no tec */
+#define MIN_EL      0.0         /* min elevation angle (rad) */
+#define MIN_HGT     -1000.0     /* min user height (m) */
+
+/* Product conventions, not fitted PPP parameters. CODE's own IONEX header
+ * declares geocentric grid latitudes and a 6821km IPP sphere. Bernese manual
+ * 13.3 Eq13.8 specifies a DIFFERENT mapping height: 506.7km, alpha .9782.
+ * The generic RTKLIB SLM and opt-bit behavior remain explicitly reproducible. */
+extern int ionex_geometry_select(nav_t *nav,const char *mode)
+{
+    int i,policy=IONEX_GEOMETRY_AUTO;
+    if(!nav)return 0;
+    if(mode && *mode) {
+        if(!strcmp(mode,"LEGACY"))policy=IONEX_GEOMETRY_LEGACY;
+        else if(strcmp(mode,"AUTO"))return 0;
+    }
+    if(policy==IONEX_GEOMETRY_AUTO && nav->nt>0) {
+        if(!nav->tec)return 0;
+        for(i=1;i<nav->nt;i++)if(nav->tec[i].convention!=nav->tec[0].convention) {
+            trace(1,"IONEX_GEOMETRY_MIXED,reason=INCOMPATIBLE_PRODUCT_CONVENTIONS\n");return 0;
+        }
+    }
+    nav->ionex_geometry_policy=(uint8_t)policy;
+    trace(2,"IONEX_GEOMETRY_POLICY,%s\n",policy?"LEGACY_SLM":"AUTO_PRODUCT");
+    return 1;
+}
+extern int ionex_geometry(const tec_t *tec,const double *pos,const double *azel,
+                         int policy,int opt,int layer,double *posp,double *mapf)
+{
+    double hion,rp,r[3],enu[3],e[3],q[3],dot,re2,radius,t,disc;
+    int i;
+    if(!tec || !pos || !azel || !posp || !mapf ||
+       policy<IONEX_GEOMETRY_AUTO || policy>IONEX_GEOMETRY_LEGACY ||
+       layer<0 || layer>=tec->ndata[2] || tec->convention>IONEX_CONVENTION_CODE)return 0;
+    for(i=0;i<3;i++)if(!isfinite(pos[i]))return 0;
+    if(!isfinite(azel[0]) || !isfinite(azel[1]) || fabs(pos[0])>PI/2 ||
+       azel[1]<0 || azel[1]>PI/2 || !isfinite(tec->rb) || tec->rb<=0)return 0;
+    hion=tec->hgts[0]+tec->hgts[2]*layer;
+    if(!isfinite(hion) || hion<=0)return 0;
+    if(policy==IONEX_GEOMETRY_AUTO && tec->convention==IONEX_CONVENTION_CODE) {
+        if(tec->ndata[2]!=1 || fabs(tec->rb-6371.0)>1E-6 || fabs(hion-450.0)>1E-6)return 0;
+        /* Intersect the actual WGS84 receiver + geodetic-ENU LOS with the
+         * declared geocentric sphere. Never relabel geodetic latitude as GC. */
+        pos2ecef(pos,r);
+        enu[0]=cos(azel[1])*sin(azel[0]);
+        enu[1]=cos(azel[1])*cos(azel[0]);enu[2]=sin(azel[1]);
+        enu2ecef(pos,enu,e);
+        dot=r[0]*e[0]+r[1]*e[1]+r[2]*e[2];
+        re2=r[0]*r[0]+r[1]*r[1]+r[2]*r[2];radius=(tec->rb+hion)*1000.0;
+        if(!isfinite(re2) || re2>=radius*radius)return 0;
+        disc=dot*dot+radius*radius-re2;
+        if(!isfinite(disc) || disc<0)return 0;
+        t=-dot+sqrt(disc);
+        if(!isfinite(t) || t<=0)return 0;
+        for(i=0;i<3;i++)q[i]=r[i]+t*e[i];
+        posp[0]=atan2(q[2],hypot(q[0],q[1]));posp[1]=atan2(q[1],q[0]);posp[2]=hion*1000;
+        rp=tec->rb/(tec->rb+506.7)*sin(0.9782*(PI/2.0-azel[1]));
+        *mapf=1.0/sqrt(1.0-rp*rp);
+    }
+    else {
+        *mapf=ionppp(pos,azel,tec->rb,hion,posp);
+        if(opt&2) {
+            /* Historical RTKLIB modified-SLM option, with grid hion. */
+            rp=tec->rb/(tec->rb+hion)*sin(0.9782*(PI/2.0-azel[1]));
+            *mapf=1.0/sqrt(1.0-rp*rp);
+        }
+    }
+    return isfinite(posp[0]) && isfinite(posp[1]) && isfinite(*mapf) && *mapf>=1.0;
+}
+
+/* IONEX epochs are UT/UTC labels, kept unchanged by the reader. The public
+ * iontec() API takes GPST. Convert the query once, before both interpolation
+ * and sun-fixed rotation. No environment access or global mode in the core. */
+extern int ionex_time_select(nav_t *nav,const char *mode)
+{
+    int selected=IONEX_TIME_CORRECTED;
+    if(!nav)return 0;
+    if(mode && *mode) {
+        if(!strcmp(mode,"LEGACY"))selected=IONEX_TIME_LEGACY;
+        else if(strcmp(mode,"CORRECTED")) {
+            trace(1,"IONEX_TIME_ERROR,reason=INVALID_MODE,value=%s\n",mode);
+            return 0;
+        }
+    }
+    nav->ionex_time_mode=(uint8_t)selected;
+    trace(2,"IONEX_TIME_MODEL,mode=%s,input=GPST,maps=UTC,query=%s\n",
+        selected==IONEX_TIME_LEGACY?"LEGACY":"CORRECTED",
+        selected==IONEX_TIME_LEGACY?"GPST_MIXED_WITH_UTC":"UTC");
+    return 1;
+}
+
+extern gtime_t ionex_query_time(gtime_t gpst,const nav_t *nav)
+{
+    return nav && nav->ionex_time_mode==IONEX_TIME_LEGACY ? gpst : gpst2utc(gpst);
+}
+
+/* This is the actual interpolation domain, also used by product diagnostics.
+ * Legacy rejected the last map's exact epoch; corrected admits both ends. */
+extern int ionex_in_range(gtime_t gpst,const nav_t *nav)
+{
+    gtime_t query;double end;
+    if(!nav || !nav->tec || nav->nt<2 || !isfinite(gpst.sec) ||
+       nav->ionex_time_mode>IONEX_TIME_LEGACY)return 0;
+    query=ionex_query_time(gpst,nav);
+    end=timediff(query,nav->tec[nav->nt-1].time);
+    return timediff(query,nav->tec[0].time)>=0.0 &&
+        (nav->ionex_time_mode==IONEX_TIME_LEGACY ? end<0.0 : end<=0.0);
+}
+
+/* get index -----------------------------------------------------------------*/
+static int getindex(double value, const double *range)
+{
+    if (range[2]==0.0) return 0;
+    if (range[1]>0.0&&(value<range[0]||range[1]<value)) return -1;
+    if (range[1]<0.0&&(value<range[1]||range[0]<value)) return -1;
+    return (int)floor((value-range[0])/range[2]+0.5);
+}
+/* get number of items -------------------------------------------------------*/
+static int nitem(const double *range)
+{
+    return getindex(range[1],range)+1;
+}
+/* data index (i:lat,j:lon,k:hgt) --------------------------------------------*/
+static int dataindex(int i, int j, int k, const int *ndata)
+{
+    if (i<0||ndata[0]<=i||j<0||ndata[1]<=j||k<0||ndata[2]<=k) return -1;
+    return i+ndata[0]*(j+ndata[1]*k);
+}
+/* add tec data to navigation data -------------------------------------------*/
+static tec_t *addtec(const double *lats, const double *lons, const double *hgts,
+                     double rb, nav_t *nav)
+{
+    tec_t *p,*nav_tec;
+    gtime_t time0={0};
+    int i,n,ndata[3],indx;
+    
+    trace(3,"addtec  :\n");
+    
+    ndata[0]=nitem(lats);
+    ndata[1]=nitem(lons);
+    ndata[2]=nitem(hgts);
+    if (ndata[0] > 1 && ndata[1] > 1 && ndata[2] > 0)
+    {
+        if (nav->nt >= nav->ntmax) {
+            nav->ntmax += 256;
+            if (!(nav_tec = (tec_t*)realloc(nav->tec, sizeof(tec_t) * nav->ntmax))) {
+                trace(1, "readionex malloc error ntmax=%d\n", nav->ntmax);
+                free(nav->tec); nav->tec = NULL; nav->nt = nav->ntmax = 0;
+                return NULL;
+            }
+            for (indx = nav->ntmax - 1; indx >= nav->ntmax - 256; indx--)
+                memset(&nav_tec[indx], 0, sizeof(tec_t));
+            nav->tec = nav_tec;
+        }
+        p = nav->tec + nav->nt;
+        p->time = time0;
+        p->rb = rb;
+        for (i = 0; i < 3; i++) {
+            p->ndata[i] = ndata[i];
+            p->lats[i] = lats[i];
+            p->lons[i] = lons[i];
+            p->hgts[i] = hgts[i];
+        }
+        n = ndata[0] * ndata[1] * ndata[2];
+
+        if (!(p->data = (double*)malloc(sizeof(double) * n)) ||
+            !(p->rms = (float*)malloc(sizeof(float) * n))) {
+            return NULL;
+        }
+        for (i = 0; i < n; i++) {
+            /* Thanks to 'if (ndata[0]>1 && ndata[1]>1 && ndata[2]>0)' we know analysis is wrong - disable 6386 */
+            p->data[i] = 0.0;
+            p->rms[i] = 0.0f;
+        }
+        nav->nt++;
+        return p;
+    }
+    else
+        return NULL;
+}
+/* read ionex dcb aux data ----------------------------------------------------*/
+static void readionexdcb(FILE *fp, double *dcb, double *rms)
+{
+    int i,sat;
+    char buff[1024],id[8],*label;
+    
+    trace(3,"readionexdcb:\n");
+    
+    for (i=0;i<MAXSAT;i++) dcb[i]=rms[i]=0.0;
+    
+    while (fgets(buff,sizeof(buff),fp)) {
+        if (strlen(buff)<60) continue;
+        label=buff+60;
+        
+        if (strstr(label,"PRN / BIAS / RMS")==label) {
+            
+            strncpy(id,buff+3,3); id[3]='\0';
+            
+            if (!(sat=satid2no(id))) {
+                trace(2,"ionex invalid satellite: %s\n",id);
+                continue;
+            }
+            dcb[sat-1]=str2num(buff, 6,10);
+            rms[sat-1]=str2num(buff,16,10);
+        }
+        else if (strstr(label,"END OF AUX DATA")==label) break;
+    }
+}
+/* read ionex header ---------------------------------------------------------*/
+static double readionexh(FILE *fp, double *lats, double *lons, double *hgts,
+                         double *rb, double *nexp, double *dcb, double *rms,
+                         int *convention)
+{
+    double ver=0.0;
+    char buff[1024],lower[61],*label;
+    int i,code=0,modified=0,geocentric=0;
+    *convention=IONEX_CONVENTION_GENERIC;
+    
+    trace(3,"readionexh:\n");
+    
+    while (fgets(buff,sizeof(buff),fp)) {
+        
+        if (strlen(buff)<60) continue;
+        label=buff+60;
+        for(i=0;i<60;i++)lower[i]=(char)tolower((unsigned char)buff[i]);lower[60]='\0';
+        if(strstr(lower,"code's") || (strstr(lower,"ioninx") && strstr(lower,"aiub")))code=1;
+        if(strstr(label,"DESCRIPTION") || strstr(label,"COMMENT")) {
+            if(strstr(lower,"modified") && !strstr(lower,"unmodified"))modified=1;
+            if(strstr(lower,"geocentric"))geocentric=1;
+        }
+        
+        if (strstr(label,"IONEX VERSION / TYPE")==label) {
+            if (buff[20]=='I') ver=str2num(buff,0,8);
+        }
+        else if (strstr(label,"BASE RADIUS")==label) {
+            *rb=str2num(buff,0,8);
+        }
+        else if (strstr(label,"HGT1 / HGT2 / DHGT")==label) {
+            hgts[0]=str2num(buff, 2,6);
+            hgts[1]=str2num(buff, 8,6);
+            hgts[2]=str2num(buff,14,6);
+        }
+        else if (strstr(label,"LAT1 / LAT2 / DLAT")==label) {
+            lats[0]=str2num(buff, 2,6);
+            lats[1]=str2num(buff, 8,6);
+            lats[2]=str2num(buff,14,6);
+        }
+        else if (strstr(label,"LON1 / LON2 / DLON")==label) {
+            lons[0]=str2num(buff, 2,6);
+            lons[1]=str2num(buff, 8,6);
+            lons[2]=str2num(buff,14,6);
+        }
+        else if (strstr(label,"EXPONENT")==label) {
+            *nexp=str2num(buff,0,6);
+        }
+        else if (strstr(label,"START OF AUX DATA")==label&&
+                 strstr(buff,"DIFFERENTIAL CODE BIASES")) {
+            readionexdcb(fp,dcb,rms);
+        }
+        else if (strstr(label,"END OF HEADER")==label) {
+            if(code && modified && geocentric) {
+                if(fabs(*rb-6371.0)>1E-6 || fabs(hgts[0]-450.0)>1E-6 ||
+                   hgts[1]!=hgts[0] || hgts[2]!=0.0) {
+                    trace(1,"IONEX_GEOMETRY_UNSUPPORTED,producer=CODE,rb=%.9f,h=%.9f\n",*rb,hgts[0]);
+                    return 0.0;
+                }
+                *convention=IONEX_CONVENTION_CODE;
+                trace(2,"IONEX_GEOMETRY_PRODUCT,CODE_MSLM_GEOCENTRIC,IPP_km=450,MF_km=506.7,alpha=0.9782\n");
+            }
+            return ver;
+        }
+    }
+    return 0.0;
+}
+/* read ionex body -----------------------------------------------------------*/
+static int readionexb(FILE *fp, const double *lats, const double *lons,
+                      const double *hgts, double rb, double nexp, nav_t *nav,int convention)
+{
+    tec_t *p=NULL;
+    gtime_t time={0};
+    double lat,lon[3],hgt,x;
+    int i,j,k,n,m,index,type=0;
+    char buff[1024],*label=buff+60;
+    
+    trace(3,"readionexb:\n");
+    
+    while (fgets(buff,sizeof(buff),fp)) {
+        
+        if (strlen(buff)<60) continue;
+        
+        if (strstr(label,"START OF TEC MAP")==label) {
+            if ((p=addtec(lats,lons,hgts,rb,nav))) {
+                p->convention=(uint8_t)convention;type=1;
+            }
+        }
+        else if (strstr(label,"END OF TEC MAP")==label) {
+            type=0;
+            p=NULL;
+        }
+        else if (strstr(label,"START OF RMS MAP")==label) {
+            type=2;
+            p=NULL;
+        }
+        else if (strstr(label,"END OF RMS MAP")==label) {
+            type=0;
+            p=NULL;
+        }
+        else if (strstr(label,"EPOCH OF CURRENT MAP")==label) {
+            if (str2time(buff,0,36,&time)) {
+                trace(2,"ionex epoch invalid: %-36.36s\n",buff);
+                continue;
+            }
+            if (type==2) {
+                for (i=nav->nt-1;i>=0;i--) {
+                    if (fabs(timediff(time,nav->tec[i].time))>=1.0) continue;
+                    p=nav->tec+i;
+                    break;
+                }
+            }
+            else if (p) p->time=time;
+        }
+        else if (strstr(label,"LAT/LON1/LON2/DLON/H")==label&&p) {
+            lat   =str2num(buff, 2,6);
+            lon[0]=str2num(buff, 8,6);
+            lon[1]=str2num(buff,14,6);
+            lon[2]=str2num(buff,20,6);
+            hgt   =str2num(buff,26,6);
+            
+            i=getindex(lat,p->lats);
+            k=getindex(hgt,p->hgts);
+            n=nitem(lon);
+            
+            for (m=0;m<n;m++) {
+                if (m%16==0&&!fgets(buff,sizeof(buff),fp)) break;
+                
+                j=getindex(lon[0]+lon[2]*m,p->lons);
+                if ((index=dataindex(i,j,k,p->ndata))<0) continue;
+                
+                if ((x=str2num(buff,m%16*5,5))==9999.0) continue;
+                
+                if (type==1) p->data[index]=x*pow(10.0,nexp);
+                else p->rms[index]=(float)(x*pow(10.0,nexp));
+            }
+        }
+    }
+    return 1;
+}
+/* combine tec grid data -----------------------------------------------------*/
+static void combtec(nav_t *nav)
+{
+    tec_t tmp;
+    int i,j,n=0;
+    
+    trace(3,"combtec : nav->nt=%d\n",nav->nt);
+    
+    for (i=0;i<nav->nt-1;i++) {
+        for (j=i+1;j<nav->nt;j++) {
+            if (timediff(nav->tec[j].time,nav->tec[i].time)<0.0) {
+                tmp=nav->tec[i];
+                nav->tec[i]=nav->tec[j];
+                nav->tec[j]=tmp;
+            }
+        }
+    }
+    for (i=0;i<nav->nt;i++) {
+        if (i>0&&timediff(nav->tec[i].time,nav->tec[n-1].time)==0.0) {
+            free(nav->tec[n-1].data);
+            free(nav->tec[n-1].rms );
+            nav->tec[n-1]=nav->tec[i];
+            continue;
+        }
+        nav->tec[n++]=nav->tec[i];
+    }
+    nav->nt=n;
+    
+    trace(4,"combtec : nav->nt=%d\n",nav->nt);
+}
+/* read ionex tec grid file ----------------------------------------------------
+* read ionex ionospheric tec grid file
+* args   : char   *file       I   ionex tec grid file
+*                                 (wild-card * is expanded)
+*          nav_t  *nav        IO  navigation data
+*                                 nav->nt, nav->ntmax and nav->tec are modified
+*          int    opt         I   read option (1: no clear of tec data,0:clear)
+* return : none
+* notes  : map epochs remain UTC, as specified by IONEX ref [1].
+*          iontec() converts its GPST query to UTC (except explicit LEGACY).
+*-----------------------------------------------------------------------------*/
+extern void readtec(const char *file, nav_t *nav, int opt)
+{
+    FILE *fp;
+    double dcb[MAXSAT]={0},rms[MAXSAT]={0};
+    int i,n,convention;
+    char *efiles[MAXEXFILE];
+    
+    trace(3,"readtec : file=%s\n",file);
+    
+    /* clear of tec grid data option */
+    if (!opt) {
+        free(nav->tec); nav->tec=NULL; nav->nt=nav->ntmax=0;
+    }
+    for (i=0;i<MAXEXFILE;i++) {
+        if (!(efiles[i]=(char *)malloc(1024))) {
+            for (i--;i>=0;i--) free(efiles[i]);
+            return;
+        }
+    }
+    /* expand wild card in file path */
+    n=expath(file,efiles,MAXEXFILE);
+    
+    for (i=0;i<n;i++) {
+        if (!(fp=fopen(efiles[i],"r"))) {
+            trace(2,"ionex file open error %s\n",efiles[i]);
+            continue;
+        }
+        /* read ionex header */
+        double lats[3]={0},lons[3]={0},hgts[3]={0},rb=0.0,nexp=-1.0;
+        if (readionexh(fp,lats,lons,hgts,&rb,&nexp,dcb,rms,&convention)<=0.0) {
+            trace(2,"ionex file format error %s\n",efiles[i]);
+            fclose(fp);
+            continue;
+        }
+        /* read ionex body */
+        readionexb(fp,lats,lons,hgts,rb,nexp,nav,convention);
+        
+        fclose(fp);
+    }
+    for (i=0;i<MAXEXFILE;i++) free(efiles[i]);
+    
+    /* combine tec grid data */
+    if (nav->nt>0) combtec(nav);
+    
+    /* P1-P2 dcb (not used)*/
+    /* for (i=0;i<MAXSAT;i++) { */
+    /*    nav->cbias[i][0]=CLIGHT*dcb[i]*1E-9; */ /* ns->m */
+    /* } */
+}
+/* interpolate tec grid data -------------------------------------------------*/
+static int interptec(const tec_t *tec, int k, const double *posp, double *value,
+                     double *rms)
+{
+    double dlat,dlon,a,b,d[4]={0},r[4]={0};
+    int i,j,n,index;
+    
+    trace(3,"interptec: k=%d posp=%.2f %.2f\n",k,posp[0]*R2D,posp[1]*R2D);
+    *value=*rms=0.0;
+    
+    if (tec->lats[2]==0.0||tec->lons[2]==0.0) return 0;
+    
+    dlat=posp[0]*R2D-tec->lats[0];
+    dlon=posp[1]*R2D-tec->lons[0];
+    if (tec->lons[2]>0.0) dlon-=floor( dlon/360)*360.0; /*  0<=dlon<360 */
+    else                  dlon+=floor(-dlon/360)*360.0; /* -360<dlon<=0 */
+    
+    a=dlat/tec->lats[2];
+    b=dlon/tec->lons[2];
+    i=(int)floor(a); a-=i;
+    j=(int)floor(b); b-=j;
+    
+    /* get gridded tec data */
+    for (n=0;n<4;n++) {
+        if ((index=dataindex(i+(n%2),j+(n<2?0:1),k,tec->ndata))<0) continue;
+        d[n]=tec->data[index];
+        r[n]=tec->rms [index];
+    }
+    if (d[0]>0.0&&d[1]>0.0&&d[2]>0.0&&d[3]>0.0) {
+        
+        /* bilinear interpolation (inside of grid) */
+        *value=(1.0-a)*(1.0-b)*d[0]+a*(1.0-b)*d[1]+(1.0-a)*b*d[2]+a*b*d[3];
+        *rms  =(1.0-a)*(1.0-b)*r[0]+a*(1.0-b)*r[1]+(1.0-a)*b*r[2]+a*b*r[3];
+    }
+    /* nearest-neighbour extrapolation (outside of grid) */
+    else if (a<=0.5&&b<=0.5&&d[0]>0.0) {*value=d[0]; *rms=r[0];}
+    else if (a> 0.5&&b<=0.5&&d[1]>0.0) {*value=d[1]; *rms=r[1];}
+    else if (a<=0.5&&b> 0.5&&d[2]>0.0) {*value=d[2]; *rms=r[2];}
+    else if (a> 0.5&&b> 0.5&&d[3]>0.0) {*value=d[3]; *rms=r[3];}
+    else {
+        i=0;
+        for (n=0;n<4;n++) if (d[n]>0.0) {i++; *value+=d[n]; *rms+=r[n];}
+        if(i==0) return 0;
+        *value/=i; *rms/=i;
+    }
+    return 1;
+}
+/* ionosphere delay by tec grid data -----------------------------------------*/
+static int iondelay(gtime_t time, const tec_t *tec, const double *pos,
+                    const double *azel, int opt,int geometry_policy,double *delay,double *var)
+{
+    const double fact=40.30E16/FREQL1/FREQL1; /* tecu->L1 iono (m) */
+    double fs,posp[3]={0},vtec,rms;
+    int i;
+    
+    char tstr[40];
+    trace(3,"iondelay: time=%s pos=%.1f %.1f azel=%.1f %.1f\n",time2str(time,tstr,0),
+          pos[0]*R2D,pos[1]*R2D,azel[0]*R2D,azel[1]*R2D);
+    
+    *delay=*var=0.0;
+    
+    for (i=0;i<tec->ndata[2];i++) { /* for a layer */
+        
+        /* ionospheric pierce point position */
+        if(!ionex_geometry(tec,pos,azel,geometry_policy,opt,i,posp,&fs))return 0;
+        if (opt&1) {
+            /* earth rotation correction (sun-fixed coordinate) */
+            posp[1]+=2.0*PI*timediff(time,tec->time)/86400.0;
+        }
+        /* interpolate tec grid data */
+        if (!interptec(tec,i,posp,&vtec,&rms)) return 0;
+        
+        *delay+=fact*fs*vtec;
+        *var+=fact*fact*fs*fs*rms*rms;
+    }
+    trace(4,"iondelay: delay=%7.2f std=%6.2f\n",*delay,sqrt(*var));
+    
+    return 1;
+}
+/* ionosphere model by tec grid data -------------------------------------------
+* compute ionospheric delay by tec grid data
+* args   : gtime_t time     I   time (gpst)
+*          nav_t  *nav      I   navigation data
+*          double *pos      I   receiver position {lat,lon,h} (rad,m)
+*          double *azel     I   azimuth/elevation angle {az,el} (rad)
+*          int    opt       I   model option
+*                                bit0: 0:earth-fixed,1:sun-fixed
+*                                bit1: 0:single-layer,1:modified single-layer
+*          double *delay    O   ionospheric delay (L1) (m)
+*          double *var      O   ionospheric dealy (L1) variance (m^2)
+* return : status (1:ok,0:error)
+* notes  : before calling the function, read tec grid data by calling readtec()
+*          return ok with delay=0 and var=VAR_NOTEC if el<MIN_EL or h<MIN_HGT
+*-----------------------------------------------------------------------------*/
+extern int iontec(gtime_t time, const nav_t *nav, const double *pos,
+                  const double *azel, int opt, double *delay, double *var)
+{
+    double dels[2],vars[2],a,tt;
+    int i,stat[2];
+    
+    char tstr[40];
+    if(!nav || !isfinite(time.sec) || nav->ionex_time_mode>IONEX_TIME_LEGACY)
+        return 0;
+    trace(3,"iontec  : time=%s pos=%.1f %.1f azel=%.1f %.1f\n",time2str(time,tstr,0),
+          pos[0]*R2D,pos[1]*R2D,azel[0]*R2D,azel[1]*R2D);
+    
+    if (azel[1]<MIN_EL||pos[2]<MIN_HGT) {
+        *delay=0.0;
+        *var=VAR_NOTEC;
+        return 1;
+    }
+    if(!ionex_in_range(time,nav)) {
+        trace(2,"%s: tec grid out of period (query=GPST,mode=%s)\n",
+            time2str(time,tstr,0),nav->ionex_time_mode==IONEX_TIME_LEGACY?
+            "LEGACY":"CORRECTED");
+        return 0;
+    }
+    time=ionex_query_time(time,nav);
+    for (i=0;i<nav->nt;i++) {
+        if (timediff(nav->tec[i].time,time)>0.0) break;
+    }
+    /* At the final corrected epoch use the last interval with a=1. The
+     * range check above still rejects extrapolation and preserves legacy. */
+    if(i>=nav->nt)i=nav->nt-1;
+    if ((tt=timediff(nav->tec[i].time,nav->tec[i-1].time))==0.0) {
+        trace(2,"tec grid time interval error\n");
+        return 0;
+    }
+    /* ionospheric delay by tec grid data */
+    stat[0]=iondelay(time,nav->tec+i-1,pos,azel,opt,nav->ionex_geometry_policy,dels  ,vars  );
+    stat[1]=iondelay(time,nav->tec+i  ,pos,azel,opt,nav->ionex_geometry_policy,dels+1,vars+1);
+    
+    if (!stat[0]&&!stat[1]) {
+        trace(2,"%s: tec grid out of area pos=%6.2f %7.2f azel=%6.1f %5.1f\n",
+              time2str(time,tstr,0),pos[0]*R2D,pos[1]*R2D,azel[0]*R2D,azel[1]*R2D);
+        return 0;
+    }
+    if (stat[0]&&stat[1]) { /* linear interpolation by time */
+        a=timediff(time,nav->tec[i-1].time)/tt;
+        *delay=dels[0]*(1.0-a)+dels[1]*a;
+        *var  =vars[0]*(1.0-a)+vars[1]*a;
+    }
+    else if (stat[0]) { /* nearest-neighbour extrapolation by time */
+        *delay=dels[0];
+        *var  =vars[0];
+    }
+    else {
+        *delay=dels[1];
+        *var  =vars[1];
+    }
+    trace(3,"iontec  : delay=%5.2f std=%5.2f\n",*delay,sqrt(*var));
+    return 1;
+}

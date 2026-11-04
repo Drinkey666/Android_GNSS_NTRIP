@@ -1,0 +1,4 @@
+# Copy to ntrip.local.properties for personal debug APK defaults only.
+# Real credentials must not be committed or copied into recording bundles.
+ntrip.username=
+ntrip.password=

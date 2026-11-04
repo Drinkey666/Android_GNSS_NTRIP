@@ -1,0 +1,15 @@
+{
+  "revision": "IGS20_2437_SATELLITE_HISTORY_20261026",
+  "upstream_url": "https://files.igs.org/pub/station/general/igs20_2437.atx.gz",
+  "upstream_gzip_sha256": "22897a9f31449de93e9943cb6ecf3212acf24bde81b1b83cfc3aa648d73a5454",
+  "satellite_subset_sha256": "737c46fcfd30b80a8a622f011f88bae779449e6a14781ac6e1a558934004261a",
+  "previous_bundled_sha256": "fd9955ae17d759291e62e144db8e47a3d4f38bb1d8aae7a8e093fbc6cad0b79f",
+  "subset_blocks": 414,
+  "subset_bytes": 5193078,
+  "scope": "Lossless official satellite blocks. No receiver antenna enabled in current profile. Frozen capture/product inputs unchanged; no install.",
+  "metadata_url": "https://files.igs.org/pub/station/general/igs_satellite_metadata.snx",
+  "metadata_release": "2441",
+  "metadata_sha256": "ac93d053eac7d8b08ce129b6af98667e1867296e1685417d38c081cd046558ae",
+  "identity_validation_epoch": "2026-10-25; supported B_VERIFIED GPS/Galileo/BeiDou",
+  "not_validated_for_glonass": "GLONASS remains OFF; R10/R28 identities in this archived ATX differ from metadata. Do not enable GLO without refreshing its antenna records."
+}

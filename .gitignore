@@ -1,0 +1,34 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+**/build/
+/captures
+.externalNativeBuild
+.cxx
+**/.cxx/
+local.properties
+*.apk
+*.aab
+*.jks
+*.keystore
+
+# VMF3 本地认证信息：仅本机保留，不纳入 Git。
+/vmf3.local.properties
+/ntrip.local.properties
+/tools/
+
+# 本地编译缓存、错误日志与历史同步备份，不属于可分发工程源码。
+.kotlin/
+__pycache__/
+*.pyc
+/tools/config_backup_*/
+/tools/ppp_sync_backups/
+/tools/ppp_device_build/
