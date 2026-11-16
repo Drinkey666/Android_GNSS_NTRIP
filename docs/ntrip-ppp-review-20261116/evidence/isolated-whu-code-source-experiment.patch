@@ -1,0 +1,22 @@
+diff --git a/src/ntrip_ssr.cpp b/src/ntrip_ssr.cpp
+index 57c1cc8..db34c97 100644
+--- a/src/ntrip_ssr.cpp
++++ b/src/ntrip_ssr.cpp
+@@ -250,11 +250,12 @@ void NtripSsr::feed(nav_t *nav,int channel,const unsigned char *data,int count,g
+                 // Independent bias transport must not erase orbit/clock or vice versa.
+                 const auto previous=target;target=s;
+                 copy_phase(target,previous);
+-                if(!s.t0[4].time && previous.t0[4].time) {
+-                    target.t0[4]=previous.t0[4];target.udi[4]=previous.udi[4];target.iod[4]=previous.iod[4];
+-                    target.provider[4]=previous.provider[4];target.solution[4]=previous.solution[4];
+-                    memcpy(target.cbias,previous.cbias,sizeof(target.cbias));
+-                    memcpy(target.cbias_valid,previous.cbias_valid,sizeof(target.cbias_valid));
++                const auto &code_source=whu_osb?transport_committed[2][sat]:previous;
++                if(whu_osb || (!s.t0[4].time && previous.t0[4].time)) {
++                    target.t0[4]=code_source.t0[4];target.udi[4]=code_source.udi[4];target.iod[4]=code_source.iod[4];
++                    target.provider[4]=code_source.provider[4];target.solution[4]=code_source.solution[4];
++                    memcpy(target.cbias,code_source.cbias,sizeof(target.cbias));
++                    memcpy(target.cbias_valid,code_source.cbias_valid,sizeof(target.cbias_valid));
+                 }
+             } else if(s.t0[4].time) {
+                 target.t0[4]=s.t0[4];target.udi[4]=s.udi[4];target.iod[4]=s.iod[4];

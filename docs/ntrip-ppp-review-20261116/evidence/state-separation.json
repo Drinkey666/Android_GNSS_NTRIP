@@ -1,0 +1,309 @@
+{
+  "vivo_1120": {
+    "epochs": 64,
+    "first_epoch": {
+      "prior_enu": [
+        -2.46236627757217,
+        -1.6663043544796121,
+        6.0508863462222084
+      ],
+      "post_enu": [
+        -0.8815046691464101,
+        -1.4588498190115073,
+        1.3787935812323555
+      ],
+      "posterior_sigma_up": 6.026207820996522,
+      "satellites_single_code": 14,
+      "satellites_multiple_codes": 5,
+      "selected_state_updates": [
+        {
+          "state": "GPS clock",
+          "change": -3.196378817083314,
+          "rho_up": 0.8772865025085741
+        },
+        {
+          "state": "Galileo ISB",
+          "change": 1.2020803209344146,
+          "rho_up": 0.29242026099182183
+        },
+        {
+          "state": "BeiDou ISB",
+          "change": 6.374823429517251,
+          "rho_up": 0.5918094538322246
+        },
+        {
+          "state": "ZTD",
+          "change": -0.0005513490979134339,
+          "rho_up": -0.059064431026958436
+        },
+        {
+          "state": "GPS 5Q",
+          "change": -0.03982857836715163,
+          "rho_up": 0.13318774215801302
+        },
+        {
+          "state": "Galileo 5Q",
+          "change": 1.0034490514046257,
+          "rho_up": -0.08257072564936604
+        }
+      ],
+      "local_observability_fractions": {
+        "code|EN_ONLY": 0.9291684616276191,
+        "code|CLOCK": 0.1356618583541483,
+        "code|CLOCK+ZTD": 0.04956660815957204,
+        "code|CLOCK+RCB": 0.13220898567051917,
+        "code|CLOCK+ZTD+RCB": 0.04674941161297087,
+        "code|CLOCK+ZTD+RCB+IONO": 1.4590932757483486e-15,
+        "code|CLOCK+ZTD+RCB+IONO+AMBIGUITY": 9.84395594779835e-16,
+        "gnss|EN_ONLY": 0.7742425206079129,
+        "gnss|CLOCK": 0.13717240670143233,
+        "gnss|CLOCK+ZTD": 0.04803851883934982,
+        "gnss|CLOCK+RCB": 0.13676637828087873,
+        "gnss|CLOCK+ZTD+RCB": 0.047884123619550994,
+        "gnss|CLOCK+ZTD+RCB+IONO": 0.01441911547904776,
+        "gnss|CLOCK+ZTD+RCB+IONO+AMBIGUITY": 8.122554392303223e-16,
+        "including_product_rows|EN_ONLY": 0.7742425206079129,
+        "including_product_rows|CLOCK": 0.13717240670143233,
+        "including_product_rows|CLOCK+ZTD": 0.04803851883934982,
+        "including_product_rows|CLOCK+RCB": 0.13676637828087873,
+        "including_product_rows|CLOCK+ZTD+RCB": 0.047884123619550994,
+        "including_product_rows|CLOCK+ZTD+RCB+IONO": 0.01441911547904776,
+        "including_product_rows|CLOCK+ZTD+RCB+IONO+AMBIGUITY": 8.122554392303223e-16
+      }
+    }
+  },
+  "xiaomi_1120": {
+    "epochs": 18,
+    "first_epoch": {
+      "prior_enu": [
+        1.1730225580364615,
+        1.2620243998472807,
+        1.7410350115555537
+      ],
+      "post_enu": [
+        0.48645950102010976,
+        -0.6094914574956619,
+        0.1768215040660184
+      ],
+      "posterior_sigma_up": 4.874829545142722,
+      "satellites_single_code": 11,
+      "satellites_multiple_codes": 11,
+      "selected_state_updates": [
+        {
+          "state": "GPS clock",
+          "change": -0.1218731256085448,
+          "rho_up": 0.8156396198893855
+        },
+        {
+          "state": "Galileo ISB",
+          "change": 0.6557326781036901,
+          "rho_up": 0.2222316371096973
+        },
+        {
+          "state": "BeiDou ISB",
+          "change": 9.249513777531636,
+          "rho_up": 0.5184523364197429
+        },
+        {
+          "state": "ZTD",
+          "change": -0.0006526691361865566,
+          "rho_up": -0.0815837094173197
+        },
+        {
+          "state": "GPS 5Q",
+          "change": 1.7043531822032423,
+          "rho_up": 0.18823284025326387
+        },
+        {
+          "state": "Galileo 5Q",
+          "change": 2.4767299747185856,
+          "rho_up": -0.12022681991501215
+        },
+        {
+          "state": "BeiDou 5P",
+          "change": -0.22734087395765978,
+          "rho_up": -0.1185733029180846
+        }
+      ],
+      "local_observability_fractions": {
+        "code|EN_ONLY": 0.9250394420057421,
+        "code|CLOCK": 0.20316561044440942,
+        "code|CLOCK+ZTD": 0.05586694325172921,
+        "code|CLOCK+RCB": 0.18962404210495104,
+        "code|CLOCK+ZTD+RCB": 0.054318158694689575,
+        "code|CLOCK+ZTD+RCB+IONO": 0.007814076980905936,
+        "code|CLOCK+ZTD+RCB+IONO+AMBIGUITY": 0.00781407698090592,
+        "gnss|EN_ONLY": 0.9329600187722032,
+        "gnss|CLOCK": 0.19227991783054385,
+        "gnss|CLOCK+ZTD": 0.08359422206261838,
+        "gnss|CLOCK+RCB": 0.1890229483909446,
+        "gnss|CLOCK+ZTD+RCB": 0.08314100294714347,
+        "gnss|CLOCK+ZTD+RCB+IONO": 0.02729530844834907,
+        "gnss|CLOCK+ZTD+RCB+IONO+AMBIGUITY": 0.002114171534981185,
+        "including_product_rows|EN_ONLY": 0.9329600187722032,
+        "including_product_rows|CLOCK": 0.19227991783054385,
+        "including_product_rows|CLOCK+ZTD": 0.08359422206261838,
+        "including_product_rows|CLOCK+RCB": 0.1890229483909446,
+        "including_product_rows|CLOCK+ZTD+RCB": 0.08314100294714347,
+        "including_product_rows|CLOCK+ZTD+RCB+IONO": 0.02729530844834907,
+        "including_product_rows|CLOCK+ZTD+RCB+IONO+AMBIGUITY": 0.002114171534981185
+      }
+    }
+  },
+  "xiaomi_1004": {
+    "epochs": 18,
+    "first_epoch": {
+      "prior_enu": [
+        1.4023179802107413,
+        2.5635661465830224,
+        1.0095879050686718
+      ],
+      "post_enu": [
+        1.8368509678706215,
+        2.3523471499729083,
+        -3.05289755012965
+      ],
+      "posterior_sigma_up": 4.48177796483205,
+      "satellites_single_code": 8,
+      "satellites_multiple_codes": 13,
+      "selected_state_updates": [
+        {
+          "state": "GPS clock",
+          "change": -1.611917482194258,
+          "rho_up": 0.9396760911330675
+        },
+        {
+          "state": "Galileo ISB",
+          "change": 3.318421582051277,
+          "rho_up": -0.34158188236268167
+        },
+        {
+          "state": "BeiDou ISB",
+          "change": 10.432859259013714,
+          "rho_up": 0.033967302491939105
+        },
+        {
+          "state": "ZTD",
+          "change": 0.0003947566331752306,
+          "rho_up": -0.09570650335996654
+        },
+        {
+          "state": "GPS 5Q",
+          "change": 2.14199612621033,
+          "rho_up": -0.09878705953360745
+        },
+        {
+          "state": "Galileo 5Q",
+          "change": 2.205751192988885,
+          "rho_up": 0.005391965712877603
+        },
+        {
+          "state": "BeiDou 5P",
+          "change": 0.7017584936694212,
+          "rho_up": -0.1958422490391235
+        }
+      ],
+      "local_observability_fractions": {
+        "code|EN_ONLY": 0.9981074487323692,
+        "code|CLOCK": 0.22514111680511895,
+        "code|CLOCK+ZTD": 0.06526089410820217,
+        "code|CLOCK+RCB": 0.2085743953764431,
+        "code|CLOCK+ZTD+RCB": 0.06349194053025152,
+        "code|CLOCK+ZTD+RCB+IONO": 0.011402084954682763,
+        "code|CLOCK+ZTD+RCB+IONO+AMBIGUITY": 0.01140208495468257,
+        "gnss|EN_ONLY": 0.8914172362304016,
+        "gnss|CLOCK": 0.23005772533582697,
+        "gnss|CLOCK+ZTD": 0.07447087485752037,
+        "gnss|CLOCK+RCB": 0.2290757311434337,
+        "gnss|CLOCK+ZTD+RCB": 0.07362992095896442,
+        "gnss|CLOCK+ZTD+RCB+IONO": 0.03754596131122679,
+        "gnss|CLOCK+ZTD+RCB+IONO+AMBIGUITY": 0.0031386033054798157,
+        "including_product_rows|EN_ONLY": 0.8914172362304016,
+        "including_product_rows|CLOCK": 0.23005772533582697,
+        "including_product_rows|CLOCK+ZTD": 0.07447087485752037,
+        "including_product_rows|CLOCK+RCB": 0.2290757311434337,
+        "including_product_rows|CLOCK+ZTD+RCB": 0.07362992095896442,
+        "including_product_rows|CLOCK+ZTD+RCB+IONO": 0.03754596131122679,
+        "including_product_rows|CLOCK+ZTD+RCB+IONO+AMBIGUITY": 0.0031386033054798157
+      }
+    }
+  },
+  "xiaomi_1031": {
+    "epochs": 84,
+    "first_epoch": {
+      "prior_enu": [
+        1.2510045689265572,
+        0.31651788322909025,
+        -4.003292191700473
+      ],
+      "post_enu": [
+        1.2473547750524323,
+        -1.6372992868124054,
+        -2.2465138054396347
+      ],
+      "posterior_sigma_up": 5.501412843287919,
+      "satellites_single_code": 7,
+      "satellites_multiple_codes": 13,
+      "selected_state_updates": [
+        {
+          "state": "GPS clock",
+          "change": 0.5443238521402236,
+          "rho_up": 0.9314757886039662
+        },
+        {
+          "state": "Galileo ISB",
+          "change": 2.481726715640828,
+          "rho_up": -0.2818709743799661
+        },
+        {
+          "state": "BeiDou ISB",
+          "change": 10.601391414558712,
+          "rho_up": 0.2491833065764845
+        },
+        {
+          "state": "ZTD",
+          "change": 0.0017175803834472703,
+          "rho_up": -0.06708226808640913
+        },
+        {
+          "state": "GPS 5Q",
+          "change": 2.5298970463364125,
+          "rho_up": 0.026556867862827776
+        },
+        {
+          "state": "Galileo 5Q",
+          "change": 2.7171777250439098,
+          "rho_up": 0.047411146321716675
+        },
+        {
+          "state": "BeiDou 5P",
+          "change": 3.1567537155890344,
+          "rho_up": -0.10564987624714073
+        }
+      ],
+      "local_observability_fractions": {
+        "code|EN_ONLY": 0.9820836325645564,
+        "code|CLOCK": 0.15280470013340092,
+        "code|CLOCK+ZTD": 0.05418454175887697,
+        "code|CLOCK+RCB": 0.14265500925653055,
+        "code|CLOCK+ZTD+RCB": 0.050408337066374,
+        "code|CLOCK+ZTD+RCB+IONO": 0.0075422042472653335,
+        "code|CLOCK+ZTD+RCB+IONO+AMBIGUITY": 0.007542204247265158,
+        "gnss|EN_ONLY": 0.9607235345589245,
+        "gnss|CLOCK": 0.1309215598627293,
+        "gnss|CLOCK+ZTD": 0.04801069822330774,
+        "gnss|CLOCK+RCB": 0.13057723805203056,
+        "gnss|CLOCK+ZTD+RCB": 0.04789091687705515,
+        "gnss|CLOCK+ZTD+RCB+IONO": 0.018912853181680872,
+        "gnss|CLOCK+ZTD+RCB+IONO+AMBIGUITY": 0.0013461308564284423,
+        "including_product_rows|EN_ONLY": 0.9607235345589245,
+        "including_product_rows|CLOCK": 0.1309215598627293,
+        "including_product_rows|CLOCK+ZTD": 0.04801069822330774,
+        "including_product_rows|CLOCK+RCB": 0.13057723805203056,
+        "including_product_rows|CLOCK+ZTD+RCB": 0.04789091687705515,
+        "including_product_rows|CLOCK+ZTD+RCB+IONO": 0.018912853181680872,
+        "including_product_rows|CLOCK+ZTD+RCB+IONO+AMBIGUITY": 0.0013461308564284423
+      }
+    }
+  }
+}

@@ -1,0 +1,174 @@
+{
+  "pc_replay_1031": {
+    "release_prefixes_identical_669_epochs": true,
+    "legacy_profile_result": {
+      "first_q6_s": 584.9990000724792,
+      "q6": 84,
+      "last60_h_rms_m": 1.8224000838157681,
+      "last60_u_rms_m": 0.46021312763973454,
+      "first_h_m": 2.05831068913699,
+      "first_u_m": -2.2465138051395126,
+      "horizontal_convergence_start_s": null
+    },
+    "first_complete_profile_result": {
+      "first_q6_s": 5.0,
+      "q6": 663,
+      "last60_h_rms_m": 1.6909950475818079,
+      "last60_u_rms_m": 0.4070971075013133,
+      "first_h_m": 2.499229971676006,
+      "first_u_m": 3.1916271060898884,
+      "horizontal_convergence_start_s": null
+    },
+    "phone_ttff_measured": false,
+    "first_osb_absolute_validity_independently_certified": false
+  },
+  "xiaomi_1114": [
+    {
+      "session": "1001",
+      "duration_s": 124.950476931,
+      "phone_first_available_s": null,
+      "paired_q6": 0,
+      "pc_phone_ecef_delta_max_m": null,
+      "first_complete_profile_pc_first_q6_s": 4.52934677,
+      "first_complete_profile_pc_q_counts": {
+        "0": 70,
+        "6": 55
+      },
+      "isolated_code_source_pc": {
+        "first_q6_s": 4.52934677,
+        "Q": {
+          "0": 6,
+          "5": 0,
+          "6": 119
+        },
+        "all_q6": {
+          "count": 119,
+          "h_rms": 1.9643856564965168,
+          "u_rms": 3.0765680271568865
+        },
+        "common_last_60_pc_v2": {
+          "count": 55,
+          "h_rms": 1.9681236821306878,
+          "u_rms": 3.912357105090422
+        },
+        "common_last_60_probe": {
+          "count": 55,
+          "h_rms": 1.9996471667876041,
+          "u_rms": 3.6022195395487597
+        },
+        "same_causal_prefix": true
+      }
+    },
+    {
+      "session": "1004",
+      "duration_s": 1800.004503262,
+      "phone_first_available_s": 12.915805232,
+      "paired_q6": 848,
+      "pc_phone_ecef_delta_max_m": 1.149950431153326e-06,
+      "first_complete_profile_pc_first_q6_s": 5.817214232,
+      "first_complete_profile_pc_q_counts": {
+        "0": 946,
+        "6": 852,
+        "5": 2
+      },
+      "isolated_code_source_pc": {
+        "first_q6_s": 5.817214232,
+        "Q": {
+          "0": 330,
+          "5": 4,
+          "6": 1466
+        },
+        "all_q6": {
+          "count": 1466,
+          "h_rms": 2.342930606098236,
+          "u_rms": 3.0729445549383017
+        },
+        "common_last_60_pc_v2": {
+          "count": 60,
+          "h_rms": 2.0535705474796164,
+          "u_rms": 2.4227136335144883
+        },
+        "common_last_60_probe": {
+          "count": 60,
+          "h_rms": 2.0826313767782003,
+          "u_rms": 2.997630606637781
+        },
+        "same_causal_prefix": true
+      }
+    },
+    {
+      "session": "1041",
+      "duration_s": 69.978509235,
+      "phone_first_available_s": null,
+      "paired_q6": 0,
+      "pc_phone_ecef_delta_max_m": null,
+      "first_complete_profile_pc_first_q6_s": 4.878104001,
+      "first_complete_profile_pc_q_counts": {
+        "0": 16,
+        "6": 45,
+        "5": 8
+      },
+      "isolated_code_source_pc": {
+        "first_q6_s": 4.878104001,
+        "Q": {
+          "0": 6,
+          "5": 0,
+          "6": 63
+        },
+        "all_q6": {
+          "count": 63,
+          "h_rms": 1.30426402994024,
+          "u_rms": 2.0318177256876124
+        },
+        "common_last_60_pc_v2": {
+          "count": 45,
+          "h_rms": 1.9271148649723282,
+          "u_rms": 2.7696167736895982
+        },
+        "common_last_60_probe": {
+          "count": 45,
+          "h_rms": 1.4272830032359924,
+          "u_rms": 2.316455593430966
+        },
+        "same_causal_prefix": true
+      }
+    },
+    {
+      "session": "1120",
+      "duration_s": 629.248763653,
+      "phone_first_available_s": 268.963335324,
+      "paired_q6": 293,
+      "pc_phone_ecef_delta_max_m": 7.625070989457902e-07,
+      "first_complete_profile_pc_first_q6_s": 14.799510386,
+      "first_complete_profile_pc_q_counts": {
+        "0": 140,
+        "6": 488,
+        "5": 1
+      },
+      "isolated_code_source_pc": {
+        "first_q6_s": 14.799510386,
+        "Q": {
+          "0": 41,
+          "5": 1,
+          "6": 587
+        },
+        "all_q6": {
+          "count": 587,
+          "h_rms": 0.7262957176775096,
+          "u_rms": 0.892506688030359
+        },
+        "common_last_60_pc_v2": {
+          "count": 60,
+          "h_rms": 0.6291904869802325,
+          "u_rms": 0.615185648001002
+        },
+        "common_last_60_probe": {
+          "count": 60,
+          "h_rms": 0.7185762439409259,
+          "u_rms": 0.6231853538183149
+        },
+        "same_causal_prefix": true
+      }
+    }
+  ]
+}
