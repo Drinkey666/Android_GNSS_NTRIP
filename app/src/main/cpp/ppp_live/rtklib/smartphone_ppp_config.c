@@ -114,6 +114,7 @@ void smartphone_ppp_configure(prcopt_t *opt, solopt_t *sol)
     opt->eratio[0] = 100.0; opt->eratio[1] = 70.0;
     opt->eratio[2] = 60.0; opt->eratio[3] = 100.0;
     opt->modear = ARMODE_OFF;
+    opt->ppp_ssr_phase_osb=1;
     opt->thresslip = 0.20;
     opt->elmin = 15.0 * D2R;
     opt->prn[0] = 1e-4; opt->prn[1] = 1e-3; opt->prn[2] = 1e-4;
@@ -203,6 +204,8 @@ int smartphone_ppp_validate(const prcopt_t *opt, char *error, size_t capacity)
          opt->ppp_rcb_datum || opt->ppp_wet_correction || opt->ppp_iekf || opt->ppp_physical_atmosphere ||
          !phase_identity_selected(opt->rnxopt[0])))
         problem="incomplete B_VERIFIED preset; use smartphone_ppp_select_profile before input loading";
+    else if(opt->ppp_ssr_phase_osb<0 || opt->ppp_ssr_phase_osb>1)
+        problem="SSR phase OSB must be 0 or 1";
     else if(opt->ppp_clock_mode<PPP_CLOCK_AUTO || opt->ppp_clock_mode>PPP_CLOCK_COMMON)
         problem="invalid PPP clock policy";
     else if(opt->ppp_rcb_datum<0 || opt->ppp_rcb_datum>1 ||
@@ -308,6 +311,10 @@ unsigned int smartphone_ppp_describe(const prcopt_t *opt, char *out, size_t capa
     if(smartphone_ppp_policy(opt).verified_repairs) {
         size_t len=strlen(text);
         snprintf(text+len,sizeof(text)-len," repairs=B_VERIFIED_v2 phase_identity=1 reference_seed=1 ion_continuity=1 reference_event=1 covariance=JOSEPH_B_MASK");
+    }
+    {
+        size_t len=strlen(text);
+        snprintf(text+len,sizeof(text)-len," ssr_phase_osb=%d phase_policy=OPTIONAL_WHU_FLOAT_V1",opt->ppp_ssr_phase_osb);
     }
     for (p = (const unsigned char *)text; *p; ++p) hash = (hash ^ *p) * 16777619u;
     if (out && capacity) snprintf(out, capacity, "PPP_CONFIG,signature=%08x,%s", hash, text);

@@ -27,7 +27,10 @@ class NtripCaptureStoreTest {
     @Test fun pairedArchiveIsCompatibleAndContainsNoCredentials() {
         val dir=directory("paired")
         val utc=1700000000000000000L;var elapsed=1000000000L
-        val store=NtripCaptureStore(dir,NtripSettings(),{utc+elapsed-1000000000L},{elapsed})
+        val reference = ReferencePosition(30.0, 104.0, 480.0)
+        val store=NtripCaptureStore(dir,NtripSettings(),{utc+elapsed-1000000000L},{elapsed},
+            durationMinutes=12, reference=reference)
+        store.beginAcquisition()
         elapsed+=100000000L;store.event(0,"RESET");store.event(0,"CONNECTED");store.event(0,"DATA",packet(1060))
         store.event(1,"RESET");store.event(1,"CONNECTED");store.event(1,"DATA",packet(1019))
         val txt=File(dir,"RawData_20231114_221320.txt")
@@ -55,6 +58,9 @@ class NtripCaptureStoreTest {
             }
             val manifest=z.getInputStream(z.getEntry("capture.json")).bufferedReader().readText()
             assertTrue(manifest.contains("\"complete\":true"));assertTrue(manifest.contains("\"transport_received_both\":true"))
+            assertTrue(manifest.contains("\"duration_limit_seconds\":720"))
+            assertTrue(manifest.contains("\"height_type\":\"ELLIPSOID\""))
+            assertTrue(manifest.contains("\"first_q6\":null"))
             assertFalse(manifest.contains("Authorization"));assertFalse(manifest.contains("password"));assertFalse(manifest.contains("username"))
         }
         // A stable fixture location for the PC cross-language importer test.
@@ -67,6 +73,59 @@ class NtripCaptureStoreTest {
         assertTrue(runCatching {store.event(0,"DATA",packet(1060))}.isFailure)
         store.finish(null,0,null,"CLOCK_STEP")
         assertTrue(File(dir,"capture.json").readText().contains("\"complete\":false"))
+    }
+
+    @Test fun timedCapturePreservesDeadlineAndDiagnosticEvidence() {
+        val dir = directory("timed_capture")
+        val second = 1_000_000_000L
+        var elapsed = 10 * second
+        val start = elapsed
+        val utc = 1_700_000_000_000_000_000L
+        val settings = NtripSettings(correctionMount="SSRC00WHU0", centerOfMass=true,
+            biasMount="OSBC00WHU1")
+        val reference = ReferencePosition(30.0, 104.0, 480.0, ReferenceHeightType.NORMAL, 5.0)
+        val store = NtripCaptureStore(dir, settings, { utc + elapsed - start }, { elapsed },
+            durationMinutes=1, reference=reference)
+        elapsed += 2 * second
+        store.beginAcquisition()
+        assertEquals(60 * second, store.remainingNanos())
+        store.productSetupFailed("LOCAL_PRODUCTS", "缺少 VMF3")
+        elapsed += 3 * second
+        store.productInitialized()
+        store.event(2,"CONNECTED")
+        store.event(2,"DATA",packet(1059))
+        store.event(2,"CLOSED",reason="NETWORK_DISCONNECTED")
+        store.event(2,"RESET")
+        store.event(2,"CONNECTED")
+        val q6 = LivePppResult(2442,531605.0,6,17,30.0,104.0,485.0,
+            1.0,2.0,3.0,0.1,0.1,0.1,2.0,60,24,19,30)
+        store.recordPppResult(q6.copy(q=5),"Q_5",elapsed)
+        store.recordPppResult(q6,"Q_6",elapsed)
+        store.recordPppResult(null,"当前 GNSS 时间不在 VMF3 覆盖范围内",elapsed)
+        elapsed += second
+        store.recordPppResult(q6.copy(tow=531606.0),"Q_6",elapsed)
+        elapsed = start + 62 * second - 1
+        assertEquals(1L, store.remainingNanos())
+        elapsed++
+        assertEquals(0L, store.remainingNanos())
+        val stopRequestedAt = elapsed
+        elapsed += 2 * second
+        val zip = store.finish(null, 0, null, "DURATION_LIMIT", stopRequestedAt)
+        ZipFile(zip).use { z ->
+            val manifest = z.getInputStream(z.getEntry("capture.json")).bufferedReader().readText()
+            for (expected in listOf(
+                "\"duration_limit_seconds\":60", "\"stop_reason\":\"DURATION_LIMIT\"",
+                "\"acquisition_duration_ns\":60000000000", "\"end_elapsed_ns\":64000000000",
+                "\"height_type\":\"NORMAL\"", "\"ellipsoid_height_m\":485.0",
+                "\"first_q6\":{\"week\":2442, \"tow\":531605.0",
+                "\"last_q6\":{\"week\":2442, \"tow\":531606.0",
+                "\"solution_quality_counts\":{\"5\":1, \"6\":2}",
+                "\"product_setup_failure_count\":1", "\"epochs_outside_product_coverage\":{\"VMF3\":1}",
+                "\"connection_count\":2", "\"first_valid_rtcm_elapsed_ns\":5000000000",
+            )) assertTrue(expected, manifest.contains(expected))
+            val arrivals = z.getInputStream(z.getEntry("arrivals.csv")).bufferedReader().readText()
+            assertTrue(arrivals.contains(",CLOSED,10,0,NETWORK_DISCONNECTED"))
+        }
     }
     @Test fun limitsDoNotWriteOversizedChunkOrOverwriteDirectory() {
         val dir=directory("limits");val store=NtripCaptureStore(dir,NtripSettings(),{1700000000000000000L},{0L},maxBytes=5)
@@ -94,7 +153,7 @@ class NtripCaptureStoreTest {
             assertNotNull(z.getEntry("bias.rtcm3"));assertNotNull(z.getEntry("profile.txt"))
             val m=z.getInputStream(z.getEntry("capture.json")).bufferedReader().readText()
             assertTrue(m.contains("PPP_NTRIP_CAPTURE_V2"));assertTrue(m.contains("OSBC00WHU1"))
-            assertTrue(m.contains("WHU_OSB_CONTINUITY_V1"))
+            assertTrue(m.contains("WHU_OSB_FIRST_COMPLETE_V2"))
             assertTrue(m.contains(captureDigest(File(dir,"profile.txt"))))
         }
         assertArrayEquals(packet(1059),File(dir,"bias.rtcm3").readBytes())

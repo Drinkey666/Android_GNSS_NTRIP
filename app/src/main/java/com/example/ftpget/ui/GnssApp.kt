@@ -1,6 +1,5 @@
 package com.example.ftpget.ui
 
-import android.webkit.WebView
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
@@ -64,7 +63,6 @@ fun GnssApp(
     signalBars: SignalBarView,
     satellites: GnssDataTableView,
     measurements: GnssDataTableView,
-    map: WebView,
     onPageSelected: (Int) -> Unit,
 ) {
     val pageState = rememberSaveableStateHolder()
@@ -106,7 +104,7 @@ fun GnssApp(
                 0 -> LogPage(state, measurements, Modifier.padding(padding))
                 1 -> ViewPage(state, skyPlot, signalBars, satellites, Modifier.padding(padding))
                 2 -> PosPage(state, Modifier.padding(padding))
-                else -> MapPage(state, map, Modifier.padding(padding))
+                else -> MapPage(state, Modifier.padding(padding))
             }
         }
     }
@@ -131,6 +129,7 @@ private fun AppHeader(state: MainUiState) {
     val pageDetail = when (state.selectedPage) {
         0 -> today
         1 -> stringResource(R.string.header_live_update)
+        3 -> stringResource(R.string.section_map)
         else -> stringResource(R.string.header_device_position)
     }
     Surface(color = MaterialTheme.colorScheme.surface) {

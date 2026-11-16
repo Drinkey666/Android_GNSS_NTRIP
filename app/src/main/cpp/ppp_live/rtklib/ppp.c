@@ -1144,10 +1144,80 @@ static double mwmeas(const obsd_t* obs, const nav_t* nav, int f)
  *       精密产品路径按当前 sat+code+time 查码 OSB：P_corrected=P_raw-OSB。
  *       OSB 已知但过期时禁用该码；从未提供时按现有规则尝试 legacy DCB。
  *       BDS 第 4 槽 C1P 无 legacy DCB 回退，没有时效内 OSB 时仅保留载波。
- *       本函数没有对 L 扣除相位 OSB；不要把“读取 BIA”当作已经实现 PPP-AR。
+ *       NTRIP 仅在独立相位有效性检查通过后给 L 加 RTCM 相位偏差；
+ *       文件 BIA 相位记录仍未接入。本函数不实现模糊度固定。
  *       此处不扣除电离层/对流层/钟差：它们统一进入后面的观测方程。
  *       Lc/Pc 为可选消电离层组合；非组合 PPP 仍使用逐频的 L[f]/P[f]。
  * ============================================================================= */
+static double pppopt_number(const prcopt_t *opt,const char *key,
+    double fallback,double lower,double upper);
+/* Only prepare()'s source/continuity-validated WHU phase component is usable.
+ * Missing correction means an explicitly uncorrected FLOAT phase, not a
+ * fabricated zero OSB. Receiver phase and float ambiguities remain estimated. */
+static int phase_osb_ppp(const obsd_t *obs,const nav_t *nav,const prcopt_t *opt,
+    int f,double *correction)
+{
+    *correction=0.0;
+#ifdef PPP_NTRIP_SSR
+    if(obs->sat>=1 && obs->sat<=MAXSAT && f>=0 && f<NFREQ &&
+        opt->ionoopt!=IONOOPT_IFLC &&
+        (opt->sateph==EPHOPT_SSRAPC || opt->sateph==EPHOPT_SSRCOM) &&
+        opt->ppp_ssr_phase_osb==1) {
+        const ssr_t *s=nav->ssr+obs->sat-1;
+        int code=obs->code[f];
+        if(code>0 && code<=MAXCODE && s->pbias_ready &&
+            s->pbias_valid[code-1]==1 && s->t0[5].time &&
+            timediff(obs->time,s->t0[5])>=-1.0 && isfinite(s->pbias[code-1])) {
+            *correction=s->pbias[code-1];return 1;
+        }
+    }
+#endif
+    return 0;
+}
+static void phase_osb_arcs_ppp(rtk_t *rtk,const obsd_t *obs,int n,const nav_t *nav)
+{
+#ifdef PPP_NTRIP_SSR
+    int i,f;
+    if(rtk->opt.ionoopt==IONOOPT_IFLC ||
+        (rtk->opt.sateph!=EPHOPT_SSRAPC && rtk->opt.sateph!=EPHOPT_SSRCOM))return;
+    for(i=0;i<n && i<MAXOBS;i++) {
+        int sat=obs[i].sat;
+        ssat_t *ss;
+        const ssr_t *s;
+        if(sat<1||sat>MAXSAT)continue;
+        ss=&rtk->ssat[sat-1];s=nav->ssr+sat-1;
+        for(f=0;f<rtk->opt.nf && f<NFREQ;f++)if(obs[i].L[f]!=0.0 && obs[i].code[f]) {
+            double correction;
+            int mode=phase_osb_ppp(obs+i,nav,&rtk->opt,f,&correction);
+            int code=obs[i].code[f],changed=0;
+            if(ss->ppp_pb_seen[f]) {
+                changed=(mode || ss->ppp_pb_mode[f]) &&
+                    (ss->ppp_pb_signal[f]!=code || ss->ppp_pb_mode[f]!=mode);
+                if(mode && (ss->ppp_pb_disc[f]!=s->pbias_disc[code-1] ||
+                    ss->ppp_pb_provider[f]!=s->provider[5] || ss->ppp_pb_solution[f]!=s->solution[5] ||
+                    ss->ppp_pb_iod[f]!=s->iod[5]))changed=1;
+            }
+            if(changed) {
+                /* This is a model-reference break, not a fabricated raw LLI.
+                 * Preserve the raw CODE smoother, which did not change datum. */
+                uint8_t valid=ss->psmvalid[f];
+                invalidate_arc_ppp(rtk,sat,f,"PHASE_OSB_REFERENCE_CHANGE");ss->psmvalid[f]=valid;
+            }
+            ss->ppp_pb_seen[f]=1;ss->ppp_pb_signal[f]=(uint8_t)code;ss->ppp_pb_mode[f]=(uint8_t)mode;
+            if(mode) {
+                ss->ppp_pb_disc[f]=s->pbias_disc[code-1];
+                ss->ppp_pb_provider[f]=s->provider[5];ss->ppp_pb_solution[f]=s->solution[5];ss->ppp_pb_iod[f]=s->iod[5];
+            }
+            {
+                char t[40],id[8];time2str(obs[i].time,t,3);satno2id(sat,id);
+                trace(2,"$PHASE_OSB,%s,sat=%s,sig=%s,slot=%d,applied=%d,correction_m=%.9f,present=%d,ready=%d,disc=%d,reference_reset=%d\n",
+                    t,id,code2obs(code),f,mode,correction,code<=MAXCODE?s->pbias_valid[code-1]:0,
+                    s->pbias_ready,mode?s->pbias_disc[code-1]:-1,changed);
+            }
+        }
+    }
+#endif
+}
 static void corr_meas(const obsd_t* obs, const nav_t* nav, const double* azel,
     const prcopt_t* opt, const double* dantr,
     const double* dants, const uint8_t *sat_pco_valid,
@@ -1168,8 +1238,12 @@ static void corr_meas(const obsd_t* obs, const nav_t* nav, const double* azel,
         /* Phase and code can be intermittently missing on phones. Keep each
            observable independently instead of discarding both. */
         if (obs->L[i] != 0.0) {
+            double phase_correction;
             L[i] = obs->L[i] * CLIGHT / freq[i] - dants[i] - dantr[i]
                 - phw * CLIGHT / freq[i];
+            /* RTCM correction adds metres, unlike Bias-SINEX OSB subtraction.
+             * Same routine is used for ambiguity seeds and filter residuals. */
+            if(phase_osb_ppp(obs,nav,opt,i,&phase_correction))L[i]+=phase_correction;
         }
         if (obs->P[i] != 0.0) {
             P[i] = obs->P[i] - dants[i] - dantr[i];
@@ -4660,6 +4734,7 @@ extern void pppos(rtk_t* rtk, const obsd_t* obs, int n, const nav_t* nav)
         if (smartphone_ppp_policy(opt).startup_qc)
             precheck_startup_code_ppp(rtk,obs,n,nav,rs,dts,var,svh);
     }
+    phase_osb_arcs_ppp(rtk,obs,n,nav);
     /* 第 3 步：平滑及可选码阶段选择，各执行一次；严禁移进残差编辑循环，
      * 否则同一 epoch 会重复平滑和增加历史计数，fast/realtime 也可能不等价。 */
     nsmooth = uddoppsm_ppp(rtk, obs, n, nav, rs);

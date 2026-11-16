@@ -20,8 +20,15 @@ data class CaptureDisplay(val active: Boolean=false,val stopping: Boolean=false,
     val ssr: String="",val nav: String="",val bytes: Long=0,val ssrFrames:Long=0,val navFrames:Long=0,
     val message: String="",val archive: String?=null,
     val pppStatus:String="等待 WHU 产品检查，尚未启用 PPP",val solution:LivePppResult?=null,
-    val bias:String="",val biasFrames:Long=0)
-internal data class CaptureStart(val settings:NtripSettings,val credentials:NtripCredentials,val reference:ReferencePosition?=null)
+    val bias:String="",val biasFrames:Long=0,
+    val latestMapSolution:LivePppResult?=null,
+    val remainingSeconds:Int?=null)
+internal data class CaptureStart(
+    val settings: NtripSettings,
+    val credentials: NtripCredentials,
+    val reference: ReferencePosition?,
+    val durationMinutes: Int,
+)
 internal object CaptureSession {
     val display=MutableStateFlow(CaptureDisplay())
     @Volatile var pending:CaptureStart?=null
@@ -59,11 +66,13 @@ class NtripCaptureService:Service() {
             if(Build.VERSION.SDK_INT>=29)startForeground(27,notification,ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION or ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
             else startForeground(27,notification)
             wake=(getSystemService(POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"PPP_NTRIP:recording")
-                .apply { acquire(31*60*1000L) }
+                .apply { acquire((MAX_NTRIP_CAPTURE_MINUTES + 1) * 60_000L) }
             val root=getExternalFilesDir("GNSS_NTRIP") ?: File(filesDir,"GNSS_NTRIP")
             check(root.isDirectory || root.mkdirs())
             val name="Capture_"+SimpleDateFormat("yyyyMMdd_HHmmss",Locale.US).format(Date())+"_"+UUID.randomUUID().toString().take(8)
-            val recording=NtripCaptureStore(File(root,name),request.settings,{System.currentTimeMillis()*1000000L},SystemClock::elapsedRealtimeNanos)
+            val recording=NtripCaptureStore(File(root,name),request.settings,
+                {System.currentTimeMillis()*1000000L},SystemClock::elapsedRealtimeNanos,
+                durationMinutes=request.durationMinutes, reference=request.reference)
             store=recording
             File(recording.directory,"software.json").writeText(captureJson(mapOf(
                 "package" to packageName,"version_name" to BuildConfig.VERSION_NAME,
@@ -74,7 +83,15 @@ class NtripCaptureService:Service() {
             if(request.settings.biasMount.isNotEmpty()) {
                 val productDirectory=getExternalFilesDir("GNSS_Products")?:File(filesDir,"GNSS_Products")
                 live=LiveSsrSession(recording,productDirectory,request.settings,request.reference,
-                    publish={status,result -> publish {it.copy(pppStatus=status,solution=result)}},fatal=::finish,
+                    publish={status,result -> publish { display ->
+                        val mapSolution = when {
+                            status.startsWith("WHU 解码停止") || status.startsWith("LIVE_SESSION_ERROR") -> null
+                            result != null && MapPosition.live(result) != null -> result
+                            else -> display.latestMapSolution
+                        }
+                        display.copy(pppStatus=status,solution=result,
+                            latestMapSolution=mapSolution)
+                    }},fatal=::finish,
                     prepareProducts={BundledProducts.ensure(applicationContext,productDirectory) { message ->
                         publish {it.copy(pppStatus=message)}
                     }})
@@ -86,7 +103,9 @@ class NtripCaptureService:Service() {
                 eventObserver={event,callback -> synchronized(gateway) {live?.epoch(event,callback)}})
 
             check(logger!!.startRecording()) { "RAW_REGISTRATION_FAILED" }
-            publish { CaptureDisplay(active=true,message=getString(R.string.capture_active)) }
+            recording.beginAcquisition()
+            publish { it.copy(active=true,message=getString(R.string.capture_active),
+                remainingSeconds=recording.durationLimitSeconds) }
             (listOf(request.settings.correctionMount,request.settings.navigationMount)+listOf(request.settings.biasMount).filter {it.isNotEmpty()}).forEachIndexed { channel,mount ->
                 val client=NtripClient(request.settings,mount,request.credentials,
                     onConnect={if(!stopping.get())try { synchronized(gateway) {
@@ -113,13 +132,21 @@ class NtripCaptureService:Service() {
                 synchronized(clients) { if(!stopping.get()){clients+=client;client.start()} }
             }
             scope.launch {
-                val start=SystemClock.elapsedRealtime()
                 while(!stopping.get()) {
-                    delay(1000);val counts=recording.counts()
-                    publish {it.copy(bytes=counts.first,ssrFrames=counts.second,navFrames=counts.third,biasFrames=recording.biasFrames())}
-                    if(SystemClock.elapsedRealtime()-start>=1800000L)finish("DURATION_LIMIT")
-                    if((logger?.currentSaveFile?.length()?:0)>256L*1024*1024)finish("TXT_SIZE_LIMIT")
-                    if(logger?.recordingErrorClass!=null)finish("TXT_WRITE_FAILED")
+                    val remaining = recording.remainingNanos()
+                    when {
+                        remaining == 0L -> { finish("DURATION_LIMIT"); break }
+                        (logger?.currentSaveFile?.length() ?: 0) > 256L*1024*1024 -> { finish("TXT_SIZE_LIMIT"); break }
+                        logger?.recordingErrorClass != null -> { finish("TXT_WRITE_FAILED"); break }
+                    }
+                    val counts=recording.counts()
+                    val biasFrames = recording.biasFrames()
+                    publish { display ->
+                        if (stopping.get()) display else display.copy(
+                            bytes=counts.first,ssrFrames=counts.second,navFrames=counts.third,
+                            biasFrames=biasFrames,remainingSeconds=((remaining+999_999_999L)/1_000_000_000L).toInt())
+                    }
+                    delay(minOf(1000L,(remaining+999_999L)/1_000_000L))
                 }
             }
         }catch(_:Exception){finish("CAPTURE_START_FAILED")}
@@ -133,7 +160,8 @@ class NtripCaptureService:Service() {
         if(Build.VERSION.SDK_INT>=29 && c.hasElapsedRealtimeUncertaintyNanos())c.elapsedRealtimeUncertaintyNanos.toString() else "",callback.toString())
     private fun finish(reason:String) {
         if(!stopping.compareAndSet(false,true))return
-        publish {it.copy(active=true,stopping=true,message=getString(R.string.capture_finishing))}
+        val stopRequestedAt = SystemClock.elapsedRealtimeNanos()
+        publish {it.copy(active=true,stopping=true,message=getString(R.string.capture_finishing),remainingSeconds=null)}
         scope.launch {
             var archive:File?=null
             var message=getString(R.string.capture_saved)
@@ -145,7 +173,7 @@ class NtripCaptureService:Service() {
                 val txt=logger?.stopRecording()
                 check(owned.all {it.awaitStopped()}) {"NTRIP_WORKER_NOT_STOPPED"}
                 live?.close();live=null
-                archive=store?.finish(txt,logger?.droppedMeasurementCount?:0,logger?.recordingErrorClass,reason)
+                archive=store?.finish(txt,logger?.droppedMeasurementCount?:0,logger?.recordingErrorClass,reason,stopRequestedAt)
                 if(archive==null)message=getString(R.string.capture_failed,reason)
                 else {
                     getSharedPreferences("ntrip_capture",MODE_PRIVATE).edit().putString("archive",archive.absolutePath).apply()
@@ -158,7 +186,8 @@ class NtripCaptureService:Service() {
                 runCatching {logger?.stopRecording()}
                 runCatching {live?.close()};live=null
                 if(wake?.isHeld==true)wake?.release()
-                publish {it.copy(active=false,stopping=false,message=message,archive=archive?.absolutePath)}
+                publish {it.copy(active=false,stopping=false,message=message,archive=archive?.absolutePath,
+                    latestMapSolution=null,remainingSeconds=null)}
                 withContext(Dispatchers.Main){stopForeground(STOP_FOREGROUND_REMOVE);stopSelf()}
                 scope.cancel()
             }

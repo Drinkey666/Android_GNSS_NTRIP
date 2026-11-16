@@ -1978,8 +1978,74 @@ static int decode_ssr7_head(rtcm_t *rtcm, int sys, int subtype, int *sync,
     return nsat;
 }
 /* decode SSR 7: phase bias --------------------------------------------------*/
+#ifdef PPP_NTRIP_SSR
+/* Current RTCM 1265-1270 / IGS phase biases: 32 bits per signal, NOT the
+ * obsolete tentative format's extra 17-bit standard deviation. Validate the
+ * complete payload before touching any satellite (including truncated CRC-ok
+ * frames). A duplicated signal is ambiguous, even when one value is zero. */
+static int decode_ssr7_current(rtcm_t *rtcm,int sys,int subtype)
+{
+    const uint8_t *sigs;
+    int i,start,j,k,np,off=0,sync,iod,nsat,disp,mw,nb,sat,prn,mode,code,bias;
+    int seen[MAXSAT]={0};
+    double udi;
+    if((nsat=decode_ssr7_head(rtcm,sys,subtype,&sync,&iod,&udi,&disp,&mw,&i))<0)return -1;
+    switch(sys) {
+        case SYS_GPS:np=6;sigs=ssr_sig_gps;break;
+        case SYS_GLO:np=subtype?6:5;sigs=ssr_sig_glo;break;
+        case SYS_GAL:np=6;sigs=ssr_sig_gal;break;
+        case SYS_CMP:np=6;sigs=ssr_sig_cmp;break;
+        case SYS_QZS:np=subtype?6:4;off=192;sigs=ssr_sig_qzs;break;
+        default:return -1;
+    }
+    start=i;
+    for(j=0;j<nsat;j++) {
+        if(i+np+22>rtcm->len*8)return -1;
+        prn=getbitu(rtcm->buff,i,np)+off;i+=np;
+        sat=satno(sys,prn);
+        if(!sat||seen[sat-1]++ || rtcm->ssr[sat-1].pbias_update)return -1;
+        nb=getbitu(rtcm->buff,i,5);i+=22;
+        if(i+nb*32>rtcm->len*8)return -1;
+        i+=nb*32;
+    }
+    if(rtcm->len*8-i>7)return -1;
+    for(k=i;k<rtcm->len*8;k++)if(getbitu(rtcm->buff,k,1))return -1;
+    i=start;
+    for(j=0;j<nsat;j++) {
+        ssr_t *s;
+        uint8_t used[MAXCODE]={0};
+        prn=getbitu(rtcm->buff,i,np)+off;i+=np;sat=satno(sys,prn);s=rtcm->ssr+sat-1;
+        nb=getbitu(rtcm->buff,i,5);i+=5;
+        s->yaw_ang=getbitu(rtcm->buff,i,9)*180.0/256.0;i+=9;
+        s->yaw_rate=getbits(rtcm->buff,i,8)*180.0/8192.0;i+=8;
+        memset(s->pbias,0,sizeof(s->pbias));memset(s->stdpb,0,sizeof(s->stdpb));
+        memset(s->pbias_valid,0,sizeof(s->pbias_valid));
+        memset(s->pbias_integer,0,sizeof(s->pbias_integer));
+        memset(s->pbias_wl,0,sizeof(s->pbias_wl));memset(s->pbias_disc,0,sizeof(s->pbias_disc));
+        for(k=0;k<nb;k++) {
+            int integer,wl,dc;
+            mode=getbitu(rtcm->buff,i,5);i+=5;integer=getbitu(rtcm->buff,i,1);i++;
+            wl=getbitu(rtcm->buff,i,2);i+=2;dc=getbitu(rtcm->buff,i,4);i+=4;
+            bias=getbits(rtcm->buff,i,20);i+=20;
+            code=sigs[mode];if(code<=0||code>MAXCODE)continue;
+            code--;
+            if(used[code]++) {s->pbias_valid[code]=2;continue;}
+            s->pbias[code]=bias*0.0001;
+            s->pbias_valid[code]=bias!=-524288;
+            s->pbias_integer[code]=integer;s->pbias_wl[code]=wl;s->pbias_disc[code]=dc;
+        }
+        s->t0[5]=rtcm->time;s->udi[5]=udi;s->iod[5]=iod;
+        s->provider[5]=rtcm->ssr_provider;s->solution[5]=rtcm->ssr_solution;
+        s->pbias_dispersive=disp;s->pbias_mw=mw;s->pbias_update=1;s->pbias_ready=0;
+    }
+    return sync?0:20;
+}
+#endif
 static int decode_ssr7(rtcm_t *rtcm, int sys, int subtype)
 {
+#ifdef PPP_NTRIP_SSR
+    if(subtype>0)return decode_ssr7_current(rtcm,sys,subtype);
+#endif
     const uint8_t *sigs;
     double udint,bias,std=0.0,pbias[MAXCODE],stdpb[MAXCODE];
     int i,j,k,type,mode,sync,iod,nsat,prn,sat,nbias,np,mw,offp,sii,swl;
@@ -2798,6 +2864,13 @@ extern int decode_rtcm3(rtcm_t *rtcm)
         case 1261: ret=decode_ssr4(rtcm,SYS_CMP,0); break; /* draft */
         case 1262: ret=decode_ssr5(rtcm,SYS_CMP,0); break; /* draft */
         case 1263: ret=decode_ssr6(rtcm,SYS_CMP,0); break; /* draft */
+#ifdef PPP_NTRIP_SSR
+        case 1265: ret=decode_ssr7_current(rtcm,SYS_GPS,0);break;
+        case 1266: ret=decode_ssr7_current(rtcm,SYS_GLO,0);break;
+        case 1267: ret=decode_ssr7_current(rtcm,SYS_GAL,0);break;
+        case 1268: ret=decode_ssr7_current(rtcm,SYS_QZS,0);break;
+        case 1270: ret=decode_ssr7_current(rtcm,SYS_CMP,0);break;
+#endif
         case   11: ret=decode_ssr7(rtcm,SYS_GPS,0); break; /* tentative */
         case   12: ret=decode_ssr7(rtcm,SYS_GAL,0); break; /* tentative */
         case   13: ret=decode_ssr7(rtcm,SYS_QZS,0); break; /* tentative */

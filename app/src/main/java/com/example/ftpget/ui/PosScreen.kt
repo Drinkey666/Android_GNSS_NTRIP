@@ -39,27 +39,12 @@ fun PosPage(state: MainUiState, modifier: Modifier = Modifier) {
         Column(verticalArrangement = Arrangement.spacedBy(GnssSpacing.md)) {
             SectionHeading(R.string.section_ppp, stringResource(R.string.ppp_source_note))
             PppResult(state.tvPppResult.text)
-            BoxWithConstraints(Modifier.fillMaxWidth()) {
-                if (maxWidth >= 440.dp) {
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(GnssSpacing.sm)) {
-                        AppAction(state.btnLivePpp, Modifier.weight(1f), ActionStyle.Primary)
-                        AppAction(state.btnRunPpp, Modifier.weight(1f), ActionStyle.Outline)
-                    }
-                } else {
-                    Column(Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(GnssSpacing.sm)) {
-                        AppAction(state.btnLivePpp, Modifier.fillMaxWidth(), ActionStyle.Primary)
-                        AppAction(state.btnRunPpp, Modifier.fillMaxWidth(), ActionStyle.Outline)
-                    }
-                }
-            }
+            AppAction(state.btnRunPpp, Modifier.fillMaxWidth(), ActionStyle.Outline)
         }
         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
         ReferenceErrorSection(state)
         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
         ReferencePositionSection(state)
-        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-        NtripSection(state, compact = true)
     }
 }
 

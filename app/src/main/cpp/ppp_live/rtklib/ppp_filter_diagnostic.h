@@ -1,5 +1,8 @@
 /* Compile with ENABLE_FILTER_DIAGNOSTIC in every relevant translation unit.
- * Observer-only, one PPP session per PC process. No estimator writes. */
+ * Observer-only, one PPP session per PC process. No estimator writes.
+ * RTK_PPP_FILTER_DIAGNOSTIC_START_EPOCH: zero-based PPP-call start (default 0).
+ * RTK_PPP_FILTER_DIAGNOSTIC_MAX_EPOCHS: 1..600 PPP calls (default 6).
+ * These counters exclude SSR waiting callbacks; they never alter readiness. */
 #ifndef PPP_FILTER_DIAGNOSTIC_H
 #define PPP_FILTER_DIAGNOSTIC_H
 #ifdef ENABLE_FILTER_DIAGNOSTIC

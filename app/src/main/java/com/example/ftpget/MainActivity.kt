@@ -1,7 +1,6 @@
 package com.example.ftpget // ★ 务必确保这里的包名和你的项目一致 ★
 
 import android.Manifest
-import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.annotation.SuppressLint
 import android.content.Context
@@ -12,7 +11,6 @@ import android.location.GnssStatus
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
@@ -26,10 +24,6 @@ import com.example.ftpget.ui.PositionFix
 import com.example.ftpget.ui.UiDialog
 import com.example.ftpget.ui.GnssTheme
 import com.example.ftpget.ui.GnssApp
-import android.webkit.WebView
-import android.webkit.WebViewClient
-import android.webkit.WebResourceRequest
-import android.webkit.WebResourceError
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -97,14 +91,11 @@ class MainActivity : AppCompatActivity() {
     private val tvMeasurementSummary get() = ui.tvMeasurementSummary
     private val tvHeaderStatus get() = ui.tvHeaderStatus
     private val tvDevicePosition get() = ui.tvDevicePosition
-    private val tvMapStatus get() = ui.tvMapStatus
-    private lateinit var mapWebView: WebView
-    private val btnRefreshMap get() = ui.btnRefreshMap
     private lateinit var locationManager: LocationManager
-    private var lastLocation: Location? = null
     private var gnssUiRegistered = false
     private var lastMeasurementRefresh = 0L
-    private var lastMapPosition: Pair<Double, Double>? = null
+    private var mapCaptureActive = false
+    private var lastCaptureMapResult: LivePppResult? = null
 
     // 只用于显示的回调，与 TXT 采集、实时 JNI 回调分开。
     // 下面每 1000 ms 刷新且只显示 15 条不代表只采集 15 条，也不会给采集数据降采样。
@@ -261,7 +252,7 @@ class MainActivity : AppCompatActivity() {
         ui.selectedPage = savedInstanceState?.getInt("selectedPage") ?: 0
         setContent {
             GnssTheme {
-                GnssApp(ui, skyPlotView, signalBarView, satelliteTable, measurementTable, mapWebView,
+                GnssApp(ui, skyPlotView, signalBarView, satelliteTable, measurementTable,
                     onPageSelected = ::selectPage)
             }
         }
@@ -302,25 +293,6 @@ class MainActivity : AppCompatActivity() {
             GnssTableColumn("方位角", 72),
             GnssTableColumn("定位", 64, Gravity.CENTER_HORIZONTAL)
         ))
-        mapWebView = WebView(this)
-        mapWebView.webViewClient = object : WebViewClient() {
-            override fun onReceivedError(
-                view: WebView, request: WebResourceRequest, error: WebResourceError
-            ) {
-                if (request.isForMainFrame) {
-                    tvMapStatus.text = "地图暂时无法加载，请检查网络；设备坐标仍可在 POS 页面查看。"
-                    ui.mapLoading = false
-                    ui.mapLoadError = true
-                }
-            }
-            override fun onPageFinished(view: WebView, url: String) {
-                ui.mapLoading = false
-            }
-        }
-        mapWebView.settings.javaScriptEnabled = true
-        mapWebView.settings.allowFileAccess = false
-        mapWebView.settings.allowContentAccess = false
-
         updateRecordButtons(false)
     }
 
@@ -330,7 +302,7 @@ class MainActivity : AppCompatActivity() {
                 this, Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED) {
             visualPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-        } else if (page == 3) refreshMap()
+        }
     }
 
     private fun setupListeners() {
@@ -365,13 +337,10 @@ class MainActivity : AppCompatActivity() {
                 ) == PackageManager.PERMISSION_GRANTED) startLivePpp()
             else livePppPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
-        btnRefreshMap.setOnClickListener { refreshMap(force = true) }
-        ui.btnOpenMap.setOnClickListener { openExternalMap() }
     }
 
     override fun onResume() {
         super.onResume()
-        mapWebView.onResume()
         registerGnssUi()
     }
 
@@ -382,13 +351,11 @@ class MainActivity : AppCompatActivity() {
             locationManager.removeUpdates(uiLocationListener)
             gnssUiRegistered = false
         }
-        mapWebView.onPause()
         super.onPause()
     }
 
     override fun onDestroy() {
         stopLivePpp()
-        mapWebView.destroy()
         super.onDestroy()
     }
 
@@ -404,6 +371,16 @@ class MainActivity : AppCompatActivity() {
         })
     }
     private fun setupCaptureSession() {
+        val capturePreferences = getSharedPreferences("ntrip_capture", MODE_PRIVATE)
+        ui.captureDurationMinutes = capturePreferences
+            .getInt("duration_minutes", MAX_NTRIP_CAPTURE_MINUTES)
+            .coerceIn(1, MAX_NTRIP_CAPTURE_MINUTES)
+        ui.onCaptureDurationChanged = { minutes ->
+            if (!CaptureSession.display.value.active && minutes in 1..MAX_NTRIP_CAPTURE_MINUTES) {
+                ui.captureDurationMinutes = minutes
+                capturePreferences.edit().putInt("duration_minutes", minutes).apply()
+            }
+        }
         ui.onPrepareAtmosphere = {
             if(!ui.atmosphereBusy && !CaptureSession.display.value.active) {
                 ui.atmosphereBusy=true
@@ -465,7 +442,9 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 CaptureSession.display.collect { display ->
+                    updateCaptureMapPosition(display)
                     ui.captureActive=display.active;ui.captureStopping=display.stopping;ui.captureBytes=display.bytes
+                    ui.captureRemainingSeconds=display.remainingSeconds
                     ui.captureSsrFrames=display.ssrFrames;ui.captureNavFrames=display.navFrames
                     ui.captureBiasFrames=display.biasFrames
                     ui.captureMessage.text=display.message
@@ -474,8 +453,13 @@ class MainActivity : AppCompatActivity() {
                     if(display.ssr.isNotEmpty())ui.ntripSsrStatus.text=getString(R.string.capture_ssr_status,captureNetworkStatus(display.ssr))
                     if(display.nav.isNotEmpty())ui.ntripNavStatus.text=getString(R.string.capture_nav_status,captureNetworkStatus(display.nav))
                     if(display.bias.isNotEmpty())ui.ntripBiasStatus.text=getString(R.string.capture_bias_status,captureNetworkStatus(display.bias))
-                    ui.ntripDataStatus.text=if(display.pppStatus.contains("WHU_OSB_WAIT_NEXT_ESTIMATE"))
-                        getString(R.string.whu_osb_warmup) else display.pppStatus
+                    ui.ntripDataStatus.text = when (display.pppStatus.substringBefore(';')) {
+                        "SSR_WAIT: MISSING_ORBIT_CLOCK_CODE_BIAS" -> getString(R.string.capture_wait_whu)
+                        "SSR_WAIT: WHU_OSB_WAIT_COMPLETE_ESTIMATE" -> getString(R.string.capture_wait_code_bias)
+                        "SSR_WAIT: WHU_OSB_ESTIMATE_NOT_ADVANCING" -> getString(R.string.capture_wait_fresh_code_bias)
+                        "SSR_WAIT: BROADCAST_IOD_OR_SATPOS_NOT_READY" -> getString(R.string.capture_wait_broadcast)
+                        else -> display.pppStatus
+                    }
                     display.solution?.let { result ->
                         ui.comparisonSolution=if(result.q==6) SolutionCoordinate.fromLive(result) else null
                         ui.comparisonIsPostprocessed=false
@@ -489,6 +473,19 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun updateCaptureMapPosition(display: CaptureDisplay) {
+        if (mapCaptureActive != display.active) {
+            ui.mapSolution = null
+            mapCaptureActive = display.active
+        }
+        val result = display.latestMapSolution.takeIf { display.active }
+        if (result != lastCaptureMapResult) {
+            ui.mapSolution = result?.let(MapPosition::live)
+            lastCaptureMapResult = result
+        }
+    }
+
     private fun startCaptureSession() {
         if(CaptureSession.display.value.active || gnssLogger.isRecording || livePppController?.isRunning()==true) {
             showToast(getString(R.string.capture_busy));return
@@ -497,7 +494,8 @@ class MainActivity : AppCompatActivity() {
             ui.ntripUser.any {it==':' || it=='\r' || it=='\n'} || ui.ntripPassword.any {it=='\r' || it=='\n'}) {
             showToast(getString(R.string.capture_config_invalid));return
         }
-        CaptureSession.pending=CaptureStart(ui.ntripSettings,NtripCredentials(ui.ntripUser,ui.ntripPassword),referencePositionStore.current)
+        CaptureSession.pending=CaptureStart(ui.ntripSettings,NtripCredentials(ui.ntripUser,ui.ntripPassword),
+            referencePositionStore.current,ui.captureDurationMinutes)
         CaptureSession.display.value=CaptureDisplay(active=true,message=getString(R.string.capture_active))
         try {ContextCompat.startForegroundService(this,Intent(this,NtripCaptureService::class.java))}
         catch(_:Exception) {CaptureSession.pending=null;CaptureSession.display.value=CaptureDisplay(message=getString(R.string.capture_failed,"SERVICE_START_DENIED"))}
@@ -521,10 +519,12 @@ class MainActivity : AppCompatActivity() {
                 if (it.contains("已停止") || it.startsWith("PPP 初始化失败") ||
                     it.startsWith("PPP 产品已过期")) {
                     btnLivePpp.text = "启动实时 PPP"; ui.ntripRunning = false
+                    ui.mapSolution = null
                 }
                 if (it.startsWith("SSR_WAIT") || it.contains("已停止")) ui.comparisonSolution = null
             },
             onResult = { result ->
+                MapPosition.live(result)?.let { ui.mapSolution = it }
                 ui.comparisonSolution = SolutionCoordinate.fromLive(result)
                 ui.comparisonIsPostprocessed = false
                 tvPppResult.text = if (result.q == 0) {
@@ -552,6 +552,7 @@ class MainActivity : AppCompatActivity() {
             referenceProvider = { referencePositionStore.current },
         )
         if (controller.start()) {
+            ui.mapSolution = null
             livePppController = controller
             ui.ntripRunning = true
             btnLivePpp.text = "停止实时 PPP"
@@ -559,6 +560,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun stopLivePpp() {
+        if (livePppController != null) ui.mapSolution = null
         livePppController?.stop()
         livePppController = null
         ui.ntripRunning = false
@@ -590,60 +592,11 @@ class MainActivity : AppCompatActivity() {
 
     // 此处是 Android 系统定位坐标和 accuracy，不是 LivePppResult，也不是实测误差真值。
     private fun updateDeviceLocation(location: Location) {
-        lastLocation = location
         tvDevicePosition.text = "纬度  %.6f°\n经度  %.6f°\n高度  %.1f m\n水平精度  ±%.1f m".format(
             Locale.US, location.latitude, location.longitude, location.altitude,
             location.accuracy
         )
-        tvMapStatus.text = "设备位置  %.6f°, %.6f° · 精度 ±%.1f m".format(
-            Locale.US, location.latitude, location.longitude, location.accuracy
-        )
         ui.positionFix = PositionFix(location.latitude, location.longitude, location.altitude, location.accuracy)
-        if (ui.selectedPage == 3 && lastMapPosition == null) refreshMap()
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun refreshMap(force: Boolean = false) {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
-            PackageManager.PERMISSION_GRANTED) {
-            tvMapStatus.text = "请先授予定位权限，再查看地图。"
-            return
-        }
-        val location = lastLocation ?: locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-        if (location == null) {
-            tvMapStatus.text = "正在等待 GPS 定位，请到室外后刷新。"
-            return
-        }
-        val position = location.latitude to location.longitude
-        if (!force && lastMapPosition == position) return
-        lastMapPosition = position
-        val lat = location.latitude
-        val lon = location.longitude
-        val bbox = "%.5f,%.5f,%.5f,%.5f".format(
-            Locale.US, lon - 0.006, lat - 0.004, lon + 0.006, lat + 0.004
-        )
-        val url = "https://www.openstreetmap.org/export/embed.html?bbox=" +
-            Uri.encode(bbox) + "&layer=mapnik&marker=" +
-            "%.6f".format(Locale.US, lat) + "%2C" + "%.6f".format(Locale.US, lon)
-        ui.mapLoadError = false
-        ui.mapLoading = true
-        mapWebView.loadUrl(url)
-    }
-
-    private fun openExternalMap() {
-        val location = lastLocation
-        if (location == null) {
-            showToast("暂无设备位置，请先等待 GPS 定位")
-            return
-        }
-        val lat = location.latitude
-        val lon = location.longitude
-        val uri = Uri.parse("geo:$lat,$lon?q=$lat,$lon")
-        try {
-            startActivity(Intent(Intent.ACTION_VIEW, uri))
-        } catch (_: ActivityNotFoundException) {
-            showToast("手机上未找到可打开的地图应用")
-        }
     }
 
     /** 启动 TXT 记录；屏幕常亮只作用于当前窗口，不等于后台定位服务或硬件 WakeLock。 */
@@ -1240,6 +1193,7 @@ class MainActivity : AppCompatActivity() {
             var total = 0
             var q6 = 0
             var last: List<String>? = null
+            var latestMapPosition: MapPosition? = null
             posFile.forEachLine { line ->
                 if (!line.startsWith("%") && line.isNotBlank()) {
                     val parts = line.trim().split("\\s+".toRegex())
@@ -1247,9 +1201,11 @@ class MainActivity : AppCompatActivity() {
                         total++
                         if (parts[5] == "6") q6++
                         last = parts
+                        MapPosition.postprocessed(parts)?.let { latestMapPosition = it }
                     }
                 }
             }
+            latestMapPosition?.let { ui.mapSolution = it }
             val resultStr = last?.let { parts ->
                 "历元 $total，Q6 $q6\n末历元：纬度 ${parts[2]}，经度 ${parts[3]}，" +
                     "高程 ${parts[4]} m，Q=${parts[5]}"

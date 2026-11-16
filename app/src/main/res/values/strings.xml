@@ -30,7 +30,7 @@
     <string name="ntrip_save_settings">保存设置</string>
     <string name="section_ppp">PPP 解算</string>
     <string name="ppp_latest_result">最近结果</string>
-    <string name="section_map">设备地图</string>
+    <string name="section_map">高德地图</string>
     <string name="label_duration">采集时长</string>
     <string name="label_latitude">纬度</string>
     <string name="label_longitude">经度</string>
@@ -47,8 +47,6 @@
     <string name="action_export_latest">导出最近采集的 TXT</string>
     <string name="action_download">开始下载</string>
     <string name="action_export_products">导出已下载产品</string>
-    <string name="action_refresh_map">定位到当前位置</string>
-    <string name="action_external_map">在手机地图中打开</string>
     <string name="measurement_hint">表格可左右滑动查看完整数据</string>
     <string name="location_note">设备定位并非 PPP 解算结果</string>
     <string name="no_fix">等待手机定位…</string>
@@ -61,11 +59,14 @@
     <string name="action_close">关闭</string>
     <string name="ppp_report_title">PPP 引擎诊断报告</string>
     <string name="map_load_error">地图暂时无法加载</string>
-    <string name="map_loading">正在载入设备地图…</string>
-    <string name="map_fix_ready">定位有效</string>
+    <string name="map_loading">正在加载高德地图…</string>
     <string name="map_waiting_fix">等待定位</string>
-    <string name="map_coordinates">%1$.6f°  %2$.6f°  ·  ±%3$.1f m</string>
-    <string name="map_load_hint">请检查网络连接，然后点击“定位到当前位置”重试。设备坐标仍可在定位页查看。</string>
+    <string name="map_waiting_hint">获取设备位置后将在地图上标注。请检查系统定位和精确定位权限。</string>
+    <string name="map_current_source">当前来源 · %1$s</string>
+    <string name="map_source_live">实时 PPP</string>
+    <string name="map_source_post">后处理 PPP</string>
+    <string name="map_coordinates">原始坐标 WGS84\n纬度 %1$.8f° · 经度 %2$.8f°</string>
+    <string name="map_load_hint">请检查网络连接，然后重新打开地图页。</string>
     <string name="sat_count">%1$d 颗可见</string>
     <string name="wait_signal">等待信号</string>
     <string name="fix_available">设备定位有效</string>
@@ -157,6 +158,11 @@
     <string name="ntrip_invalid">检查地址、端口和两个不同的挂载点，账号不能包含冒号或换行。</string>
     <string name="ntrip_explanation">Q=6 表示浮点 PPP，Q=5 为单点。连接成功不代表产品兼容或定位精度已验证。</string>
     <string name="capture_start">启动实时解算并留档</string>
+    <string name="capture_duration_selected">采集时长 · %1$d 分钟</string>
+    <string name="capture_duration_title">采集时长</string>
+    <string name="capture_duration_unit">分钟</string>
+    <string name="capture_duration_range">设置 1 至 %1$d 分钟，到点自动保存录制包。</string>
+    <string name="capture_remaining_time">剩余 %1$02d:%2$02d</string>
     <string name="capture_stop">停止并保存</string>
     <string name="capture_export">导出最近录制包（ZIP）</string>
     <string name="capture_choose_folder">选择公共保存目录</string>
@@ -199,5 +205,8 @@
     <string name="capture_atmosphere_ready">预报文件准备完成；启动后按 GNSS 时间再检查实际覆盖</string>
     <string name="capture_atmosphere_incomplete">预报文件未全部准备成功；请查看下载提示，PPP 不会绕过产品检查</string>
     <string name="capture_atmosphere_failed">预报文件准备失败；保留已有文件，PPP 不会绕过产品检查</string>
-    <string name="whu_osb_warmup">正在核验 WHU 偏差估计的连续更新，首次可能等待约 5 分钟；断流后重新核验。原始数据持续留档，尚未进入 PPP 更新。</string>
+    <string name="capture_wait_whu">等待可配套的 WHU 轨钟和码偏差</string>
+    <string name="capture_wait_code_bias">等待收到完整的 WHU 码偏差</string>
+    <string name="capture_wait_fresh_code_bias">WHU 码偏差估计长时间未更新，正在等下一份</string>
+    <string name="capture_wait_broadcast">等待匹配轨钟的广播星历</string>
 </resources>

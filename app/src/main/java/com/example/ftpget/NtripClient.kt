@@ -12,6 +12,8 @@ import java.util.Locale
 import javax.net.ssl.SSLSocket
 import javax.net.ssl.SSLSocketFactory
 
+internal const val WHU_SSR_PROFILE = "WHU_OSB_FIRST_COMPLETE_V2"
+
 /** Not a data class: generated toString/copy must never expose a password. */
 class NtripCredentials(val user: String, val password: String) {
     override fun toString() = "NtripCredentials(REDACTED)"

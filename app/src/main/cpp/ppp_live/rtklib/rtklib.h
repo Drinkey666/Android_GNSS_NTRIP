@@ -859,6 +859,9 @@ typedef struct {        /* SSR correction type */
 #ifdef PPP_NTRIP_SSR
     int provider[6], solution[6]; /* per-component SSR identity */
     uint8_t cbias_valid[MAXCODE]; /* zero is valid; absence is not zero */
+    uint8_t pbias_valid[MAXCODE]; /* 0:absent/invalid,1:present,2:duplicate conflict */
+    uint8_t pbias_integer[MAXCODE],pbias_wl[MAXCODE],pbias_disc[MAXCODE];
+    uint8_t pbias_dispersive,pbias_mw,pbias_update,pbias_ready;
     int bds_iod_mode;    /* modern standard SSR: IOD=(GPST TOC/720)%240, not AODE */
     int bds_toe_mod;     /* raw 10-bit DF470; kept separate from 8-bit DF471 */
 #endif
@@ -1138,6 +1141,7 @@ typedef struct {        /* processing options type */
     int ppp_rcb_datum,ppp_wet_correction,ppp_iekf; /* explicit estimator profile, 0=legacy */
     int ppp_gal_e5b;    /* opt-in raw E5b C7Q/L7Q with its own receiver code bias */
     int ppp_physical_atmosphere; /* physical I_L1 + relative actual-code RCB; opt-in */
+    int ppp_ssr_phase_osb; /* optional validated WHU phase correction; FLOAT only */
 } prcopt_t;
 
 typedef struct {        /* solution options type */
@@ -1289,6 +1293,11 @@ typedef struct {        /* satellite status type */
     /* Persistent half-cycle-unresolved LLI is a state, not an epochly slip. */
     uint8_t ppp_half_seen[NFREQ];
     uint8_t ppp_half_invalid[NFREQ];
+#ifdef PPP_NTRIP_SSR
+    uint8_t ppp_pb_seen[NFREQ],ppp_pb_mode[NFREQ],ppp_pb_signal[NFREQ];
+    uint8_t ppp_pb_disc[NFREQ];
+    int ppp_pb_provider[NFREQ],ppp_pb_solution[NFREQ],ppp_pb_iod[NFREQ];
+#endif
     /* PPP diagnostics only: corrected raw code-minus-phase arc history (m). */
     gtime_t ppp_diag_cmc_start[NFREQ];
     gtime_t ppp_diag_cmc_time[NFREQ];

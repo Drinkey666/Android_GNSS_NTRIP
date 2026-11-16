@@ -6,6 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.ftpget.ReferencePosition
 import com.example.ftpget.SolutionCoordinate
+import com.example.ftpget.MapPosition
+import com.example.ftpget.MAX_NTRIP_CAPTURE_MINUTES
 
 /** Observable presentation values for the existing Activity's business callbacks. */
 class UiText(initial: String = "") {
@@ -55,6 +57,9 @@ data class UiDialog(
 class MainUiState {
     var captureActive by mutableStateOf(false)
     var captureStopping by mutableStateOf(false)
+    var captureDurationMinutes by mutableIntStateOf(MAX_NTRIP_CAPTURE_MINUTES)
+    var captureRemainingSeconds by mutableStateOf<Int?>(null)
+    var onCaptureDurationChanged: (Int) -> Unit = {}
     var captureBytes by mutableStateOf(0L)
     var captureSsrFrames by mutableStateOf(0L)
     var captureNavFrames by mutableStateOf(0L)
@@ -88,8 +93,7 @@ class MainUiState {
     var comparisonIsPostprocessed by mutableStateOf(false)
     var onReferenceChanged: (ReferencePosition?) -> Unit = {}
     var dialog by mutableStateOf<UiDialog?>(null)
-    var mapLoading by mutableStateOf(false)
-    var mapLoadError by mutableStateOf(false)
+    internal var mapSolution by mutableStateOf<MapPosition?>(null)
 
     val chronometer = UiChronometer()
     val tvStatus = UiText("等待采集…")
@@ -117,7 +121,4 @@ class MainUiState {
     val tvMeasurementSummary = UiText("等待原始观测…")
     val tvHeaderStatus = UiText("等待 GNSS 信号")
     val tvDevicePosition = UiText("等待手机定位…")
-    val tvMapStatus = UiText("等待设备定位。点击下方按钮刷新地图。")
-    val btnRefreshMap = UiAction("定位到当前位置")
-    val btnOpenMap = UiAction("在手机地图中打开")
 }

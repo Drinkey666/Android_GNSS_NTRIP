@@ -94,6 +94,7 @@ internal class LiveSsrSession(
         val decision=SystemClock.elapsedRealtimeNanos()-store.startElapsed
         if(disabled)return@enqueue
         if(settings.correctionMount!="SSRC00WHU0" || settings.biasMount!="OSBC00WHU1" || !settings.centerOfMass) {
+            store.productSetupFailed("SSR_PROFILE", "WHU SSRC00WHU0(CoM) + OSBC00WHU1 required")
             disabled=true;publish("仅采集：实时解算要求 WHU SSRC00WHU0(CoM) + OSBC00WHU1",null);return@enqueue
         }
         if(!initialized) {
@@ -106,15 +107,21 @@ internal class LiveSsrSession(
                 if(!productsPrepared){prepareProducts();productsPrepared=true}
                 LivePppProducts.resolveSsr(products,event.clock)
             }catch(e:Exception) {
+                store.productSetupFailed("LOCAL_PRODUCTS", e.message)
                 publish("PPP 未启用：${e.message}",null);return@enqueue
             }
             val frozen=snapshot(paths)
             nativeTouched=true
             initialized=LivePppNative.nativeInitSsr(frozen,File(dir,"live.trace").absolutePath,true)
-            if(!initialized){disabled=true;publish("PPP 未启用：${LivePppNative.nativeLastError()}",null);return@enqueue}
+            if(!initialized){
+                val reason = LivePppNative.nativeLastError()
+                store.productSetupFailed("NATIVE_INIT", reason)
+                disabled=true;publish("PPP 未启用：$reason",null);return@enqueue
+            }
             check(LivePppNative.nativeUseWhuProfile()) { "WHU_PROFILE_INIT_FAILED" }
-            File(dir,"profile.txt").writeText(LivePppNative.nativeProfile()+"\nSOURCE=WHU_SSR_PLUS_FORECAST\nSSR_PROFILE=WHU_OSB_CONTINUITY_V1\n")
+            File(dir,"profile.txt").writeText(LivePppNative.nativeProfile()+"\nSOURCE=WHU_SSR_PLUS_FORECAST\nSSR_PROFILE=$WHU_SSR_PROFILE\n")
             primeRecordedPrefix()
+            store.productInitialized()
         }
         val values=LivePppNative.nativeProcessEpoch(event.clock,event.measurements.toTypedArray())
         val stamp=LivePppNative.nativeEpochStamp()
@@ -127,11 +134,12 @@ internal class LiveSsrSession(
         epochs.flush()
         corrections.write("${callback-store.startElapsed},${LivePppNative.nativeCorrectionStatus().replace(',',';')}\n");corrections.flush()
         observations.write(LivePppNative.nativeObsRows());observations.flush()
-        if(values==null){publish(status,null);return@enqueue}
+        if(values==null){store.recordPppResult(null,status,callback);publish(status,null);return@enqueue}
         val r=LivePppResult.fromNative(values)
         solutions.write(String.format(Locale.US,"%d,%.9f,%d,%d,%d,%.9f,%.9f,%.9f,%.12f,%.12f,%.6f,%.6f,%.6f,%.6f,%.3f\n",
             r.week,r.tow,r.q,r.satellites,r.observedSatellites,r.x,r.y,r.z,r.latitude,r.longitude,r.height,r.stdX,r.stdY,r.stdZ,r.processingMs))
         solutions.flush();errors.write(PositionErrorCsv.row(reference,SolutionCoordinate.fromLive(r),"LIVE"));errors.flush()
+        store.recordPppResult(r,status,callback)
         publish(if(r.q==6)"PPP 浮点解；精度尚待 PC 验证" else "当前 Q=${r.q}，不代表 PPP 成功",r)
     }
     /** Called only after both the socket workers and Raw callback producer stop. */

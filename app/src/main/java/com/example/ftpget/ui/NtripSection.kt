@@ -17,11 +17,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.ftpget.NtripSettings
+import com.example.ftpget.MAX_NTRIP_CAPTURE_MINUTES
 import com.example.ftpget.R
 
 @Composable
-internal fun NtripSection(state: MainUiState, compact: Boolean = false) {
+internal fun NtripSection(state: MainUiState) {
     var editing by remember { mutableStateOf(false) }
+    var editingDuration by rememberSaveable { mutableStateOf(false) }
     var expanded by rememberSaveable { mutableStateOf(false) }
     Column(verticalArrangement = Arrangement.spacedBy(GnssSpacing.md)) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -33,8 +35,7 @@ internal fun NtripSection(state: MainUiState, compact: Boolean = false) {
                 Text(stringResource(R.string.ntrip_settings))
             }
         }
-        Surface(color = if (compact) MaterialTheme.colorScheme.surfaceVariant
-                else MaterialTheme.colorScheme.primaryContainer,
+        Surface(color = MaterialTheme.colorScheme.primaryContainer,
             shape = MaterialTheme.shapes.medium) {
             Column(Modifier.fillMaxWidth().padding(GnssSpacing.lg),
                 verticalArrangement = Arrangement.spacedBy(GnssSpacing.md)) {
@@ -46,28 +47,33 @@ internal fun NtripSection(state: MainUiState, compact: Boolean = false) {
                     Text(stringResource(if (state.captureActive) R.string.ntrip_recording
                         else R.string.ntrip_standby),
                         style = MaterialTheme.typography.labelMedium,
-                        color = if (compact) MaterialTheme.colorScheme.onSurfaceVariant
-                        else MaterialTheme.colorScheme.onPrimaryContainer)
+                        color = MaterialTheme.colorScheme.onPrimaryContainer)
                 }
-                Text(if (state.captureActive && state.captureMessage.text.isNotBlank())
-                    state.captureMessage.text else state.ntripDataStatus.text,
+                Text(if (state.captureMessage.text.isNotBlank()) state.captureMessage.text
+                    else state.ntripDataStatus.text,
                     style = MaterialTheme.typography.titleMedium,
-                    color = if (compact) MaterialTheme.colorScheme.onSurface
-                    else MaterialTheme.colorScheme.onPrimaryContainer,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
                     maxLines = 3, overflow = TextOverflow.Ellipsis)
                 Text(stringResource(R.string.ntrip_endpoint,
                     state.ntripSettings.host, state.ntripSettings.port),
                     style = MaterialTheme.typography.bodySmall,
-                    color = if (compact) MaterialTheme.colorScheme.onSurfaceVariant
-                    else MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f),
+                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f),
                     maxLines = 1, overflow = TextOverflow.Ellipsis)
                 if (!state.captureActive) {
+                    TextButton(onClick = { editingDuration = true }, enabled = !state.ntripRunning) {
+                        Text(stringResource(R.string.capture_duration_selected, state.captureDurationMinutes))
+                    }
                     Button(onClick = state.onCaptureStart,
                         enabled = !state.ntripRunning && !state.atmosphereBusy,
                         modifier = Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.small) {
                         Text(stringResource(R.string.capture_start))
                     }
                 } else {
+                    state.captureRemainingSeconds?.let { seconds ->
+                        Text(stringResource(R.string.capture_remaining_time, seconds / 60, seconds % 60),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer)
+                    }
                     FilledTonalButton(onClick = state.onCaptureStop,
                         enabled = !state.captureStopping,
                         modifier = Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.small) {
@@ -76,15 +82,14 @@ internal fun NtripSection(state: MainUiState, compact: Boolean = false) {
                 }
             }
         }
-        if (!compact) {
-            Column(verticalArrangement = Arrangement.spacedBy(GnssSpacing.xs)) {
-                StreamStatus(state.ntripSsrStatus.text)
-                StreamStatus(state.ntripNavStatus.text)
-                StreamStatus(state.ntripBiasStatus.text.ifBlank {
-                    stringResource(R.string.capture_bias_status,
-                        stringResource(R.string.ntrip_disconnected))
-                })
-            }
+        Column(verticalArrangement = Arrangement.spacedBy(GnssSpacing.xs)) {
+            if (state.captureActive) DetailText(state.ntripDataStatus.text)
+            StreamStatus(state.ntripSsrStatus.text)
+            StreamStatus(state.ntripNavStatus.text)
+            StreamStatus(state.ntripBiasStatus.text.ifBlank {
+                stringResource(R.string.capture_bias_status,
+                    stringResource(R.string.ntrip_disconnected))
+            })
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically) {
@@ -102,14 +107,6 @@ internal fun NtripSection(state: MainUiState, compact: Boolean = false) {
         }
         if (expanded) {
             Column(verticalArrangement = Arrangement.spacedBy(GnssSpacing.sm)) {
-                if (compact) {
-                    StreamStatus(state.ntripSsrStatus.text)
-                    StreamStatus(state.ntripNavStatus.text)
-                    StreamStatus(state.ntripBiasStatus.text.ifBlank {
-                        stringResource(R.string.capture_bias_status,
-                            stringResource(R.string.ntrip_disconnected))
-                    })
-                }
                 DetailText(stringResource(R.string.capture_ssr_label,
                     state.ntripSettings.correctionMount))
                 DetailText(stringResource(R.string.capture_nav_label,
@@ -142,6 +139,31 @@ internal fun NtripSection(state: MainUiState, compact: Boolean = false) {
         }
     }
     if (editing) NtripEditor(state, onDismiss = { editing = false })
+    if (editingDuration) {
+        var input by rememberSaveable { mutableStateOf(state.captureDurationMinutes.toString()) }
+        val minutes = input.toIntOrNull()?.takeIf { it in 1..MAX_NTRIP_CAPTURE_MINUTES }
+        AlertDialog(
+            onDismissRequest = { editingDuration = false },
+            title = { Text(stringResource(R.string.capture_duration_title)) },
+            text = {
+                OutlinedTextField(input, { input = it },
+                    label = { Text(stringResource(R.string.capture_duration_unit)) },
+                    supportingText = { Text(stringResource(R.string.capture_duration_range, MAX_NTRIP_CAPTURE_MINUTES)) },
+                    singleLine = true,
+                    isError = minutes == null,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
+            },
+            confirmButton = {
+                TextButton(enabled = minutes != null, onClick = {
+                    minutes?.let(state.onCaptureDurationChanged)
+                    editingDuration = false
+                }) { Text(stringResource(R.string.ntrip_save_settings)) }
+            },
+            dismissButton = {
+                TextButton(onClick = { editingDuration = false }) { Text(stringResource(R.string.action_cancel)) }
+            },
+        )
+    }
 }
 
 @Composable

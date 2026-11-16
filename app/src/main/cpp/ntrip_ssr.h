@@ -21,9 +21,14 @@ public:
     std::string reason="WAITING_RTCM";
     ~NtripSsr();
     bool init();
-    bool useWhuOsb(const std::string &orbit_mount,const std::string &bias_mount,bool com);
+    static constexpr const char *WHU_CONTINUITY_PROFILE="WHU_OSB_CONTINUITY_V1";
+    static constexpr const char *WHU_FIRST_COMPLETE_PROFILE="WHU_OSB_FIRST_COMPLETE_V2";
+    bool useWhuOsb(const std::string &orbit_mount,const std::string &bias_mount,bool com,
+                   bool start_with_first_bias=false);
     bool usable(int sat,gtime_t epoch,std::string *why=nullptr) const;
+    bool phaseUsable(int sat,gtime_t epoch,std::string *why=nullptr) const;
     bool whuProfile() const { return whu_osb; }
+    const char *profileName() const;
     void resetTransport(int channel); // discard fragments/incomplete batches, keep completed data
     void feed(nav_t *nav,int channel,const unsigned char *data,int count,gtime_t anchor);
     int prepare(nav_t *nav,const prcopt_t *opt,gtime_t epoch,obsd_t *obs,int n);
@@ -38,9 +43,17 @@ private:
     static constexpr double WHU_ESTIMATION_SECONDS=300.0;
     static constexpr double WHU_SENDING_SECONDS=5.0;
     bool whu_osb=false;
+    bool whu_start_with_first_bias=false;
     int whu_orbit_iod=-1,whu_bias_iod=-1;
     struct BiasContinuity {gtime_t epoch{},received{},advanced{};bool consecutive=false;};
     BiasContinuity bias_continuity[MAXSAT]{};
+    BiasContinuity phase_continuity[MAXSAT]{};
+    int phase_provider=-1,phase_solution=-1,phase_iod=-1;
+    bool phase_blocked=false;
+    struct PhaseBatch {bool open=false;int key=0,epoch=0,iod=0,provider=0,solution=0;};
+    PhaseBatch phase_batch[3]{};
+    void rollbackPhase(int channel);
+    void commitPhase(int channel,gtime_t receipt);
     bool observeWhuBias(int sat,const ssr_t &s,gtime_t receipt);
     void mergeEphemeris(nav_t *nav,const rtcm_t *r);
 };

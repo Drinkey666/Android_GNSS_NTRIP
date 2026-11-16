@@ -5,11 +5,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 
 static FILE *fd_file;
 static const rtk_t *fd_owner;
 static int fd_epoch=-1,fd_trial=-1,fd_iteration,fd_call,fd_in_filter;
 static int fd_np,fd_nc,fd_nt,fd_ni,fd_nd,fd_nf,fd_nx,fd_open_attempted,fd_scope;
+static int fd_first_epoch=0,fd_epoch_count=6;
 static gtime_t fd_time;
 static uint8_t fd_signals[MAXSAT][NFREQ];
 static const char *fd_profile;
@@ -37,7 +39,19 @@ static void fd_finish(void)
         trace(2,"$FILTER_DIAGNOSTIC_FAILURE,reason=IO_ERROR,estimator_unchanged=1\n");
     }
 }
-int ppp_fd_enabled(void){return fd_file && fd_owner && fd_scope && fd_epoch>=0 && fd_epoch<6;}
+/* Bounded opt-in windows allow late/formal-start diagnostics without replacing
+ * the SSR startup policy. Invalid settings retain the safe default window. */
+static int fd_env_integer(const char *name,int fallback,int maximum)
+{
+    const char *value=getenv(name);char *end;long result;
+    if(!value || !*value)return fallback;
+    errno=0;result=strtol(value,&end,10);
+    if(errno || end==value || *end || result<0 || result>maximum)return fallback;
+    return (int)result;
+}
+int ppp_fd_enabled(void)
+{return fd_file && fd_owner && fd_scope && fd_epoch>=fd_first_epoch &&
+    fd_epoch-fd_first_epoch<fd_epoch_count;}
 
 static void fd_identity(int index)
 {
@@ -63,6 +77,9 @@ void ppp_fd_epoch(const rtk_t *rtk,const obsd_t *obs,int n,
     if(!fd_open_attempted){
         fd_open_attempted=1;path=getenv("RTK_PPP_FILTER_DIAGNOSTIC");
         if(path && *path){
+            fd_first_epoch=fd_env_integer("RTK_PPP_FILTER_DIAGNOSTIC_START_EPOCH",0,86400);
+            fd_epoch_count=fd_env_integer("RTK_PPP_FILTER_DIAGNOSTIC_MAX_EPOCHS",6,600);
+            if(fd_epoch_count<1)fd_epoch_count=6;
             fd_file=fopen(path,"wb");
             if(!fd_file)trace(2,"$FILTER_DIAGNOSTIC_FAILURE,reason=OPEN_FAILED,estimator_unchanged=1\n");
         }
@@ -107,8 +124,10 @@ void ppp_fd_trial(int trial,const ppp_innovation_meta_t *rows,int nv,
     for(i=0;i<nv;i++){
         const ppp_innovation_meta_t *m=rows?rows+i:NULL;char id[8]="";
         if(i)fputc(',',fd_file);if(m && m->sat)satno2id(m->sat,id);
-        fprintf(fd_file,"{\"row\":%d,\"class\":\"%s\",\"sat\":\"%s\",\"signal\":\"%s\",\"slot\":%d,\"source\":%d}",
-            i,m?ppp_innovation_class_name(m->measurement_class):"UNAVAILABLE",id,m?code2obs(m->signal):"",m?m->frequency_slot:-1,m?m->source_obs_index:-1);
+        fprintf(fd_file,"{\"row\":%d,\"class\":\"%s\",\"sat\":\"%s\",\"signal\":\"%s\",\"slot\":%d,\"source\":%d,\"slip_flag\":%d,\"arc_status\":%d,\"frequency_hz\":",
+            i,m?ppp_innovation_class_name(m->measurement_class):"UNAVAILABLE",id,m?code2obs(m->signal):"",m?m->frequency_slot:-1,m?m->source_obs_index:-1,
+            m?m->slip_flag:0,m?m->arc_status:0);
+        fd_number(m?m->frequency_hz:0.0);fputc('}',fd_file);
     }
     fputc(']',fd_file);fd_finish();
 }
@@ -156,6 +175,6 @@ void ppp_fd_end(int failure,int solution_status)
         fd_header("EPOCH_END");fprintf(fd_file,",\"failure\":%d,\"solution_status\":%d",failure,solution_status);fd_finish();
     }
     fd_in_filter=0;fd_scope=0;fd_trial=-1;
-    if(fd_file && fd_epoch==5){fclose(fd_file);fd_file=NULL;}
+    if(fd_file && fd_epoch-fd_first_epoch==fd_epoch_count-1){fclose(fd_file);fd_file=NULL;}
 }
 #endif

@@ -592,10 +592,11 @@ extern "C" JNIEXPORT jboolean JNICALL
 Java_com_example_ftpget_LivePppNative_nativeUseWhuProfile(JNIEnv*,jobject) {
     std::lock_guard<std::mutex> guard(g_lock);
     if(!g_engine.ready || !g_engine.ssr || !g_engine.ssr_mode || !g_engine.rtk || g_engine.rtk->opt.sateph!=EPHOPT_SSRCOM)return JNI_FALSE;
-    if(!g_engine.ssr->useWhuOsb("SSRC00WHU0","OSBC00WHU1",true)) {
+    if(!g_engine.ssr->useWhuOsb("SSRC00WHU0","OSBC00WHU1",true,true)) {
         g_engine.error=g_engine.ssr->reason;return JNI_FALSE;
     }
-    trace(2,"SSR_POLICY,WHU_OSB_CONTINUITY_V1; bootstrap=two_consecutive_300s_estimates; watchdog=300+5s; no_phase_bias_applied\n");
+    trace(2,"SSR_POLICY,%s; bootstrap=first_complete_code_bias; watchdog=300+5s\n",
+        g_engine.ssr->profileName());
     return JNI_TRUE;
 }
 extern "C" JNIEXPORT jboolean JNICALL
