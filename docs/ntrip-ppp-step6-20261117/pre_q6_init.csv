@@ -1,0 +1,5 @@
+dataset,week,first_q6_second,E_before_first_Q6_m,prior_exported_Q5,committed_PPP_trials_before_Q6,bootstrap_spp_success_lines,last_Q5_E_m,E_from_last_Q5_to_Q6_prior_m,attribution_to_one_SPP_constellation
+1120_xiaomi,2444,530689,1.173022558191132,0,0,1,,,unavailable; no saved SPP accepted normal equations
+1004_vivo,2444,525883,2.1208009309368325,0,0,1,,,unavailable; no saved SPP accepted normal equations
+1004_xiaomi,2444,525883,1.402317980514519,0,0,1,,,unavailable; no saved SPP accepted normal equations
+1031_xiaomi_V2,2442,531025,1.9833477904280177,0,0,1,,,unavailable; no saved SPP accepted normal equations

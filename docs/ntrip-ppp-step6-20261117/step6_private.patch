@@ -1,0 +1,63 @@
+--- a/core/ppp.c
++++ b/core/ppp.c
+@@ -3473,6 +3473,8 @@
+     const double *H,double *R,int nx,int nv,const unsigned char *gnss,
+     const ppp_innovation_meta_t *meta,gtime_t time,int trial)
+ {return apply_huber_robust_ppp_masked(x,P,v,H,R,nx,nv,gnss,meta,time,trial,0);}
++#include "step6_weights.inc"
++
+ static int ppp_res(int post, const obsd_t* obs, int n, const double* rs,
+     const double* dts, const double* var_rs, const int* svh,
+     const double* dr, int* exc, unsigned char* mexc, const nav_t* nav,
+@@ -4624,6 +4626,9 @@
+     char str[40];
+     const char* diag_opt;
+     ppp_diag_epoch_t diag, evidence;
++    step6_row_t step6_weights[STEP6_ROWS];
++    char step6_mode;
++    int step6_phase_sat=0;
+     ppp_innovation_meta_t *row_meta=NULL,*trial_meta[MAX_ITER]={0};
+     ppp_innovation_value_t *trial_value[MAX_ITER]={0};
+     int trial_count[MAX_ITER]={0},capacity;
+@@ -4848,6 +4853,13 @@
+               valid_satpos, n, osb_ok, osb_expired, osb_missing);
+     }
+ 
++    step6_mode=step6_scheme();
++    if(opt->ionoopt!=IONOOPT_EST || opt->modear!=ARMODE_OFF ||
++        !ppp_verified_joseph(opt) || opt->ppp_iekf) {
++        trace(2,"$S6_INVALID_PROFILE\n");
++        rtk->ppp_failure=FILTER_BAD_DIM;
++        goto cleanup;
++    }
+     /* 第 6 步：按开关处理地影和潮汐。潮汐接口使用 UTC，观测仍保持 GPST。
+      * dr 仅用于几何位置，不能把这一位移再重复写进最终解坐标。 */
+     /* exclude measurements of eclipsing satellite (block IIA) */
+@@ -4878,7 +4890,7 @@
+         ) {
+         row_meta=(ppp_innovation_meta_t *)calloc(capacity,sizeof(*row_meta));
+         if(!row_meta)trace(2,"$INNOV_DIAG_FAILURE,reason=NO_MEMORY,estimator_unchanged=1\n");
+-        if(!row_meta && (smartphone_ppp_policy(opt).common_clock || opt->ppp_iekf)) {
++        if(!row_meta) {
+             rtk->ppp_failure=FILTER_NO_MEMORY;goto cleanup;
+         }
+     }
+@@ -4922,6 +4934,7 @@
+                 group,peers,shift,xp[IC(0,opt)],Pp[IC(0,opt)*(rtk->nx+1)],
+                 rtk->ppp_spp_clock_valid,rtk->ppp_spp_clock_m,have);
+         }
++        if(step6_mode)step6_phase_sat=step6_apply(step6_mode,rtk,obs,n,nav,xp,dr,azel,v,R,row_meta,nv,step6_weights);
+         /* Snapshot pre-fit diagnostics before filter mutates xp/Pp. Outputs
+          * have independent ownership; allocation failure affects logs only. */
+         if(robust_gnss && (info=apply_huber_robust_ppp_masked(xp,Pp,v,H,R,
+@@ -5069,6 +5082,10 @@
+         /* 把状态复制为 rtk->sol，按实际通过的载波卫星数决定最终 Q/ns；
+          * 隔离只跨历元更新一次，不随前面的试算次数增加。 */
+         update_stat(rtk, obs, n, stat);
++        if(rtk->sol.stat==SOLQ_PPP) {
++            if(step6_mode)step6_log(obs,nv,step6_phase_sat,v,R,row_meta,step6_weights);
++            step6_seen_q6=1;
++        }
+         if (smartphone_ppp_policy(opt).quality_learning)
+             update_phase_quarantine_ppp(rtk, obs, n, mexc, &diag);
+ 
