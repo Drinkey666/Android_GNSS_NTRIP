@@ -15,6 +15,8 @@
 
 ## 当前任务
 
+11/17 Step 10 完成 SPP/首期相对残差物理拆解（Part A）与 `O1`/`O2`/`O3_joint` 隔离提精消融（Part B）。Part A 复用 Step 9 115 行及首 Q6 快照证实：共视卫星钟差、SSR OSB 与大气相对差完全相消（`0.000 m`），`11:20` 双机 `+3.635 m` 启动东向差中纯手机原始测码相对差贡献 `+4.252 m`（`G25 1C` 相对差 `−21.311 m` 贡献 `+3.300 m`）；`Saastamoinen vs VMF3` 东推力 `≤0.017 m`，`startup_fde` 与 `STARTQC` 最高仅达 30 m 门限 `0.625` 倍。Part B 完成 18 组隔离回放，同 Q 序列且 `observations/corrections` 逐字节一致，`K·v` 最大闭合差 `4.66e-10 m`；但 `O1` 使 `10/31 V2` 末 60 s U 反退（`0.407→1.245 m`），`O2` 使 `11:20/10:04 vivo` 全段 U 反退（`2.289/1.390→2.707/2.463 m`），三档均归档为 `NEGATIVE_NOT_FIX`，正式源码不变。 [Step 10 报告](ntrip-ppp-step10-20261117/README.md) · [PC 交接镜像](ntrip-pc-handoff/CURRENT_STATE.md)
+
 11/17 Step 9 完成隔离 SPP 方程审计。六组隔离回放 6,202 历元、4,703 个 Q6 完全复现保存的正式基线。SPP 接纳坐标原样进入首个 Q6 验前，无二次覆盖、Q5、回退或更早 PPP 提交。11:20 小米主要为 GPS 1C，10:04 vivo 主要为 BDS 2I，10:04 小米由 GPS/GAL 1C 共同推动，10/31 V2 无 GPS 实测行，GAL 1C 与 BDS 2I 分别推东 +1.207/+0.776 m。同组常量偏移由钟差/ISB 吸收，尚未分离组内相对残差的物理来源。固定线性化闭合 1.95×10⁻¹⁴ m。 [Step 9 报告](ntrip-ppp-step9-20261117/README.md) · [PC 交接镜像](ntrip-pc-handoff/CURRENT_STATE.md)
 
 11/17 12 组私有试算完成，复用六组正式及六组 A。定锚前后 P 与伪观测完全一致。A→联合的首期 U，10/31 V2 +3.120→+1.785 m、10:04 小米 −3.163→−2.815 m。末 60 秒高程 RMS 分别仅改善 3 mm、2 mm。11:20 小米前 20 期高程反退，持续东偏仍在。保留独立证据。 [实验报告](ntrip-ppp-step8-20261117/README.md)

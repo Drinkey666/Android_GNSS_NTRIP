@@ -1,0 +1,2 @@
+step10_private.patch -text -whitespace
+*.csv -text -whitespace
