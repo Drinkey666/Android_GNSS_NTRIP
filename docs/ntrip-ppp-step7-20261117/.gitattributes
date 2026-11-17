@@ -1,0 +1,2 @@
+step7_private.patch -text -whitespace
+step7_weights.inc -text -whitespace

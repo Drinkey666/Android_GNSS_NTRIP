@@ -1,0 +1,103 @@
+--- a/core/ppp.c
++++ b/core/ppp.c
+@@ -3473,6 +3473,8 @@
+     const double *H,double *R,int nx,int nv,const unsigned char *gnss,
+     const ppp_innovation_meta_t *meta,gtime_t time,int trial)
+ {return apply_huber_robust_ppp_masked(x,P,v,H,R,nx,nv,gnss,meta,time,trial,0);}
++#include "step7_weights.inc"
++
+ static int ppp_res(int post, const obsd_t* obs, int n, const double* rs,
+     const double* dts, const double* var_rs, const int* svh,
+     const double* dr, int* exc, unsigned char* mexc, const nav_t* nav,
+@@ -4624,6 +4626,9 @@
+     char str[40];
+     const char* diag_opt;
+     ppp_diag_epoch_t diag, evidence;
++    s7_row_t step7_weights[S7_ROWS];
++    const int step7_mode=s7_scheme();
++    double s7_before[3];
+     ppp_innovation_meta_t *row_meta=NULL,*trial_meta[MAX_ITER]={0};
+     ppp_innovation_value_t *trial_value[MAX_ITER]={0};
+     int trial_count[MAX_ITER]={0},capacity;
+@@ -4848,6 +4853,12 @@
+               valid_satpos, n, osb_ok, osb_expired, osb_missing);
+     }
+ 
++    if(!step7_mode || opt->ionoopt!=IONOOPT_EST || opt->modear!=ARMODE_OFF ||
++        !ppp_verified_joseph(opt) || opt->ppp_iekf) {
++        trace(2,"$S7_INVALID_PROFILE\n");
++        rtk->ppp_failure=FILTER_BAD_DIM;
++        goto cleanup;
++    }
+     /* 第 6 步：按开关处理地影和潮汐。潮汐接口使用 UTC，观测仍保持 GPST。
+      * dr 仅用于几何位置，不能把这一位移再重复写进最终解坐标。 */
+     /* exclude measurements of eclipsing satellite (block IIA) */
+@@ -4878,7 +4889,7 @@
+         ) {
+         row_meta=(ppp_innovation_meta_t *)calloc(capacity,sizeof(*row_meta));
+         if(!row_meta)trace(2,"$INNOV_DIAG_FAILURE,reason=NO_MEMORY,estimator_unchanged=1\n");
+-        if(!row_meta && (smartphone_ppp_policy(opt).common_clock || opt->ppp_iekf)) {
++        if(!row_meta) {
+             rtk->ppp_failure=FILTER_NO_MEMORY;goto cleanup;
+         }
+     }
+@@ -4922,6 +4933,7 @@
+                 group,peers,shift,xp[IC(0,opt)],Pp[IC(0,opt)*(rtk->nx+1)],
+                 rtk->ppp_spp_clock_valid,rtk->ppp_spp_clock_m,have);
+         }
++        s7_apply(step7_mode,rtk,obs,n,nav,xp,dr,azel,v,R,row_meta,nv,step7_weights);
+         /* Snapshot pre-fit diagnostics before filter mutates xp/Pp. Outputs
+          * have independent ownership; allocation failure affects logs only. */
+         if(robust_gnss && (info=apply_huber_robust_ppp_masked(xp,Pp,v,H,R,
+@@ -4954,6 +4966,8 @@
+ #endif
+         /* filter 在 rtkcmn 中完成 EKF 测量更新：根据 v/H/R 算增益，更新
+          * xp/Pp。info!=0 为数值更新失败，不能把该试算状态提交成有效 PPP。 */
++        memcpy(s7_before,xp,sizeof(s7_before));
++        s7_gain_count=nv;
+         if(opt->ppp_iekf) {
+             ppp_iekf_context_t ctx;int iterations=0;
+             memset(&ctx,0,sizeof(ctx));ctx.rtk=rtk;ctx.obs=obs;ctx.n=n;ctx.nav=nav;
+@@ -4972,6 +4986,7 @@
+             (opt->ppp_wet_correction || opt->ppp_rcb_datum)?filter_active(xp,Pp,H,v,R,rtk->nx,nv):
+             ppp_verified_joseph(opt)?filter_verified(xp,Pp,H,v,R,rtk->nx,nv):
+             filter(xp,Pp,H,v,R,rtk->nx,nv);
++        s7_gain_count=0;
+ #ifdef ENABLE_FILTER_DIAGNOSTIC
+         ppp_fd_trial_result(info,xp,Pp,NT(opt)?ppp_total_trop(rtk,xp):0.0,rtk->ppp_trop_base,rtk->ppp_trop_zhd);
+ #endif
+@@ -5069,6 +5084,7 @@
+         /* 把状态复制为 rtk->sol，按实际通过的载波卫星数决定最终 Q/ns；
+          * 隔离只跨历元更新一次，不随前面的试算次数增加。 */
+         update_stat(rtk, obs, n, stat);
++        if(rtk->sol.stat==SOLQ_PPP)s7_report(rtk,obs,nv,row_meta,v,R,s7_before,step7_weights);
+         if (smartphone_ppp_policy(opt).quality_learning)
+             update_phase_quarantine_ppp(rtk, obs, n, mexc, &diag);
+ 
+--- a/core/rtkcmn.c
++++ b/core/rtkcmn.c
+@@ -1572,6 +1572,8 @@
+     }
+     free(C);free(ix);free(scale);return info;
+ }
++extern void s7_active_indices(const int *ix,int n);
++extern void s7_capture_gain(const double *K,const double *v,int n,int m);
+ static int filter_(const double *x, const double *P, const double *H,
+                    const double *v, const double *R, int n, int m,
+                    double *xp, double *Pp,int physical)
+@@ -1594,6 +1596,7 @@
+     }
+     if (!info && !(info=matinv(Q,m))) {
+         matmul("NN",n,m,m,F,Q,K);   /* K=P*H*Q^-1 */
++        s7_capture_gain(K,v,n,m);
+ #ifdef ENABLE_FILTER_DIAGNOSTIC
+         ppp_fd_matrix("K",K,n,m);
+ #endif
+@@ -1656,6 +1659,7 @@
+ #ifdef ENABLE_FILTER_DIAGNOSTIC
+     ppp_fd_filter_begin(x_,P_,H_,v,R,n,m,ix,k,allow_zero);
+ #endif
++    s7_active_indices(ix,k);
+     info=filter_(x_,P_,H_,v,R,k,m,xp_,Pp_,physical);
+     /* copy values from compressed arrays back to full arrays */
+     for (i=0;!info && i<k;i++) {

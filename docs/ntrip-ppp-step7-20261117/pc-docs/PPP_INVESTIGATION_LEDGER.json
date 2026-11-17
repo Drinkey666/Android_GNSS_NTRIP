@@ -1,0 +1,626 @@
+{
+  "updated": "2026-10-31",
+  "archive_entries_updated": "2026-11-17",
+  "active_PC": "E:\\GNSS\\PPP_NTRIP_PC",
+  "active_Android": "E:/android/test/PPP_NTRIP",
+  "stale_chat_cwd": "E:/GNSS/rtklib_only/rtklib_only/rtklib_Project2",
+  "capture_sha256": "2014e459041de79261c738401ccffafbb94af39104fb5a3ca5a9edd52b5f02c0",
+  "input_epochs": 701,
+  "valid_epochs": 478,
+  "Q_counts": {
+    "0": 223,
+    "5": 1,
+    "6": 477
+  },
+  "reference": {
+    "ellipsoid_height_m": 459.813,
+    "same_height_user_confirmed": true
+  },
+  "profile": "B_VERIFIED_v2_JOSEPH, noncombined, GLO off, CODE IONEX AUTO, official ANTEX",
+  "formal_changes_this_turn": true,
+  "APK_installed_this_turn": false,
+  "git_pushed_this_turn": false,
+  "independent_reference": "User explicitly confirmed NONE for simultaneous same-point/short-baseline survey-grade dual-frequency receiver RINEX (2026-10-28). Do not wait or re-request it. Supplied coordinate reference retained. Absolute single-frequency I versus unknown code bias remains unidentifiable without independent assumptions.",
+  "entries": [
+    {
+      "id": "F01",
+      "status": "FIX_VALIDATED",
+      "title": "卫星身份及ANTEX读取保护",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\docs\\SSR_COMPREHENSIVE_FIX_AND_CAUSAL_AUDIT_20261027.md",
+      "report_sha256": "d75ab64eea3e2d2de547e056bb8e059fe555007ecaf6cd7cc3f4087103ff3b61",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\comprehensive_audit_20261027",
+      "evidence_exists": true,
+      "note": "保留正式修复。旧PRN/SVN身份确有问题，但没有解释全部9 m。",
+      "evidence_fingerprints": {
+        "E:\\GNSS\\PPP_NTRIP_PC\\validation\\comprehensive_audit_20261027\\delivery_verification.json": "5de82b1def44781357db1c893efcf7aa571fc17162732ffefe7edf4a0dcc5b51"
+      }
+    },
+    {
+      "id": "F02",
+      "status": "FIX_VALIDATED",
+      "title": "CODE IONEX映射与穿刺点约定",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\docs\\CODE_IONEX_CONVENTION_FIX_REPORT_20261027.md",
+      "report_sha256": "5604c8d238e7ee00e5259daab3c16c7b7a592ab4b96385b06b8581f79dc606ce",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\code_ionex_geometry_fix_20261027\\analysis.json",
+      "evidence_exists": true,
+      "note": "保留AUTO物理约定；精度变差也不能以调参理由退回错误约定。",
+      "evidence_fingerprints": {
+        "E:\\GNSS\\PPP_NTRIP_PC\\validation\\code_ionex_geometry_fix_20261027\\analysis.json": "4f325be4f7b83ff1156c7b57a836baf53c1ec5c6e217e8ef5939a711a246d4c4"
+      }
+    },
+    {
+      "id": "F03",
+      "status": "FIX_VALIDATED",
+      "title": "历史Joseph及后验提交数值保护",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\docs\\HISTORICAL_JOSEPH_NUMERICAL_FIX_REPORT.md",
+      "report_sha256": "d394b2ff2732a7166761bbbdcca79b841da2aadf6cb574188871e9ff5dc972ee",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\core\\rtkcmn.c",
+      "evidence_exists": true,
+      "note": "历史PPP_only数值修复报告；当前SSR项目filter_verified继续Joseph与失败保护。原数据/模式不同，不把历史精度当当前手机验证，不回退数值保护。",
+      "evidence_fingerprints": {
+        "E:\\GNSS\\PPP_NTRIP_PC\\core\\rtkcmn.c": "9fe32f57ac4300b7d477a41c7862e2e878848c98d213cb078ef9eec344f89aff"
+      },
+      "original_report_source": "E:\\GNSS\\PPP_only\\docs\\FILTER_COVARIANCE_NUMERICAL_FIX_REPORT.md"
+    },
+    {
+      "id": "E01",
+      "status": "LOCATING_EVIDENCE",
+      "title": "不同分析中心轨钟与有效码预测核验",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\docs\\SSR_COMMITTED_UPDATE_AND_INDEPENDENT_REFERENCE_REPORT_20261027.md",
+      "report_sha256": "21dd877c94405d9c3e85c63cdb6d316e67461e4c726ddd6e881996a6c4103525",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\ssr_matched_model_20261027\\CODE_reference",
+      "evidence_exists": true,
+      "note": "CODE只覆盖G/R/E，未认证BDS；原始CLK304读错的输出不作为有效参考，查验使用官方CLK_V2。",
+      "evidence_fingerprints": {
+        "E:\\GNSS\\PPP_NTRIP_PC\\validation\\ssr_matched_model_20261027\\CODE_reference\\comparison.json": "2b2d05801e1d81d11c81ca3b4a5348a8f19b413fc0a90ca3add9f86f4470c749",
+        "E:\\GNSS\\PPP_NTRIP_PC\\validation\\ssr_matched_model_20261027\\CODE_reference\\continuous_arc_verification.json": "7c13affa479f021f414087e629f9e13d7cd8a3968f8675665feb2ce3bf9403c7"
+      }
+    },
+    {
+      "id": "E02",
+      "status": "LOCATING_EVIDENCE",
+      "title": "真实码与载波分块交叉回放",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\docs\\SSR_CODE_PHASE_ATMOSPHERE_SEPARATION_REPORT_20261027.md",
+      "report_sha256": "64cbc97631e24f9d7bdd862fdf32c5dd53d65a77c939a7fec339e6496338074b",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\ssr_atmosphere_separation_20261027\\crossover_v2_results.json",
+      "evidence_exists": true,
+      "note": "真实P保留高差8.968 m，真实L/D配模型P为-0.404 m；模型码依赖已知参考，不是实际精度改善。",
+      "evidence_fingerprints": {
+        "E:\\GNSS\\PPP_NTRIP_PC\\validation\\ssr_atmosphere_separation_20261027\\crossover_v2_results.json": "a95ad654173374626d8bacbf94bb942ed9c87162edd0fd24a3449227328cef59"
+      }
+    },
+    {
+      "id": "E03",
+      "status": "LOCATING_EVIDENCE",
+      "title": "逐星电离层形状码差定位",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\docs\\SSR_CODE_STATE_COMPATIBILITY_REPORT_20261028.md",
+      "report_sha256": "1652ea08a79937f8fdd6235682aaf5d1d29dde5b28256c46bd7113b4f6e254ce",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\ssr_code_projection_20261028\\results.json",
+      "evidence_exists": true,
+      "note": "逐星空间形状组+11.262 m，公共组-2.993 m；不是物理I真值或独立误差贡献率。",
+      "evidence_fingerprints": {
+        "E:\\GNSS\\PPP_NTRIP_PC\\validation\\ssr_code_projection_20261028\\results.json": "7129a0fa735e042e5e3898c197afea1e03cb54ff263ab7439f539ffa760ba483"
+      }
+    },
+    {
+      "id": "E04",
+      "status": "LOCATING_EVIDENCE",
+      "title": "起始码差与后续变化分离",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\docs\\SSR_INITIAL_CODE_MEMORY_REPORT_20261028.md",
+      "report_sha256": "e1c09e227336ef4c0b2515e06c320e9b125e2f544b5e85a31588b843e121c9c7",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\initial_code_memory_20261028\\results.json",
+      "evidence_exists": true,
+      "note": "冻结首样本差+11.288 m，后续变化组-2.648 m；首样本含噪声和模型误差，不能直接标定硬件。",
+      "evidence_fingerprints": {
+        "E:\\GNSS\\PPP_NTRIP_PC\\validation\\initial_code_memory_20261028\\results.json": "9765874397d180a0ed2b0f2fe78729218fc6b95eb3ded9bba15e6e99370dd27d"
+      }
+    },
+    {
+      "id": "E05",
+      "status": "LOCATING_EVIDENCE",
+      "title": "大气几何方向敏感性",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\docs\\SSR_GIM_GEOMETRY_CAUSAL_REPORT_20261027.md",
+      "report_sha256": "ebd8723ab23ef0589280ced5450ab0d255ceba9bd2b61b7f627fcebfa1aca2c3",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\ssr_iono_datum_20261027\\results.json",
+      "evidence_exists": true,
+      "note": "只能证明联合状态对先验空间方向敏感，不证明GIM公式错误或可以默认弱化先验。",
+      "evidence_fingerprints": {
+        "E:\\GNSS\\PPP_NTRIP_PC\\validation\\ssr_iono_datum_20261027\\results.json": "98ff7e5ae72dc0a285ef3661b1e95c2569d060ffbb4f96f3413d4bd1bb10b128"
+      }
+    },
+    {
+      "id": "N01",
+      "status": "NEGATIVE_NOT_FIX",
+      "title": "真实输入绕过伪距平滑均值",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\docs\\SSR_DUAL_FREQUENCY_AND_REAL_SMOOTHER_CAUSAL_REPORT_20261027.md",
+      "report_sha256": "4c98b57b9e98c7d99a6173d98b76601ace728d3dcd9881e8adffa0aa95a4e8a0",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\ssr_dual_frequency_closure_20261027\\smoother_comparison.json",
+      "evidence_exists": true,
+      "note": "末期Up9.043→9.017 m，不能解决9 m；不默认关闭平滑，不重复。",
+      "evidence_fingerprints": {
+        "E:\\GNSS\\PPP_NTRIP_PC\\validation\\ssr_dual_frequency_closure_20261027\\smoother_comparison.json": "5e6eefe369609fc24461bc8fd0aab25d988973ed78f5a26fb6f0fc4e26756939"
+      }
+    },
+    {
+      "id": "N02",
+      "status": "NEGATIVE_NOT_FIX",
+      "title": "因果码相漂移普通Huber",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\docs\\CAUSAL_CODE_CONSISTENCY_HUBER_REPORT_20261028.md",
+      "report_sha256": "aa562e58b260cf014e0cbc22c3b7cc8d75ac6971959db255c66b6e0c00099f8a",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\causal_code_consistency_20261028\\results.json",
+      "evidence_exists": true,
+      "note": "末期Up9.043→9.025 m，7次实际软降权；保持关闭，不继续调低阈值。",
+      "evidence_fingerprints": {
+        "E:\\GNSS\\PPP_NTRIP_PC\\validation\\causal_code_consistency_20261028\\results.json": "7602d5b3b73f227110a85f04d1042f57db150b96d34e45677edc05d5b2f85769"
+      }
+    },
+    {
+      "id": "N03",
+      "status": "NEGATIVE_NOT_FIX",
+      "title": "仅替换初始位置均值",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\docs\\SSR_INITIAL_HEIGHT_CAUSAL_REPORT_20261026.md",
+      "report_sha256": "b0669aae4d75ab3220b8b99720d735cd039a0e45c36d5794dbe3e38d4370ee02",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\ssr_initial_prior_causality_20261026",
+      "evidence_exists": true,
+      "note": "历史LEGACY条件下仅毫米级变化；不等于本轮首样本观测基准分离，不重做相同位置初值试验。",
+      "evidence_fingerprints": {
+        "E:\\GNSS\\PPP_NTRIP_PC\\validation\\ssr_initial_prior_causality_20261026\\analysis.json": "42366ce56fb94159416e107fb5f5aa18669d82d42b5d5b03038eb7bd20ea7813"
+      }
+    },
+    {
+      "id": "N04",
+      "status": "NEGATIVE_NOT_FIX",
+      "title": "手机已有WHU NRT与实录SSR局部核验",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\docs\\SSR_PHONE_NRT_CROSSCHECK_REPORT_20261026.md",
+      "report_sha256": "c4839fcebb5889859301f6b8436057f1142d5d350fed86e92bff68c5a71575fb",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\phone_products_20261026",
+      "evidence_exists": true,
+      "note": "同分析中心轨钟局部吻合不能独立认证全部产品；不再用NRT代替实录SSR证明精度。",
+      "evidence_fingerprints": {
+        "E:\\GNSS\\PPP_NTRIP_PC\\validation\\phone_products_20261026\\analysis.json": "bc46c40d1e3d472c82a4c93c9b974ef4434c4e00bc6a0f9fe404a6fa879cd7d7",
+        "E:\\GNSS\\PPP_NTRIP_PC\\validation\\phone_products_20261026\\verification.json": "bb6d77897323e7d6b7c495b86b28d1562389ad5fd1a59010d4bb630b67b0762a"
+      }
+    },
+    {
+      "id": "S01",
+      "status": "SUPERSEDED_KEEP",
+      "title": "V1交叉夹具清零未建模槽",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\docs\\SSR_CODE_PHASE_ATMOSPHERE_SEPARATION_REPORT_20261027.md",
+      "report_sha256": "64cbc97631e24f9d7bdd862fdf32c5dd53d65a77c939a7fec339e6496338074b",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\ssr_matched_model_20261027\\crossover",
+      "evidence_exists": true,
+      "note": "V1空操作有厘米级副作用，保留但不作为主证据；以V2保留全部原始槽为准。",
+      "evidence_fingerprints": {}
+    },
+    {
+      "id": "P01",
+      "status": "CONFIRMED_SIDE_BUG_PENDING",
+      "title": "文件CLK3.04列宽偏移错误",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\docs\\SSR_COMMITTED_UPDATE_AND_INDEPENDENT_REFERENCE_REPORT_20261027.md",
+      "report_sha256": "21dd877c94405d9c3e85c63cdb6d316e67461e4c726ddd6e881996a6c4103525",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\ssr_matched_model_20261027\\CODE_reference\\clock_304_candidate_verification.json",
+      "evidence_exists": true,
+      "note": "有native复现和私有候选验证，正式未修；当前SSR不读CLK文件，不能当作9 m根因。",
+      "evidence_fingerprints": {
+        "E:\\GNSS\\PPP_NTRIP_PC\\validation\\ssr_matched_model_20261027\\CODE_reference\\clock_304_candidate_verification.json": "33c82b0b315cc05ff6c8174bc7c1ccf31cc68a1d7e4687d64c734b3a0f91500f"
+      }
+    },
+    {
+      "id": "F04",
+      "status": "FIX_VALIDATED",
+      "title": "Android GNSS观测生成移植至NTRIP",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\docs\\ANDROID_OBSERVATION_GENERATION_NTRIP_REPORT.md",
+      "report_sha256": "3c0f31c3d3d905cb9bf125a1f8d8d5eaa9f6188cd2cda4ba53b65f7e3210e713",
+      "evidence": "E:\\android\\test\\PPP_NTRIP\\tools\\observation_generation_ntrip_20261030",
+      "evidence_exists": true,
+      "note": "51 Native/768 PC/579 Android-source/42 Python; JVM158pass4skip; 5 Raw row audits and real701SSR replay. New APK built not installed. Does not fix remaining9m bias. Historical solution evidence retains OLD observation generation.",
+      "evidence_fingerprints": {
+        "verification.json": "224134cff7afef6c02c42a4e64f6b7c2b2d3daf98e739354917a291861673cf9",
+        "raw_validation/validation_results.json": "9029d5031a9fcaa5383b58076187af818683e960a6eb6057c0228d8d35ffe745",
+        "raw_validation/before_after_results.json": "7a8fe0825219c35cbec20087e45b37a459c9a39539b7f3565b1b4426872a8379"
+      }
+    },
+    {
+      "id": "E06",
+      "status": "LOCATING_EVIDENCE",
+      "title": "最新手机采集新观测管线与精度验证",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\docs\\ANDROID_CAPTURE_EFFECT_20261031.md",
+      "report_sha256": "626028488b454bb290ed195a89bb35410e11c877f28e5ba8313761e5cafb46d1",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\android_capture_20261031",
+      "evidence_exists": true,
+      "note": "669epochs/84PPP; finalH1.721/Up+.270; final60UpRMS.460. Different site/date not softwareA/B.585sOSBwait explained. Exactobs +submicrometrePCmatch. Noformalchange/deviceinstall.",
+      "evidence_fingerprints": {
+        "analysis.json": "3aee1821fcd50dbe8a27c5e2175c008463f56df0d2920aba76db3eb6e5408559",
+        "installed_package.json": "7d46ce126435d27b42f816f111bbfe0cb4241efd1b0b543b1d7e0f96ed32ff74",
+        "replay.json": "44ff19de3de9d491887be19a6cbd8a87ed423d1fc23605feaa50cfaf1b6d6494"
+      }
+    },
+    {
+      "id": "E07",
+      "status": "LOCATING_EVIDENCE",
+      "title": "WHU启动门控独立修改与全程回放",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\docs\\WHU_STARTUP_GATE_TRIAL_REPORT_20261031.md",
+      "report_sha256": "1714798d1ed41a081ce5ea6edfa4d3eb6eb5634cdaa911077dfabe46b1801a37",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\whu_startup_trial_20261031",
+      "evidence_exists": true,
+      "note": "585->290/5s; firstcomplete663PPP butmaxbiasage910s uncertified, NOTdefault. Allcoreparameters/phone unchanged.3x83 tests+579 strict pass.",
+      "evidence_fingerprints": {
+        "results.json": "d5b59edeb17547f5532613d59b8fc906a3959689fc2b56e3c4a9e1402ac45852",
+        "build_receipt.json": "594575c5881abf7352c8fc6dd95b2459c62b073c1e68b91ed28f0fa56f03d473",
+        "tests/results.log": "5e042478df7548b0d4ae264c9e13e17aae7eba81acebb60808290e7bce9a4754"
+      }
+    },
+    {
+      "id": "E08",
+      "status": "LOCATING_EVIDENCE",
+      "title": "东向北向分离与已存最终残差汇总掩码核查",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\docs\\WHU_EAST_NORTH_DIAGNOSIS_20261031.md",
+      "report_sha256": "c5ea00f7f464c4d57cff7c0a3a48385ccb31b081156aa7fb3545d6a3f279a71b",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\whu_east_north_20261031",
+      "evidence_exists": true,
+      "note": "Saved-only no reruns. Complete last60 E+1.477/N-.823m, east76.3%mean-square. Samephasegeometry. E29giantresidualsnotfinal; G25C1Cretained-summarylinebutactualR/Kunknown. Noformulaerrorproven.",
+      "evidence_fingerprints": {
+        "summary.json": "1de5ad132fb485b13f384d8f713c51cb23d67398d20b09879d4f553181c036a3",
+        "saved_code_mask_summary.json": "675ea16fb4581e92803b4027ca665a2f3b10fecd18bc70bbc43e55f7dfa03b40",
+        "same_window_geometry_check.json": "947d6e65012bc3340fc98df5192b94ba083d88a0785562dba9d52c012b2049bd"
+      }
+    },
+    {
+      "id": "E09",
+      "status": "LOCATING_EVIDENCE",
+      "title": "卫星DOP、方向几何与逐星作用",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\docs\\WHU_DOP_ANALYSIS_20261031.md",
+      "report_sha256": "be77909d534b89203c037f0a377a3315a05619e15730b94ea3ae858d3ba341ae",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\whu_dop_20261031",
+      "evidence_exists": true,
+      "note": "Saved-only noPPP/masking. Code E DOP .486<N .525, phaseE.764/N.652; earlierEgeometrystronger butbiaspresent. Native3checks1.2e-14. DOPnotfullPPP R/P/iono/N/trop observability or actualK.",
+      "evidence_fingerprints": {
+        "summary.json": "78510370a0ca60b098cf794a04fb5651496ccfdd026a08eebd524f450dba75a2",
+        "validation_checks.json": "cc7aa0ac907164e4f23220b7cd44ddb632a3cf2a67d4763d23ea18b5f08d44f4",
+        "satellite_geometry_ranking.csv": "2948e77cace91f2ef531b44afad2a938221a7226b2eb33b01fd3e1bb006ff6be"
+      }
+    },
+    {
+      "id": "E10",
+      "status": "LOCATING_EVIDENCE",
+      "title": "真实增益与首期东偏：削弱G25末段直接作用及SPP位置直接锁死解释",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\docs\\WHU_ACTUAL_GAIN_AND_INITIAL_BIAS_20261031.md",
+      "report_sha256": "43e4b02c918b65c68a8e827ea706477436b624608634003d51ffc7910c378549",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\whu_gain_trace_20261031",
+      "scope": "one same-config observer replay + original native-kernel local counterfactuals; no formal changes",
+      "summary_sha256": "9bfd438ac4b918f3062495abc5c9ed45c08c8d6739c0abad5a2e383d88026410",
+      "Q6": 663,
+      "Q5": 1,
+      "unchanged_solution_epochs": 669,
+      "G25_last60_E_local_without_mean_m": -0.0003511275524897653,
+      "position_prior_first_E_transfer": 0.00133301,
+      "native_full_samples": 77,
+      "early_local_cases": 490,
+      "new_targeted_tests": 12,
+      "absolute_OSB_validity_certified": false,
+      "next": "Reuse first5..16s matrices for joint code/I/receiver-code datum; no repeated broad experiments"
+    },
+    {
+      "id": "E11",
+      "status": "LOCATING_EVIDENCE",
+      "title": "实际码/I/RCB参考兼容；不存在已证实公式接错",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\docs\\WHU_CODE_IONO_RCB_COMPATIBILITY_20261031.md",
+      "report_sha256": "25216e65879b4edfc4de03a6f223907bb67ffd211524bd9db0e8d81f5953dcc0",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\whu_code_iono_rcb_20261031",
+      "summary_sha256": "90cdc879bbffce3df5c4298e9ac96e8bd25cbea72027e889ed5e2b23ecf4a83f",
+      "new_replay": false,
+      "formal_algorithm_changed": false,
+      "actual_H_rows": 652,
+      "native_reference_transforms": 12,
+      "max_ENU_rebase_error_m": 0,
+      "GNSS_null_directions": 30,
+      "null_direction_position_component": 0,
+      "first_E21_E23_DD_m": 6.047303427010775,
+      "first_DD_standardized": 0.8601508101704539,
+      "E21_phase_gap_not_crossed": true,
+      "new_tests": 9,
+      "certain_implementation_error": false,
+      "next_boundary": "Only noncommon code/I temporal changes within valid arcs can add identification; no reference/RCB retuning or repeated broad audits"
+    },
+    {
+      "id": "E12",
+      "status": "LOCATING_EVIDENCE",
+      "title": "FTPGet NRT轨钟+RTS BIA与当前SSR同Raw对照",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\docs\\WHU_FTPGET_FILE_VS_SSR_20261031.md",
+      "report_sha256": "bf4753188f121d4a75d9ff14186828a66cd793b8eb9738e6aabc04df0d03e084",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\whu_file_product_comparison_20261031",
+      "summary_sha256": "b0f12b026783f82750787294f27aba62e4cbf0acbf36983895a481594cb02232",
+      "reference_height_m": 483.98,
+      "same_capture_epochs": 669,
+      "new_replays": 2,
+      "SSR_control_exact": true,
+      "file_Q6": 667,
+      "file_final_ENU_m": [
+        1.7092108372461716,
+        -0.5516756751738565,
+        -1.3098245983071115
+      ],
+      "file_last60_RMS_H_U_m": [
+        1.797634342785805,
+        1.332525287757387
+      ],
+      "preflight_errors": 0,
+      "preflight_warnings": 21,
+      "new_tests": 8,
+      "formal_core_changed": false,
+      "causal_orbit_only_proof": false,
+      "absolute_metre_bias_resolved": false
+    },
+    {
+      "id": "E13",
+      "status": "LOCATING_EVIDENCE",
+      "title": "整星座排除旧理解的已完成独立试验，非B1C验证",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\whu_constellation_east_20261031",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\docs\\WHU_B1I_B1C_USAGE_20261031.md",
+      "report_sha256": "d768189df4648ca828350625b8967945ef3431407bdab8398241a4574eeb6ef9",
+      "summary_sha256": "c59f49c358da58bf8a90104fbb42d89df09d215cdadd184c6744b7a13660a043",
+      "new_full_replays": 2,
+      "B1C_enabled_in_any_group": false,
+      "formal_defaults_changed": false,
+      "next": "Do not rerun these exclusions; current clarified focus is B1I/B1C mapping"
+    },
+    {
+      "id": "E14",
+      "status": "LOCATING_EVIDENCE",
+      "title": "B1C未接入及adapter槽0/core槽3衔接限制",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\whu_b1i_b1c_20261031",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\docs\\WHU_B1I_B1C_USAGE_20261031.md",
+      "report_sha256": "d768189df4648ca828350625b8967945ef3431407bdab8398241a4574eeb6ef9",
+      "summary_sha256": "ef234d7ebcc597f78aa0ee7f4205ea7b07860b806746b014bc6bbb02667bba2c",
+      "raw_B1C": 5794,
+      "actual_B1C_used": 0,
+      "raw_B1I": 9486,
+      "same_epoch_sat_both": 5475,
+      "native_frequency_correct": true,
+      "current_B1C_B1I_overwrite_proven": false,
+      "adapter_B1C_slot": 0,
+      "PPP_core_B1C_slot": 3,
+      "new_tests": 7,
+      "formal_changes": false,
+      "cause_of_East_bias_proven": false
+    },
+    {
+      "id": "E15",
+      "status": "INDEPENDENT_EXPERIMENT_COMPLETED",
+      "title": "B1C独立槽位/RCB/模糊度/SSR/C01联合接入",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\docs\\WHU_B1C_JOINT_TRIAL_20261031.md",
+      "report_sha256": "1a0f3c1bc5ce9a179d2672a7d6329f73d9abf7e325ff05c92df0ea481836fdda",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\whu_b1c_joint_20261031",
+      "summary_sha256": "c1e2bda3bd22cab42ef5d58d0fbf27fc24e0574573516ebc9512ad1dfdd6844e",
+      "new_replays": 4,
+      "checks_passed": 870,
+      "formal_changed": false,
+      "Android_changed": false,
+      "default_promotion": false
+    },
+    {
+      "id": "E16",
+      "status": "VALIDATED_FIX_IN_INDEPENDENT_CANDIDATE",
+      "title": "B1C联合状态合法零值失活修复；码/相位及公共/星间作用分离",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\docs\\B1C_JOINT_STATE_CONSISTENCY_FIX_20261031.md",
+      "report_sha256": "93d45eb2910fc0f500b39d0509210042f4e3fdb60ff7020edec32348aeef3c57",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\b1c_joint_consistency_20261031",
+      "verification_sha256": "ae77f668c5d57517f1513d844bc9d35a61ee11d9c730bdb711053e6061d65aa7",
+      "candidate": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\b1c_joint_consistency_20261031\\state_activity_fix_v2\\replay.exe",
+      "candidate_sha256": "99097c09999cd8bfac19215050ec55988887660616316082d5c8f9afa65a3c7c",
+      "native_checks": 989,
+      "new_full_replays": 4,
+      "B1I_B1C_joint": true,
+      "no_consecutive_300s_startup_wait": true,
+      "formal_or_Android_changed": false,
+      "actual_accuracy_changed_by_zero_fix": false,
+      "original_meter_East_error_resolved": false
+    },
+    {
+      "id": "E27",
+      "status": "LOCATING_EVIDENCE",
+      "title": "11:20 双机码相分解、六状态 K·v 和五组双向互换",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\brain_step1_diagnosis_20261116",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\brain_step1_diagnosis_20261116\\REPORT.md",
+      "common_q6": 282,
+      "first_q6_tow": 530689,
+      "vivo_u_contribution_m": {
+        "GPS 1C": -5.024,
+        "GAL 1C": -2.28
+      },
+      "formal_code_changed": false,
+      "verification_sha256": "d68d9ceb2e4e187de54e3b0e218ccc9bcbc8f2390265ef1572a893acc0697863"
+    },
+    {
+      "id": "E28",
+      "status": "LOCATING_EVIDENCE",
+      "title": "逐星 K·v、首期静态和后续动态闭合、STATMOD 7 单机对照",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\brain_step2_closure_20261116",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\brain_step2_closure_20261116\\REPORT.md",
+      "vivo_u_rms_m": {
+        "baseline": 2.142,
+        "anchored_delta": 1.471,
+        "static_plus_delta": 1.17,
+        "plus_unanchored_E07": 1.135,
+        "full_arithmetic_center": 1.123,
+        "historical_group_median": 0.905
+      },
+      "vivo_u_contribution_m": {
+        "G03 1C": -4.1955,
+        "G10 1C": -1.0219,
+        "E27 1C": -1.2554,
+        "G28 1C": -0.7555,
+        "G25 1C": 0.799
+      },
+      "G25_first_code_difference_m": 21.335,
+      "G25_cn0_variance_factor": 12,
+      "bds_internal_cancellation": true,
+      "code_injection_additive_on_fixed_support": true,
+      "rms_increments_are_independent_physical_terms": false,
+      "statmod7_all_q6_h_u_rms_m": {
+        "vivo": [
+          1.06,
+          1.886
+        ],
+        "xiaomi": [
+          0.694,
+          0.61
+        ]
+      },
+      "default_promotion": false,
+      "verification_sha256": "f039a8161c3643b347b61db11c61e753fee41c311b7b4f6dfa3e6c5153f536fa"
+    },
+    {
+      "id": "E29",
+      "status": "NEGATIVE_NOT_FIX",
+      "title": "连续弧码降权 1+N_lock",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\brain_step2_closure_20261116",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\brain_step2_closure_20261116\\REPORT.md",
+      "all_q6_h_u_rms_m": {
+        "vivo": [
+          1.221,
+          2.726
+        ],
+        "xiaomi": [
+          0.622,
+          0.844
+        ]
+      },
+      "degraded_height_both_devices": true,
+      "default_promotion": false
+    },
+    {
+      "id": "E30",
+      "status": "LOCATING_EVIDENCE",
+      "title": "单机单频码可辨识性、验后质控与独立 WHU 准入审计",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\brain_step3_final_audit_20261116",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\brain_step3_final_audit_20261116\\REPORT.md",
+      "vivo_first_postfit_max_sigma0": {
+        "G03 1C": 1.108,
+        "G10 1C": 0.69,
+        "E27 1C": 0.608,
+        "C19 2I": 0.355
+      },
+      "feature_separation_found": false,
+      "added_rows_from_mismatch": 17204,
+      "common_rows_same_code_and_phase_osb": 45946,
+      "verification_sha256": "5656bf006991d1294320b0582c6f34bd34040f6d003eea5d8641456bddde4a53",
+      "epoch_table_sha256": "adb8e73fc6530c920789abf4835798447b0473f17093f2d721786eef7815bf10"
+    },
+    {
+      "id": "E31",
+      "status": "VALIDATED_FORMAL_FIX",
+      "title": "PC 和 Android 独立 WHU OSB 缓存来源隔离",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\whu_osb_formal_fix_20261117",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\whu_osb_formal_fix_20261117\\REPORT.md",
+      "source_sha256": "aabd4454a2515f8d5855735685d154b60148552cad88f66dc64cc8304079a314",
+      "core_ppp_sha256": "370a3eb2c406b54219c916e517b08060f17378c7b42f4f41dfc4a9576a248c4a",
+      "android_committed": false,
+      "android_installed": false,
+      "pc_native_assertions": 963,
+      "pc_python_pass": 59,
+      "android_native_x86_64_assertions": 617,
+      "android_jvm_pass": 165,
+      "android_jvm_skipped": 3,
+      "replay_epochs": 2623,
+      "replay_q6_by_session": [
+        119,
+        1466,
+        63,
+        587
+      ],
+      "epoch_table_sha256": "adb8e73fc6530c920789abf4835798447b0473f17093f2d721786eef7815bf10",
+      "epoch_table_byte_equal": true,
+      "accuracy_root_cause_fully_resolved": false
+    },
+    {
+      "id": "E32",
+      "status": "NEGATIVE_NOT_FIX",
+      "title": "GIM 基准残差、可观测性及即时 CMC 定权",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\brain_step4_bias_solution\\REPORT.md",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\brain_step4_bias_solution",
+      "replay_cases": 30,
+      "formal_controls": 6,
+      "baseline_q6": [
+        362,
+        349,
+        1786,
+        1459,
+        84,
+        663
+      ],
+      "summary": "30 组隔离回放及 6 组正式控制完成。11:20 vivo 联合全段 H/U RMS 1.187/2.289 → 1.402/1.842 m，单独 M1 1.187/2.289 → 1.160/1.955 m。10:04 双机共有 Q6 下，联合使 vivo H/U RMS 1.359/1.453 → 1.690/2.125 m、小米 2.343/2.977 → 1.833/2.581 m。10/31 末 60 秒 H/U RMS，V1 1.822/0.460 → 2.254/0.364 m、V2 1.691/0.407 → 1.778/0.093 m。联合精度取舍明显，归档为 NEGATIVE_NOT_FIX。",
+      "baseline_uses_whu_osb_fix": true,
+      "formal_estimator_changed": false,
+      "verification_sha256": "950ff64557913399930d9769717eaa29a8e5ecfd4f9a494444aa696a96a094ff"
+    },
+    {
+      "id": "E33",
+      "status": "LOCATING_EVIDENCE",
+      "title": "五包东偏、10:04 小米 GPS 1C、M1_v2 固定双门限",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\brain_step5_east_and_m1v2\\REPORT.md",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\brain_step5_east_and_m1v2",
+      "cases": 33,
+      "formal_estimator_changed": false,
+      "removed_old_M2_M3_from_follow_up": true,
+      "m1v2_not_adopted": true,
+      "verification_sha256": "12422d4c23d9e64a73eca376d2bc8606664b28978ad286d218ab458e101b2854",
+      "summary": "33 组基线观察、单星座码屏蔽与 M1_v2 完成。10:04 小米 GPS 1C 前 60 期 E/N/U 推力 +1.781/+3.106/−3.859 m，去 GPS 码全段 H/U 2.342/2.977→1.424/1.893 m，末段仍东偏 +1.108 m。五包没有同一星座通解。M1_v2 两档改善 10:04 小米，11:20 小米及 10/31 V1 水平反退，保留独立实验。用户已淘汰 M2 与 M3。"
+    },
+    {
+      "id": "E34",
+      "status": "LOCATING_EVIDENCE",
+      "title": "SPP 启动东偏、GPS 1C 逐星推力和 M1_v3",
+      "report": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\brain_step6_m1v3_targeted\\REPORT.md",
+      "evidence": "E:\\GNSS\\PPP_NTRIP_PC\\validation\\brain_step6_m1v3_targeted",
+      "cases": 24,
+      "formal_estimator_changed": false,
+      "default_promotion": false,
+      "first_q6_prior_source": "SPP bootstrap; no prior Q5",
+      "verification_sha256": "76d451134663833ece536efb48186cef4824208a70fbeff89b1a3dbbe468e5af",
+      "summary": "24 组 M1_v3 完成。四包首期正东偏已存在于 SPP 初值，既有证据无法拆分 SPP 星座责任。10:04 小米 GPS 1C 的前五星 G10/G25/G28/G13/G32，含两颗持续双频。C 全段 H/U 2.342/2.977→1.763/2.424 m，10:04 vivo 两项反退。A、B、C 保持独立实验。"
+    },
+    {
+      "id": "E35",
+      "status": "NEGATIVE_NOT_FIX",
+      "title": "M1_v4 双频半剥离与首码阈值",
+      "evidence": "..",
+      "report": "../README.md",
+      "new_replays": 24,
+      "baseline_reused": 6,
+      "A_exact": 6,
+      "formal_estimator_changed": false,
+      "default_promotion": false,
+      "verification_sha256": "1545e056cbd04be05ca1d23151e9bb4678e2483e4fb848d7e037b3ba2d99f55a",
+      "summary": "六包 A 精确复现，另完成 18 组 M1_v4。E27 全部未触发，C19 与 G28 均未在前 60 期触发。10:04 小米相对 A 的全段 H/U 全档反退，11:20 vivo 高程改善伴随水平反退。B/C 淘汰，保留 A 为诊断对照，M1_v4 三档归档为 NEGATIVE_NOT_FIX。"
+    }
+  ],
+  "observation_generation_policy": "FIXED_CLOCK_2023",
+  "formal_change_scope": "Observation generation and explicit capture-clock policy only; NTRIP/RTCM/SSR and PPP model/parameters/Joseph unchanged",
+  "latest_capture_validation": {
+    "capture": "Capture_20261031_113002_0f5a2ac0",
+    "reference": {
+      "ellipsoid_height_m": 483.98
+    },
+    "input_epochs": 669,
+    "Q": {
+      "0": 585,
+      "6": 84
+    },
+    "previous_reference_applies_only_to_previous_capture": true,
+    "formal_code_changed": false,
+    "device_modified": false
+  },
+  "latest_startup_experiment": {
+    "formal_defaults_changed": false,
+    "phone_installed": false,
+    "capture": "Capture_20261031_113002_0f5a2ac0",
+    "scope": "Independent startup gate only",
+    "first_Q6_seconds": {
+      "strict": 585,
+      "advanced": 290,
+      "complete_diagnostic": 5
+    },
+    "absolute_OSB_validity_certified": false
+  }
+}
