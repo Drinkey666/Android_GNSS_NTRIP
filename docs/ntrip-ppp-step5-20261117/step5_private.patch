@@ -1,0 +1,205 @@
+--- a/core/ppp.c
++++ b/core/ppp.c
+@@ -3473,12 +3473,14 @@
+     const double *H,double *R,int nx,int nv,const unsigned char *gnss,
+     const ppp_innovation_meta_t *meta,gtime_t time,int trial)
+ {return apply_huber_robust_ppp_masked(x,P,v,H,R,nx,nv,gnss,meta,time,trial,0);}
++#include "step5_weights.inc"
++
+ static int ppp_res(int post, const obsd_t* obs, int n, const double* rs,
+     const double* dts, const double* var_rs, const int* svh,
+     const double* dr, int* exc, unsigned char* mexc, const nav_t* nav,
+     const double* x, rtk_t* rtk, double* v, double* H, double* R,
+     double* azel, ppp_diag_epoch_t* diag, int *product_use,
+-    ppp_innovation_meta_t *row_meta,unsigned char *robust_gnss)
++    ppp_innovation_meta_t *row_meta,unsigned char *robust_gnss,step5_weight_t *weights)
+ {
+     prcopt_t* opt = &rtk->opt;
+     double y, r, cdtr, bias, rr[3], pos[3], e[3], dtdx[3], L[NFREQ], P[NFREQ], Lc, Pc;
+@@ -3548,7 +3550,7 @@
+     ecef2pos(rr, pos);
+ 
+     for (i = 0; i < n && i < MAXOBS; i++) {
+-        int sat_has_phase = 0;
++        int sat_has_phase = 0, step5_phase=0;
+         sat = obs[i].sat;
+ 
+         for (j = 0; j < NF(opt) && j < NFREQ; j++) {
+@@ -3641,6 +3643,15 @@
+         }
+         applydoppsm_ppp(rtk, obs + i, P);
+ 
++        if(!post && step5_gate>0.0) {
++            const ssat_t *ss=&rtk->ssat[sat-1];
++            for(j=0;j<NF(opt) && j<NFREQ;j++) {
++                const int row=i*2*NFREQ+2*j;
++                if(L[j]!=0.0 && ppp_signal_supported(sys,j,obs[i].code[j],opt) &&
++                    !((ss->slip[j]|obs[i].LLI[j])&LLI_SLIP) &&
++                    (!mexc || !mexc[row]) && !ppp_phase_quarantined(ss,j,obs[i].time))step5_phase=1;
++            }
++        }
+         /* stack phase and code residuals {L1,P1,L2,P2,...} */
+         for (j = 0; j < 2 * NF(opt); j++) {
+             int midx = i * 2 * NFREQ + j;
+@@ -3655,6 +3666,7 @@
+             dcb = bias = 0.0;
+             code = j % 2; /* 0=phase, 1=code */
+             frq = j / 2;
++            if (code && sys==step5_remove_sys) continue;
+ 
+             if (!ppp_signal_supported(sys, frq, obs[i].code[frq], opt)) continue;
+ 
+@@ -3825,6 +3837,16 @@
+                 persistent_variance_factor_ppp(opt,&rtk->ssat[sat-1].ppp_res_quality[frq][code],code):1.0;
+             robust_weight=apply_legacy_robust_ppp(opt,&rtk->ssat[sat-1],
+                 frq,code,z0,&var[nv]);
++            if(!post && weights) {
++                step5_weight_t w={0};
++                w.before=var[nv];
++                w.geom_factor=w.huber_factor=1.0;
++                if(code && step5_gate>0.0 && !step5_phase && !rtk->ppp_code_warmup) {
++                    w.geom_factor=4.0;
++                    var[nv]*=w.geom_factor;
++                }
++                weights[nv]=w;
++            }
+             if(opt->ppp_baseline==MODE_C_NEW_ROBUST)
+                 trace(3,"$PPP_R_PRE_HUBER,%s,sat=%d,F%d,type=%s,R0=%.17g,R_pre_huber=%.17g\n",
+                     str,sat,frq+1,code?"CODE":"PHASE",R0,var[nv]);
+@@ -4589,7 +4611,7 @@
+     for(j=0;j<MAXSAT;j++)phw[j]=c->rtk->ssat[j].phw;
+     trace(3,"$PPP_IEKF_MODEL_BEGIN,recomputed_R_used=0,new_diagnostic_sample=0\n");
+     nv=ppp_res(0,c->obs,c->n,c->rs,c->dts,c->var,c->svh,c->dr,
+-        exc,mexc,c->nav,x,c->rtk,c->model_v,c->model_H,c->R,c->azel,NULL,NULL,c->meta,NULL);
++        exc,mexc,c->nav,x,c->rtk,c->model_v,c->model_H,c->R,c->azel,NULL,NULL,c->meta,NULL,NULL);
+     for(j=0;j<MAXSAT;j++)c->rtk->ssat[j].phw=phw[j];
+     trace(3,"$PPP_IEKF_MODEL_END,rows=%d\n",nv);
+     if(nv<0)return nv;
+@@ -4624,6 +4646,8 @@
+     char str[40];
+     const char* diag_opt;
+     ppp_diag_epoch_t diag, evidence;
++    step5_weight_t weights[STEP5_ROWS]={0};
++    double step5_before[3];
+     ppp_innovation_meta_t *row_meta=NULL,*trial_meta[MAX_ITER]={0};
+     ppp_innovation_value_t *trial_value[MAX_ITER]={0};
+     int trial_count[MAX_ITER]={0},capacity;
+@@ -4848,6 +4872,13 @@
+               valid_satpos, n, osb_ok, osb_expired, osb_missing);
+     }
+ 
++    step5_config();
++    if(opt->ionoopt!=IONOOPT_EST || opt->modear!=ARMODE_OFF ||
++        !ppp_verified_joseph(opt) || opt->ppp_iekf) {
++        trace(2,"$S5_INVALID_PROFILE\n");
++        rtk->ppp_failure=FILTER_BAD_DIM;
++        goto cleanup;
++    }
+     /* 第 6 步：按开关处理地影和潮汐。潮汐接口使用 UTC，观测仍保持 GPST。
+      * dr 仅用于几何位置，不能把这一位移再重复写进最终解坐标。 */
+     /* exclude measurements of eclipsing satellite (block IIA) */
+@@ -4878,7 +4909,7 @@
+         ) {
+         row_meta=(ppp_innovation_meta_t *)calloc(capacity,sizeof(*row_meta));
+         if(!row_meta)trace(2,"$INNOV_DIAG_FAILURE,reason=NO_MEMORY,estimator_unchanged=1\n");
+-        if(!row_meta && (smartphone_ppp_policy(opt).common_clock || opt->ppp_iekf)) {
++        if(!row_meta) {
+             rtk->ppp_failure=FILTER_NO_MEMORY;goto cleanup;
+         }
+     }
+@@ -4893,7 +4924,7 @@
+ 
+         /* prefit residuals */
+         if(robust_gnss)memset(robust_gnss,0,capacity*sizeof(*robust_gnss));
+-        if ((nv = ppp_res(0, obs, n, rs, dts, var, svh, dr, exc, mexc, nav, xp, rtk, v, H, R, azel, NULL, product_use, row_meta,robust_gnss))<=0) {
++        if ((nv = ppp_res(0, obs, n, rs, dts, var, svh, dr, exc, mexc, nav, xp, rtk, v, H, R, azel, NULL, product_use, row_meta,robust_gnss,weights))<=0) {
+             if(!rtk->ppp_failure)rtk->ppp_failure=PPP_FAILURE_NO_OBS;
+             trace(2, "%s ppp (%d) no valid obs data\n", str, i + 1);
+             break;
+@@ -4914,7 +4945,7 @@
+                  * No covariance is tightened and no extra information added.
+                  * Removed rows cannot seed later editing trials. */
+                 nv=ppp_res(0,obs,n,rs,dts,var,svh,dr,exc,mexc,nav,xp,rtk,
+-                    v,H,R,azel,NULL,product_use,row_meta,robust_gnss);
++                    v,H,R,azel,NULL,product_use,row_meta,robust_gnss,weights);
+                 if(nv<=0){if(!rtk->ppp_failure)rtk->ppp_failure=PPP_FAILURE_NO_OBS;break;}
+             }
+             trace(2,"$PPP_CLOCK_TRIAL,%s,trial=%d,source=%s,group=%d,peers=%d,shift_m=%.17g,seed_m=%.17g,variance_m2=%.17g,spp_candidate_valid=%d,spp_candidate_m=%.17g,current_obs_conditioned=%d\n",
+@@ -4922,6 +4953,7 @@
+                 group,peers,shift,xp[IC(0,opt)],Pp[IC(0,opt)*(rtk->nx+1)],
+                 rtk->ppp_spp_clock_valid,rtk->ppp_spp_clock_m,have);
+         }
++        if(step5_gate>0.0)step5_pool_weights(rtk,obs,n,nav,xp,dr,azel,v,R,row_meta,nv,weights);
+         /* Snapshot pre-fit diagnostics before filter mutates xp/Pp. Outputs
+          * have independent ownership; allocation failure affects logs only. */
+         if(robust_gnss && (info=apply_huber_robust_ppp_masked(xp,Pp,v,H,R,
+@@ -4954,6 +4986,8 @@
+ #endif
+         /* filter 在 rtkcmn 中完成 EKF 测量更新：根据 v/H/R 算增益，更新
+          * xp/Pp。info!=0 为数值更新失败，不能把该试算状态提交成有效 PPP。 */
++        memcpy(step5_before,xp,sizeof(step5_before));
++        step5_gain_count=nv;
+         if(opt->ppp_iekf) {
+             ppp_iekf_context_t ctx;int iterations=0;
+             memset(&ctx,0,sizeof(ctx));ctx.rtk=rtk;ctx.obs=obs;ctx.n=n;ctx.nav=nav;
+@@ -4972,6 +5006,7 @@
+             (opt->ppp_wet_correction || opt->ppp_rcb_datum)?filter_active(xp,Pp,H,v,R,rtk->nx,nv):
+             ppp_verified_joseph(opt)?filter_verified(xp,Pp,H,v,R,rtk->nx,nv):
+             filter(xp,Pp,H,v,R,rtk->nx,nv);
++        step5_gain_count=0;
+ #ifdef ENABLE_FILTER_DIAGNOSTIC
+         ppp_fd_trial_result(info,xp,Pp,NT(opt)?ppp_total_trop(rtk,xp):0.0,rtk->ppp_trop_base,rtk->ppp_trop_zhd);
+ #endif
+@@ -4984,7 +5019,7 @@
+          * post_ok=0 时仅保留新增 mexc 屏蔽，然后下一轮从原预测状态重算。 */
+         {
+         int post_ok=ppp_res(i + 1, obs, n, rs, dts, var, svh, dr, exc, mexc, nav, xp, rtk, NULL, NULL, NULL, azel,
+-            &diag, NULL, NULL,NULL);
++            &diag, NULL, NULL,NULL,NULL);
+         /* First post-fit residuals include measurements later edited out.
+          * Count their evidence once, never once per editing iteration. */
+         /* 第一份验后证据只用于持续质量检测，包含后续可能被剔除的观测。
+@@ -5012,6 +5047,7 @@
+             if(opt->ppp_iekf)trace(2,"$PPP_IEKF_COMMIT,%s,trial=%d,posterior_commits=1\n",str,i);
+             rtk->ppp_clock_valid=1;rtk->ppp_clock_m=rtk->x[IC(0,opt)];
+             rtk->ppp_clock_time=obs[0].time;
++            step5_report(rtk,obs,nv,i,row_meta,R,step5_before,&diag,weights);
+             stat = SOLQ_PPP;
+             /* Trial editing iterations start from the same prior P: they are
+                not extra measurements. Commit consumption only on success. */
+@@ -5053,7 +5089,7 @@
+ 
+         if (opt->modear != ARMODE_OFF &&
+             ppp_ar(rtk, obs, n, exc, nav, azel, xp, Pp) &&
+-            ppp_res(9, obs, n, rs, dts, var, svh, dr, exc, mexc, nav, xp, rtk, NULL, NULL, NULL, azel, NULL, NULL, NULL,NULL)>0 &&
++            ppp_res(9, obs, n, rs, dts, var, svh, dr, exc, mexc, nav, xp, rtk, NULL, NULL, NULL, azel, NULL, NULL, NULL,NULL,NULL)>0 &&
+             numeric_finite(xp,rtk->nx) &&
+             !ppp_covariance_gate(Pp,rtk->nx,ppp_safe_covariance(opt),1)) {
+ 
+--- a/core/rtkcmn.c
++++ b/core/rtkcmn.c
+@@ -1572,6 +1572,8 @@
+     }
+     free(C);free(ix);free(scale);return info;
+ }
++extern void step5_active_indices(const int *ix,int n);
++extern void step5_capture_gain(const double *K,const double *v,int n,int m);
+ static int filter_(const double *x, const double *P, const double *H,
+                    const double *v, const double *R, int n, int m,
+                    double *xp, double *Pp,int physical)
+@@ -1594,6 +1596,7 @@
+     }
+     if (!info && !(info=matinv(Q,m))) {
+         matmul("NN",n,m,m,F,Q,K);   /* K=P*H*Q^-1 */
++        step5_capture_gain(K,v,n,m);
+ #ifdef ENABLE_FILTER_DIAGNOSTIC
+         ppp_fd_matrix("K",K,n,m);
+ #endif
+@@ -1656,6 +1659,7 @@
+ #ifdef ENABLE_FILTER_DIAGNOSTIC
+     ppp_fd_filter_begin(x_,P_,H_,v,R,n,m,ix,k,allow_zero);
+ #endif
++    step5_active_indices(ix,k);
+     info=filter_(x_,P_,H_,v,R,k,m,xp_,Pp_,physical);
+     /* copy values from compressed arrays back to full arrays */
+     for (i=0;!info && i<k;i++) {

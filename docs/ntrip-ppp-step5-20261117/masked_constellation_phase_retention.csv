@@ -1,0 +1,16 @@
+dataset,scheme,common_q6,baseline_target_constellation_phase_rows,ablation_target_constellation_phase_rows
+1120_vivo,NoBDSCode,362,2550,2550
+1120_vivo,NoGALCode,362,2848,2848
+1120_vivo,NoGPSCode,362,1788,1788
+1120_xiaomi,NoBDSCode,349,4114,4114
+1120_xiaomi,NoGALCode,349,4058,4058
+1120_xiaomi,NoGPSCode,349,1725,1725
+1004_vivo,NoBDSCode,1786,10233,10233
+1004_vivo,NoGALCode,1786,11781,11781
+1004_vivo,NoGPSCode,1786,10216,10216
+1004_xiaomi,NoBDSCode,1459,12172,12172
+1004_xiaomi,NoGALCode,1459,14268,14268
+1004_xiaomi,NoGPSCode,1459,10148,10148
+1031_xiaomi_V2,NoBDSCode,663,6561,6561
+1031_xiaomi_V2,NoGALCode,663,8210,8210
+1031_xiaomi_V2,NoGPSCode,663,3571,3571
