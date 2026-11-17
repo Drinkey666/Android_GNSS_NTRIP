@@ -1,0 +1,7 @@
+dataset,frame_tag,source_tag,height_type,reference_artifact,reference_key_line,source_line,survey_date_verified,cors_provider_verified,realization_verified,coordinate_epoch_verified
+1120_xiaomi,WGS84,USER_CONFIGURED,ELLIPSOID,imported/capture.json,1,1,False,False,False,False
+1120_vivo,WGS84,USER_CONFIGURED,ELLIPSOID,imported/capture.json,1,1,False,False,False,False
+1004_xiaomi,WGS84,USER_CONFIGURED,ELLIPSOID,imported/capture.json,1,1,False,False,False,False
+1004_vivo,WGS84,USER_CONFIGURED,ELLIPSOID,imported/capture.json,1,1,False,False,False,False
+1031_xiaomi_V1,WGS84,10/31 11:30 capture survey reference,ELLIPSOID,summary.json,2,4,False,False,False,False
+1031_xiaomi_V2,WGS84,10/31 11:30 capture survey reference,ELLIPSOID,summary.json,2,4,False,False,False,False

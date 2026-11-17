@@ -1,0 +1,5 @@
+session,window,n,max_time_skew_s,xiaomi_minus_vivo_E_m,xiaomi_minus_vivo_N_m,xiaomi_minus_vivo_U_m,H_of_mean_m,paired_H_RMS_m,reference_pair_delta_E_m,reference_pair_delta_N_m,reference_pair_delta_U_m,reference_pair_H_m,xiaomi_original_mean_E_m,xiaomi_original_mean_N_m,xiaomi_original_mean_U_m,vivo_original_mean_E_m,vivo_original_mean_N_m,vivo_original_mean_U_m,pair_common_original_mean_E_m,pair_common_original_mean_N_m,pair_common_original_mean_U_m
+1120,common_q6,349,0.0010001659393310547,-0.496,-0.089,1.677,0.504,0.590,-0.051,0.203,-0.018,0.209,0.613,0.121,-0.525,1.059,0.413,-2.221,0.836,0.267,-1.373
+1120,common_q6_tail60,59,0.0010001659393310547,-0.540,-0.035,1.268,0.541,0.548,-0.051,0.203,-0.018,0.209,0.626,0.147,-0.328,1.115,0.386,-1.614,0.871,0.267,-0.971
+1004,common_q6,1457,0.0029997825622558594,0.381,1.565,-1.568,1.610,1.647,-0.051,0.203,-0.018,0.209,1.713,1.568,-2.962,1.281,0.206,-1.411,1.497,0.887,-2.187
+1004,common_q6_tail60,59,0.0029997825622558594,0.335,1.386,-1.772,1.426,1.426,-0.051,0.203,-0.018,0.209,1.620,1.300,-2.964,1.234,0.117,-1.210,1.427,0.708,-2.087
