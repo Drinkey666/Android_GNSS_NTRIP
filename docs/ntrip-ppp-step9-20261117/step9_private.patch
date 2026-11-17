@@ -1,0 +1,296 @@
+--- a/core/pntpos.c
++++ b/core/pntpos.c
+@@ -25,6 +25,7 @@
+ *                           add output of velocity estimation error in estvel()
+ *-----------------------------------------------------------------------------*/
+ #include "rtklib.h"
++#include "step9_audit.h"
+ 
+ /* Smartphone PPP V3.2: UTF-8, MSVC /TC compatible, no variable-length arrays. */
+ 
+@@ -367,6 +368,8 @@
+     return 1;
+ }
+ /* pseudorange residuals -----------------------------------------------------*/
++#include "step9_spp.inc"
++
+ /* pseudorange residuals -----------------------------------------------------*/
+ static int rescode(int iter, const obsd_t* obs, int n, const double* rs,
+     const double* dts, const double* vare, const int* svh,
+@@ -452,7 +455,13 @@
+         /* 8. 计算该观测值的综合方差 (观测方差 + 轨道/钟方差 + 电离层方差 + 对流层方差) */
+         var[nv] = vare[i] + vmeas + vion + vtrp;
+         // 加上最底层的伪距测量噪声方差 (调用你之前问过的 varerr 函数)
+-        var[nv++] += varerr(opt, &obs[i], azel[1 + i * 2], sys);
++        {
++            double noise=varerr(opt, &obs[i], azel[1 + i * 2], sys);
++            var[nv] += noise;
++            s9_row(nv,i,obs+i,-1,sys,azel+2*i,P,r,-CLIGHT*dts[2*i],dion,dtrp,
++                   vare[i],vmeas,vion,vtrp,noise,var[nv],v[nv],H+nv*NX);
++            nv++;
++        }
+     }
+ 
+     /* 9. 约束处理以防止秩亏 (Rank-Deficient) */
+@@ -462,7 +471,9 @@
+         if (mask[i]) continue; // 如果该系统有卫星，正常处理
+         v[nv] = 0.0;             // 虚拟残差
+         for (j = 0; j < NX; j++) H[j + nv * NX] = j == i + 3 ? 1.0 : 0.0;
+-        var[nv++] = 0.01;        // 给定一个小方差约束
++        var[nv] = 0.01;
++        s9_row(nv,-1,NULL,i+3,0,NULL,0,0,0,0,0,0,0,0,0,0,var[nv],v[nv],H+nv*NX);
++        nv++;        // 给定一个小方差约束
+     }
+     return nv; // 返回有效观测方程的总个数
+ }
+@@ -512,14 +523,18 @@
+ 
+     for (i = 0; i < 3; i++) x[i] = sol->rr[i]; // 取上一历元的位置作为迭代初值
+ 
++    s9_try();
+     // 开始最大 MAXITR (通常为 10) 次的最小二乘迭代
+     for (i = 0; i < MAXITR; i++) {
+ 
+         /* 1. 构建观测方程，获取伪距残差 v, 设计矩阵 H, 方差 var (调用之前的 rescode) */
++        s9_iteration=i;
+         nv = rescode(i, obs, n, rs, dts, vare, svh, nav, x, opt, ssat, v, H, var, azel, vsat, resp, &ns);
++        s9_iteration=-1;
+ 
+         // 自由度检查：有效观测数必须大于未知数（通常是3个坐标+系统时差）
+         if (nv < NX) {
++            s9_result("lack_rows",i,0);
+             sprintf(msg, "lack of valid sats ns=%d", nv);
+             break;
+         }
+@@ -534,12 +549,18 @@
+         /* 3. 核心数学运算：最小二乘求解 (H^T * H * dx = H^T * v) */
+         // dx 是本次迭代计算出的改正数，Q 是协方差矩阵 (用于评估精度)
+         if ((info = lsq(H, v, NX, nv, dx, Q))) {
++            s9_result("singular",i,0);
+             sprintf(msg, "lsq error info=%d", info);
+             break; // 矩阵奇异，无法求逆
+         }
+ 
+         // 更新未知数：当前状态 + 改正数
+-        for (j = 0; j < NX; j++) x[j] += dx[j];
++        {
++            double before[NX];
++            memcpy(before,x,sizeof(before));
++            for (j = 0; j < NX; j++) x[j] += dx[j];
++            s9_step(i,nv,before,dx,x);
++        }
+ 
+         /* 4. 收敛判定 */
+         // 如果位置改正数 dx 的模长小于 1E-4 米 (0.1毫米)，认为已经找到最优解！
+@@ -574,10 +595,24 @@
+             if ((stat = valsol(azel, vsat, n, opt, v, nv, NX, msg))) {
+                 sol->stat = opt->sateph == EPHOPT_SBAS ? SOLQ_SBAS : SOLQ_SINGLE; // 标记为单点定位解
+             }
++            s9_result(stat?"valsol_pass":"valsol_reject",i,1);
++            if (stat && s9_log) {
++                double post_azel[2*MAXOBS],post_resp[MAXOBS];
++                int post_n,post_used[MAXOBS];
++                s9_iteration=i;
++                s9_postfit=1;
++                /* Independent, read-only nonlinear residuals at the accepted x.
++                 * Isolate buffers; do not feed this evaluation back to the solver. */
++                rescode(1,obs,n,rs,dts,vare,svh,nav,x,opt,ssat,v,H,var,
++                        post_azel,post_used,post_resp,&post_n);
++                s9_postfit=0;
++                s9_iteration=-1;
++            }
+             free(v); free(H); free(var);
+             return stat; // 成功返回
+         }
+     }
++    if (i >= MAXITR) s9_result("no_convergence",i,0);
+     if (i >= MAXITR) sprintf(msg, "iteration divergent i=%d", i); // 迭代发散，未能收敛
+ 
+     free(v); free(H); free(var);
+@@ -630,10 +665,12 @@
+     sol_t trial,best;
+     double trial_azel[MAXOBS*2],trial_resp[MAXOBS],best_azel[MAXOBS*2],best_resp[MAXOBS];
+     double score,z,metres,best_score;int i,round,dof,candidate,best_i,ok=initial_ok;
++    int s9_best=0;
+     int trial_used[MAXOBS],best_used[MAXOBS];char trial_msg[128],t[40],sid[8];
+     memcpy(work,obs,n*sizeof(*obs));time2str(obs[0].time,t,3);
+     for(round=0;round<3;round++) {
+         candidate=ok?startup_metrics(work,n,rs,dts,vare,svh,nav,opt,ssat,sol,&score,&z,&metres,&dof):-1;
++        if(ok)s9_metrics(candidate,dof,score,z,metres);
+         if(ok&&candidate<0)return 1; /* sparse geometry: do not invent evidence */
+         best_i=-1;best_score=ok?score*0.5:9.0;
+         /* A trial must actually improve a redundant fit. Evaluate all used
+@@ -643,9 +680,13 @@
+             if(work[i].P[0]==0.0||(ok&&!vsat[i]))continue;
+             memcpy(trial_obs,work,n*sizeof(*obs));trial_obs[i].P[0]=0.0;
+             trial=*sol;trial.stat=SOLQ_NONE;
++            s9_hypothesis("startup_fde",work[i].sat,s9_winner);
+             if(!estpos(trial_obs,n,rs,dts,vare,svh,nav,opt,ssat,&trial,trial_azel,trial_used,trial_resp,trial_msg))continue;
+             startup_metrics(trial_obs,n,rs,dts,vare,svh,nav,opt,ssat,&trial,&trial_score,&tz,&tm,&tdof);
++            if(s9_log)fprintf(s9_log,"TRIAL_METRICS\t%d\t%d\t%d\t%.17g\t%.17g\t%.17g\n",
++                              s9_call,s9_attempt,tdof,trial_score,tz,tm);
+             if(tdof<2||!isfinite(trial_score)||trial_score>=best_score)continue;
++            s9_best=s9_attempt;
+             best_score=trial_score;best_i=i;best=trial;
+             memcpy(best_azel,trial_azel,n*2*sizeof(double));
+             memcpy(best_resp,trial_resp,n*sizeof(double));memcpy(best_used,trial_used,n*sizeof(int));
+@@ -658,9 +699,11 @@
+         trace(2,"$START_SPP_REJECT,%s,sat=%s,sig=%s,res=%.3f,worst_z=%.2f,score_before=%.3f,score_after=%.3f\n",
+             t,sid,code2obs(work[best_i].code[0]),ok?resp[best_i]:0.0,ok?z:0.0,ok?score:0.0,best_score);
+         work[best_i].P[0]=0.0;rejected[best_i]=1;*sol=best;ok=1;
++        s9_selection("startup_fde",round,work[best_i].sat,s9_best);
+         memcpy(azel,best_azel,n*2*sizeof(double));memcpy(resp,best_resp,n*sizeof(double));memcpy(vsat,best_used,n*sizeof(int));
+     }
+     candidate=startup_metrics(work,n,rs,dts,vare,svh,nav,opt,ssat,sol,&score,&z,&metres,&dof);
++    s9_metrics(candidate,dof,score,z,metres);
+     if(candidate>=0){strcpy(msg,"startup gross code: exclusion budget exhausted");sol->stat=SOLQ_NONE;return 0;}
+     return ok;
+ }
+@@ -675,6 +718,7 @@
+     char tstr[40],name[8],msg_e[128];
+     double *rs_e,*dts_e,*vare_e,*azel_e,*resp_e,rms_e,rms=100.0;
+     int i,j,k,nvsat,stat=0,*svh_e,*vsat_e,sat=0;
++    int s9_raim_parent=0;
+     
+     trace(3,"raim_fde: %s n=%2d\n",time2str(obs[0].time,tstr,0),n);
+     
+@@ -694,10 +738,15 @@
+             svh_e[k++]=svh[j];
+         }
+         /* estimate receiver position without a satellite */
+-        if (!estpos(obs_e,n-1,rs_e,dts_e,vare_e,svh_e,nav,opt,ssat,&sol_e,azel_e,
+-                    vsat_e,resp_e,msg_e)) {
+-            trace(3,"raim_fde: exsat=%2d (%s)\n",obs[i].sat,msg);
+-            continue;
++        s9_hypothesis("raim_fde",obs[i].sat,s9_raim_parent);
++        {
++            int solved=estpos(obs_e,n-1,rs_e,dts_e,vare_e,svh_e,nav,opt,ssat,
++                              &sol_e,azel_e,vsat_e,resp_e,msg_e);
++            s9_raim_parent=s9_attempt;
++            if (!solved) {
++                trace(3,"raim_fde: exsat=%2d (%s)\n",obs[i].sat,msg);
++                continue;
++            }
+         }
+         for (j=nvsat=0,rms_e=0.0;j<n-1;j++) {
+             if (!vsat_e[j]) continue;
+@@ -725,6 +774,7 @@
+         stat=1;
+         sol_e.eventime = sol->eventime;
+         *sol=sol_e;
++        s9_selection("raim_fde",i,obs[i].sat,s9_attempt);
+         sat=obs[i].sat;
+         rms=rms_e;
+         vsat[i]=0;
+@@ -855,6 +905,7 @@
+      * Keep those writes local, including retries; only commit an accepted SPP.
+      * On failure retain the caller's last trusted numeric solution and mark
+      * its status invalid for this epoch. Satellite fields remain diagnostics. */
++    s9_begin(obs[0].time,startup,opt->sateph);
+     candidate=*sol;
+     sol=&candidate;
+     trace(3,"pntpos  : tobs=%s n=%d\n",time2str(obs[0].time,tstr,3),n);
+@@ -890,6 +941,7 @@
+     
+     /* estimate receiver position and time with pseudorange */
+     stat=estpos(obs,n,rs,dts,var,svh,nav,&opt_,ssat,sol,azel_,vsat,resp,msg);
++    s9_selection("initial",-1,0,s9_attempt);
+     if(startup)stat=startup_fde(obs,n,rs,dts,var,svh,nav,&opt_,ssat,sol,azel_,vsat,resp,stat,rejected,msg);
+     
+     /* 步骤 3：如果开启了 RAIM 且卫星数足够，执行完好性检测剔除坏星 */
+@@ -920,7 +972,8 @@
+     }
+     free(rs); free(dts); free(var); free(azel_); free(resp);
+     if (stat) *output=*sol;
+-    else {
++    s9_end(stat,output);
++    if (!stat) {
+         output->stat=SOLQ_NONE;
+         trace(2,"$SPP_FAILURE,reason=QUALITY_OR_ESTIMATION,action=KEEP_TRUSTED_SOLUTION,msg=%s\n",msg);
+     }
+--- a/core/rtkpos.c
++++ b/core/rtkpos.c
+@@ -3,6 +3,7 @@
+  */
+ #include <stdarg.h>
+ #include "rtklib.h"
++#include "step9_audit.h"
+ #include "ppp_innovation_diag.h"
+ #include "smartphone_ppp_config.h"
+ 
+@@ -306,6 +307,7 @@
+ 
+     time = rtk->sol.time; /* previous epoch */
+ 
++    s9_state(obs[0].time,"rtk_entry",rtk,rtk->x,rtk->ppp_clock_m,0,0);
+     /* rover position and time by single point positioning, skip if
+      position variance smaller than threshold */
+     if (rtk->P[0] == 0 || rtk->P[0] > STD_PREC_VAR_THRESH) {
+@@ -321,6 +323,8 @@
+             rtk->ppp_spp_clock_valid=1;rtk->ppp_spp_clock_m=CLIGHT*spp_output->dtr[0];
+             if(isolated && bootstrap)rtk->sol=spp_candidate;
+         }
++        s9_state(obs[0].time,"spp_return",rtk,spp_output->rr,CLIGHT*spp_output->dtr[0],
++                 spp_ok,spp_ok && (!isolated || bootstrap));
+         ppp_innovation_note_spp(spp_ok && (!isolated || bootstrap));
+         if(isolated) {
+             trace(2,"$SPP_CLOCK_CANDIDATE,ok=%d,used_for_bootstrap=%d,clock_m=%.17g,previous_ppp_clock_m=%.17g\n",
+@@ -356,6 +360,7 @@
+             }
+             /* pntpos commits only accepted solutions. dtr therefore remains
+              * from the last trusted solution, never from a rejected SPP. */
++            s9_state(obs[0].time,"spp_fallback",rtk,rtk->x,CLIGHT*rtk->sol.dtr[0],0,0);
+             trace(2,"$SPP_FALLBACK,clock_source=PREVIOUS_TRUSTED_SOLUTION,clock_s=%.17g\n",rtk->sol.dtr[0]);
+             rtk->sol.time = obs[0].time;
+             for (i = 0; i < 3; i++) rtk->sol.rr[i] = rtk->x[i];
+@@ -374,6 +379,7 @@
+     /* precise point positioning */
+     if (opt->mode >= PMODE_PPP_KINEMA) {
+         pppos(rtk, obs, nu, nav);
++        s9_state(obs[0].time,"ppp_return",rtk,rtk->x,rtk->ppp_clock_m,0,0);
+         /* Corrected lifecycle keeps valid carrier history at every epoch.
+          * LEGACY deliberately reproduces the old 30-second startup window. */
+         if(startup_qc || smartphone_ppp_policy(opt).corrected_lifecycle)for(i=0;i<nu&&i<MAXOBS;i++) {
+--- a/core/ppp.c
++++ b/core/ppp.c
+@@ -61,6 +61,7 @@
+ *                           use E1-E5b for Galileo iono-free LC
+ *-----------------------------------------------------------------------------*/
+ #include "rtklib.h"
++#include "step9_audit.h"
+ #include "ppp_innovation_diag.h"
+ #ifdef ENABLE_FILTER_DIAGNOSTIC
+ #include "ppp_filter_diagnostic.h"
+@@ -2960,13 +2961,16 @@
+     trace(3, "udstate_ppp: n=%d\n", n);
+ 
+     /* temporal update of position */
++    s9_state(obs[0].time,"udpos_in",rtk,rtk->x,rtk->x[IC(0,&rtk->opt)],0,0);
+     udpos_ppp(rtk);
++    s9_state(obs[0].time,"udpos_out",rtk,rtk->x,rtk->x[IC(0,&rtk->opt)],0,0);
+ #ifdef ENABLE_FILTER_DIAGNOSTIC
+     ppp_fd_state("AFTER_POSITION",rtk->x,rtk->P,NT(&rtk->opt)?ppp_total_trop(rtk,rtk->x):0.0,rtk->ppp_trop_base,rtk->ppp_trop_zhd);
+ #endif
+ 
+     /* temporal update of clock */
+     udclk_ppp(rtk);
++    s9_state(obs[0].time,"udclk_out",rtk,rtk->x,rtk->x[IC(0,&rtk->opt)],0,0);
+ #ifdef ENABLE_FILTER_DIAGNOSTIC
+     ppp_fd_state("AFTER_CLOCK",rtk->x,rtk->P,NT(&rtk->opt)?ppp_total_trop(rtk,rtk->x):0.0,rtk->ppp_trop_base,rtk->ppp_trop_zhd);
+ #endif
+@@ -4954,6 +4958,7 @@
+ #endif
+         /* filter 在 rtkcmn 中完成 EKF 测量更新：根据 v/H/R 算增益，更新
+          * xp/Pp。info!=0 为数值更新失败，不能把该试算状态提交成有效 PPP。 */
++        s9_state(obs[0].time,"ppp_trial_prior",rtk,xp,xp[IC(0,opt)],i,nv);
+         if(opt->ppp_iekf) {
+             ppp_iekf_context_t ctx;int iterations=0;
+             memset(&ctx,0,sizeof(ctx));ctx.rtk=rtk;ctx.obs=obs;ctx.n=n;ctx.nav=nav;
+@@ -5012,6 +5017,7 @@
+             if(opt->ppp_iekf)trace(2,"$PPP_IEKF_COMMIT,%s,trial=%d,posterior_commits=1\n",str,i);
+             rtk->ppp_clock_valid=1;rtk->ppp_clock_m=rtk->x[IC(0,opt)];
+             rtk->ppp_clock_time=obs[0].time;
++            s9_state(obs[0].time,"ppp_commit",rtk,rtk->x,rtk->ppp_clock_m,i,nv);
+             stat = SOLQ_PPP;
+             /* Trial editing iterations start from the same prior P: they are
+                not extra measurements. Commit consumption only on success. */
