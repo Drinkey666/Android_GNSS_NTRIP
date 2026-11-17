@@ -15,6 +15,8 @@
 
 ## 当前任务
 
+11/17 已完成 PC 隔离码定权评测。30 组隔离回放及 6 组正式控制完成。11:20 vivo 联合全段 H/U RMS 1.187/2.289 → 1.402/1.842 m，单独 M1 1.187/2.289 → 1.160/1.955 m。10:04 双机共有 Q6 下，联合使 vivo H/U RMS 1.359/1.453 → 1.690/2.125 m、小米 2.343/2.977 → 1.833/2.581 m。10/31 末 60 秒 H/U RMS，V1 1.822/0.460 → 2.254/0.364 m、V2 1.691/0.407 → 1.778/0.093 m。联合精度取舍明显，归档为 NEGATIVE_NOT_FIX。 Android 正式 ppp.c 继续使用已发布基线。[回放报告](ntrip-ppp-step4-20261117/README.md)
+
 11/17 独立 WHU OSB 缓存隔离已同步到 Android 正式代码。独立 WHU 模式下，通道 0 身份检查只看轨钟 k=0/1，通道 2 只看码偏差 k=4。通道 0 在已提交缓存只写非偏差分量，纯码帧且该星无轨钟时跳过写入。1059→1060 回归覆盖 V1/V2、冷启动、已提交合法零与缺失、不同身份和不同时标，usable() 继续通过。 PC 963 项计数原生断言、滤波诊断窗口与 V1 实录连续性夹具均通过。Python 59 通过，4 项历史 IF 诊断按约束未运行。Android x86_64 模拟器原生 617 项通过，构建了 arm64-v8a 和 x86_64 独立测试；App 四 ABI 重建。JVM 165 通过、3 项外网集成冒烟跳过、0 失败。 arm64 实机未运行，APK 未安装。正式 PC 复跑四个小米包 V2，2,623 期 × 17 列与第三轮逐历元表逐字节一致。10:01/10:04/10:41/11:20 分别 119/1466/63/587 个 Q6。逐包 corrections.csv、observations.csv、solution.stat 与私有修正逐字节一致，solution.csv 除 processing_ms 外逐字段一致。 [PC 验证报告](ntrip-ppp-closure-20261117/validation/whu_osb_formal_fix_20261117/REPORT.md) · [三轮诊断索引](ntrip-ppp-closure-20261117/pc-docs/PPP_INVESTIGATION_INDEX.md)
 11/14 从连接的小米 `2407FRK8EC` 取回四个当日采集包。采集包和该机实际 APK SHA256 均为 `04071a6c54e1fdf9e2af09e8ac24c461f81ef7f94ee1400d097ee7a65d3c01bf`，仍采用旧启动规则。PC 复现 2623 期状态，1141 个 Q6 最大坐标差 1.15 µm。11:20 真机首解 268.96 s、293 Q6、全 Q6 水平 RMS 0.608 m；新规则 PC 同包首解 14.80 s、488 Q6。10:04 长段尾部三流无新字节。另定位到轨钟流附带码偏差覆盖独立 WHU OSB 的缓存问题，随后由私有 PC 回放验证，11/17 已同步至正式 PC/Android 本地源码。详见 `E:/GNSS/PPP_NTRIP_PC/validation/android_capture_20261114/REPORT.md`。
 

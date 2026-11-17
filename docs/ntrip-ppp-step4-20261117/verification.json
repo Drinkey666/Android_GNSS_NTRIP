@@ -1,0 +1,637 @@
+{
+  "formal_input_guard_files": 126,
+  "formal_baseline_exact_cases": 6,
+  "raw_and_ssr_equal_all_cases": true,
+  "probe_sha256": "6d8ee7ca2f76604932c09cc17bb6a3cbde7a1f0fab7fec454ceaa9e72f1c789a",
+  "observation_uses_reference": false,
+  "replay_count": 30,
+  "audits": [
+    {
+      "dataset": "1120_vivo",
+      "case": "Baseline",
+      "quality": {
+        "0": 273,
+        "6": 362
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": true,
+      "max_abs_xyz_kv_closure_m": 4.6505910233918257e-10,
+      "committed_updates": 362,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 1765
+    },
+    {
+      "dataset": "1120_vivo",
+      "case": "M1",
+      "quality": {
+        "0": 273,
+        "6": 362
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": false,
+      "max_abs_xyz_kv_closure_m": 4.6554308411744794e-10,
+      "committed_updates": 362,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 1765
+    },
+    {
+      "dataset": "1120_vivo",
+      "case": "M2",
+      "quality": {
+        "0": 273,
+        "6": 362
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": false,
+      "max_abs_xyz_kv_closure_m": 4.6546776502620624e-10,
+      "committed_updates": 362,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 1765
+    },
+    {
+      "dataset": "1120_vivo",
+      "case": "M3",
+      "quality": {
+        "0": 273,
+        "6": 362
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": false,
+      "max_abs_xyz_kv_closure_m": 4.656203547726001e-10,
+      "committed_updates": 362,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 1765
+    },
+    {
+      "dataset": "1120_vivo",
+      "case": "M123",
+      "quality": {
+        "0": 273,
+        "6": 362
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": false,
+      "max_abs_xyz_kv_closure_m": 4.654290104363912e-10,
+      "committed_updates": 362,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 1765
+    },
+    {
+      "dataset": "1120_xiaomi",
+      "case": "Baseline",
+      "quality": {
+        "0": 280,
+        "6": 349
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": true,
+      "max_abs_xyz_kv_closure_m": 4.6555137522830137e-10,
+      "committed_updates": 349,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 2406
+    },
+    {
+      "dataset": "1120_xiaomi",
+      "case": "M1",
+      "quality": {
+        "0": 280,
+        "6": 349
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": false,
+      "max_abs_xyz_kv_closure_m": 4.6141239440355974e-10,
+      "committed_updates": 349,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 2406
+    },
+    {
+      "dataset": "1120_xiaomi",
+      "case": "M2",
+      "quality": {
+        "0": 280,
+        "6": 349
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": false,
+      "max_abs_xyz_kv_closure_m": 4.6449561926821537e-10,
+      "committed_updates": 349,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 2406
+    },
+    {
+      "dataset": "1120_xiaomi",
+      "case": "M3",
+      "quality": {
+        "0": 280,
+        "6": 349
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": false,
+      "max_abs_xyz_kv_closure_m": 4.6555137522830137e-10,
+      "committed_updates": 349,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 2406
+    },
+    {
+      "dataset": "1120_xiaomi",
+      "case": "M123",
+      "quality": {
+        "0": 280,
+        "6": 349
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": false,
+      "max_abs_xyz_kv_closure_m": 4.6465371047327286e-10,
+      "committed_updates": 349,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 2406
+    },
+    {
+      "dataset": "1004_vivo",
+      "case": "Baseline",
+      "quality": {
+        "0": 12,
+        "6": 1786,
+        "5": 2
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": true,
+      "max_abs_xyz_kv_closure_m": 4.656606992364809e-10,
+      "committed_updates": 1788,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 7141
+    },
+    {
+      "dataset": "1004_vivo",
+      "case": "M1",
+      "quality": {
+        "0": 12,
+        "6": 1786,
+        "5": 2
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": false,
+      "max_abs_xyz_kv_closure_m": 4.6496547134429814e-10,
+      "committed_updates": 1788,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 7141
+    },
+    {
+      "dataset": "1004_vivo",
+      "case": "M2",
+      "quality": {
+        "0": 12,
+        "6": 1786,
+        "5": 2
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": false,
+      "max_abs_xyz_kv_closure_m": 4.6502831256957713e-10,
+      "committed_updates": 1788,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 7141
+    },
+    {
+      "dataset": "1004_vivo",
+      "case": "M3",
+      "quality": {
+        "0": 12,
+        "6": 1786,
+        "5": 2
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": false,
+      "max_abs_xyz_kv_closure_m": 4.655869949559549e-10,
+      "committed_updates": 1788,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 7141
+    },
+    {
+      "dataset": "1004_vivo",
+      "case": "M123",
+      "quality": {
+        "0": 12,
+        "6": 1786,
+        "5": 2
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": false,
+      "max_abs_xyz_kv_closure_m": 4.655486777332962e-10,
+      "committed_updates": 1788,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 7141
+    },
+    {
+      "dataset": "1004_xiaomi",
+      "case": "Baseline",
+      "quality": {
+        "0": 337,
+        "6": 1459,
+        "5": 4
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": true,
+      "max_abs_xyz_kv_closure_m": 4.65641177525844e-10,
+      "committed_updates": 1463,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 8637
+    },
+    {
+      "dataset": "1004_xiaomi",
+      "case": "M1",
+      "quality": {
+        "0": 337,
+        "6": 1459,
+        "5": 4
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": false,
+      "max_abs_xyz_kv_closure_m": 4.650030039840547e-10,
+      "committed_updates": 1463,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 8637
+    },
+    {
+      "dataset": "1004_xiaomi",
+      "case": "M2",
+      "quality": {
+        "0": 337,
+        "6": 1459,
+        "5": 4
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": false,
+      "max_abs_xyz_kv_closure_m": 4.653356194296576e-10,
+      "committed_updates": 1463,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 8637
+    },
+    {
+      "dataset": "1004_xiaomi",
+      "case": "M3",
+      "quality": {
+        "0": 337,
+        "6": 1459,
+        "5": 4
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": false,
+      "max_abs_xyz_kv_closure_m": 4.654264465150937e-10,
+      "committed_updates": 1463,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 8637
+    },
+    {
+      "dataset": "1004_xiaomi",
+      "case": "M123",
+      "quality": {
+        "0": 337,
+        "6": 1459,
+        "5": 4
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": false,
+      "max_abs_xyz_kv_closure_m": 4.6556077612849855e-10,
+      "committed_updates": 1463,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 8637
+    },
+    {
+      "dataset": "1031_xiaomi_V1",
+      "case": "Baseline",
+      "quality": {
+        "0": 585,
+        "6": 84
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": true,
+      "max_abs_xyz_kv_closure_m": 4.6514199436575865e-10,
+      "committed_updates": 84,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 336
+    },
+    {
+      "dataset": "1031_xiaomi_V1",
+      "case": "M1",
+      "quality": {
+        "0": 585,
+        "6": 84
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": false,
+      "max_abs_xyz_kv_closure_m": 4.632439848384351e-10,
+      "committed_updates": 84,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 336
+    },
+    {
+      "dataset": "1031_xiaomi_V1",
+      "case": "M2",
+      "quality": {
+        "0": 585,
+        "6": 84
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": false,
+      "max_abs_xyz_kv_closure_m": 4.5993569890157016e-10,
+      "committed_updates": 84,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 336
+    },
+    {
+      "dataset": "1031_xiaomi_V1",
+      "case": "M3",
+      "quality": {
+        "0": 585,
+        "6": 84
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": false,
+      "max_abs_xyz_kv_closure_m": 4.600445371871764e-10,
+      "committed_updates": 84,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 336
+    },
+    {
+      "dataset": "1031_xiaomi_V1",
+      "case": "M123",
+      "quality": {
+        "0": 585,
+        "6": 84
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": false,
+      "max_abs_xyz_kv_closure_m": 4.5903569140248734e-10,
+      "committed_updates": 84,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 336
+    },
+    {
+      "dataset": "1031_xiaomi_V2",
+      "case": "Baseline",
+      "quality": {
+        "0": 5,
+        "6": 663,
+        "5": 1
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": true,
+      "max_abs_xyz_kv_closure_m": 4.6388030569555205e-10,
+      "committed_updates": 664,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 3195
+    },
+    {
+      "dataset": "1031_xiaomi_V2",
+      "case": "M1",
+      "quality": {
+        "0": 5,
+        "6": 663,
+        "5": 1
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": false,
+      "max_abs_xyz_kv_closure_m": 4.6551639496308916e-10,
+      "committed_updates": 664,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 3195
+    },
+    {
+      "dataset": "1031_xiaomi_V2",
+      "case": "M2",
+      "quality": {
+        "0": 5,
+        "6": 663,
+        "5": 1
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": false,
+      "max_abs_xyz_kv_closure_m": 4.654219315719868e-10,
+      "committed_updates": 664,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 3195
+    },
+    {
+      "dataset": "1031_xiaomi_V2",
+      "case": "M3",
+      "quality": {
+        "0": 5,
+        "6": 663,
+        "5": 1
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": false,
+      "max_abs_xyz_kv_closure_m": 4.6345987464446736e-10,
+      "committed_updates": 664,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 3195
+    },
+    {
+      "dataset": "1031_xiaomi_V2",
+      "case": "M123",
+      "quality": {
+        "0": 5,
+        "6": 663,
+        "5": 1
+      },
+      "causal_prefix_identical": true,
+      "observations_identical": true,
+      "formal_solution_equal": false,
+      "max_abs_xyz_kv_closure_m": 4.652958649885991e-10,
+      "committed_updates": 664,
+      "trace_failure_reasons": {},
+      "audited_code_rows_in_Q6": 3195
+    }
+  ],
+  "quality_sequence_comparisons": [
+    {
+      "dataset": "1120_vivo",
+      "case": "Baseline",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1120_vivo",
+      "case": "M1",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1120_vivo",
+      "case": "M2",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1120_vivo",
+      "case": "M3",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1120_vivo",
+      "case": "M123",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1120_xiaomi",
+      "case": "Baseline",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1120_xiaomi",
+      "case": "M1",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1120_xiaomi",
+      "case": "M2",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1120_xiaomi",
+      "case": "M3",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1120_xiaomi",
+      "case": "M123",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1004_vivo",
+      "case": "Baseline",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1004_vivo",
+      "case": "M1",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1004_vivo",
+      "case": "M2",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1004_vivo",
+      "case": "M3",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1004_vivo",
+      "case": "M123",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1004_xiaomi",
+      "case": "Baseline",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1004_xiaomi",
+      "case": "M1",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1004_xiaomi",
+      "case": "M2",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1004_xiaomi",
+      "case": "M3",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1004_xiaomi",
+      "case": "M123",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1031_xiaomi_V1",
+      "case": "Baseline",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1031_xiaomi_V1",
+      "case": "M1",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1031_xiaomi_V1",
+      "case": "M2",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1031_xiaomi_V1",
+      "case": "M3",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1031_xiaomi_V1",
+      "case": "M123",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1031_xiaomi_V2",
+      "case": "Baseline",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1031_xiaomi_V2",
+      "case": "M1",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1031_xiaomi_V2",
+      "case": "M2",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1031_xiaomi_V2",
+      "case": "M3",
+      "all_Q_sequence_same_as_current_formal": true
+    },
+    {
+      "dataset": "1031_xiaomi_V2",
+      "case": "M123",
+      "all_Q_sequence_same_as_current_formal": true
+    }
+  ],
+  "formal_ppp_sha256": "370a3eb2c406b54219c916e517b08060f17378c7b42f4f41dfc4a9576a248c4a",
+  "formal_rtklib_filter_sha256": "9fe32f57ac4300b7d477a41c7862e2e878848c98d213cb078ef9eec344f89aff",
+  "formal_ssr_sha256": "aabd4454a2515f8d5855735685d154b60148552cad88f66dc64cc8304079a314",
+  "pc_ssr_assertions_passed": 637,
+  "pc_phase_osb_assertions_passed": 137,
+  "max_abs_gain_closure_m": 4.656606992364809e-10,
+  "source_snapshot_sha256": {
+    "step4_weights.inc": "803a60ba3ef62f7559b966ae605b02fe33e07cf0bbeb1b5948732469e86e7886",
+    "step4_private.patch": "9d3fbd082a9426d8f06cf6e2c9170136c65f8d20eb0c6e1edbd6a4c287db7ac5"
+  }
+}
