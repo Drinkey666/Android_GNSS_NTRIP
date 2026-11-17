@@ -1,0 +1,197 @@
+--- a/core/ppp.c
++++ b/core/ppp.c
+@@ -2721,12 +2721,13 @@
+     return 1;
+ }
+ #endif
+-static void udbias_ppp(rtk_t* rtk, const obsd_t* obs, int n, const nav_t* nav)
++static void udbias_ppp(rtk_t* rtk, const obsd_t* obs, int n, const nav_t* nav,int seed_source[MAXSAT][NFREQ])
+ {
+     double L[NFREQ], P[NFREQ], Lc, Pc, bias[MAXOBS], offset = 0.0, pos[3] = { 0 };
+     double dion = 0.0, vari = 0.0, gamma, freq, P_clean;
+     double dantr[NFREQ] = { 0 }, dants[NFREQ] = { 0 };
+     int i, j, k, f, f2, sat, sys, slip[MAXOBS] = { 0 }, clk_jump = 0, ifb_slot, id_ifb;
++    int used_rcb[MAXOBS]={0};
+     char tstr[40];
+ 
+     trace(3, "udbias  : n=%d\n", n);
+@@ -2783,6 +2784,7 @@
+             sat = obs[i].sat;
+             bias[i] = 0.0;
+             slip[i] = 0;
++            used_rcb[i]=0;
+             if (smartphone_ppp_policy(&rtk->opt).corrected_lifecycle) {
+                 int confirmed=rtk->ssat[sat-1].slip[f]&LLI_SLIP;
+                 if (rtk->opt.ionoopt==IONOOPT_IFLC) {
+@@ -2861,6 +2863,8 @@
+                 /* L_f - P_ref needs (gamma_f + gamma_ref)*I; same-band
+                  * code uses 2*gamma_f*I. */
+                 bias[i] = L[f] - P_clean + gamma * dion;
++                if(f>0 && seed_frequency==f && id_ifb>=0 && id_ifb<rtk->nx &&
++                    rtk->x[id_ifb]==1E-6)used_rcb[i]=ifb_slot+1;
+                 if(reference_seed && seed_frequency==0 && f>0 && (rtk->x[j]==0.0 || slip[i])) {
+                     char ts[40],sid[8];time2str(obs[i].time,ts,3);satno2id(sat,sid);
+                     trace(2,"$PHASE_REFERENCE_SEED,%s,sat=%s,F%d,phase=%s,reference=%s,own_code_missing=%d,gamma=%.17g,I_slant=%.17g,P_ref_corrected=%.17g,reference_RCB=%.17g,N_seed=%.17g,slip=%d\n",
+@@ -2937,6 +2941,7 @@
+                 }
+ 
+                 initx(rtk, bias[i], VAR_BIAS, j);
++                seed_source[sat-1][f]=used_rcb[i];
+                 ppp_innovation_note_current_init(j,sat,f,1);
+                 if(smartphone_ppp_policy(&rtk->opt).corrected_lifecycle) {
+                     rtk->ssat[sat-1].ppp_arc_pending[f]=0;
+@@ -2955,7 +2960,7 @@
+  * 模糊度初值依赖当前电离层和 RCB，因此不能随意把 udbias 移到它们之前。
+  * “时间更新”以旧状态预测新历元并加过程噪声，与后面的观测测量更新不同。
+  * ============================================================================= */
+-static void udstate_ppp(rtk_t* rtk, const obsd_t* obs, int n, const nav_t* nav)
++static void udstate_ppp(rtk_t* rtk, const obsd_t* obs, int n, const nav_t* nav,int seed_source[MAXSAT][NFREQ])
+ {
+     trace(3, "udstate_ppp: n=%d\n", n);
+ 
+@@ -2993,7 +2998,7 @@
+     ppp_fd_state("AFTER_RCB",rtk->x,rtk->P,NT(&rtk->opt)?ppp_total_trop(rtk,rtk->x):0.0,rtk->ppp_trop_base,rtk->ppp_trop_zhd);
+ #endif
+     /* temporal update of phase-bias */
+-    udbias_ppp(rtk, obs, n, nav);
++    udbias_ppp(rtk, obs, n, nav,seed_source);
+ #ifdef ENABLE_FILTER_DIAGNOSTIC
+     ppp_fd_state("PREDICTED",rtk->x,rtk->P,NT(&rtk->opt)?ppp_total_trop(rtk,rtk->x):0.0,rtk->ppp_trop_base,rtk->ppp_trop_zhd);
+ #endif
+@@ -3473,6 +3478,9 @@
+     const double *H,double *R,int nx,int nv,const unsigned char *gnss,
+     const ppp_innovation_meta_t *meta,gtime_t time,int trial)
+ {return apply_huber_robust_ppp_masked(x,P,v,H,R,nx,nv,gnss,meta,time,trial,0);}
++#include "../brain_step7_m1v4_refinement/step7_weights.inc"
++#include "step8_seed.inc"
++
+ static int ppp_res(int post, const obsd_t* obs, int n, const double* rs,
+     const double* dts, const double* var_rs, const int* svh,
+     const double* dr, int* exc, unsigned char* mexc, const nav_t* nav,
+@@ -4624,6 +4632,10 @@
+     char str[40];
+     const char* diag_opt;
+     ppp_diag_epoch_t diag, evidence;
++    int seed_source[MAXSAT][NFREQ]={{0}};
++    s8_trial_t seed_audit;
++    double s8_before[3];
++    const int with_A=s8_with_A();
+     ppp_innovation_meta_t *row_meta=NULL,*trial_meta[MAX_ITER]={0};
+     ppp_innovation_value_t *trial_value[MAX_ITER]={0};
+     int trial_count[MAX_ITER]={0},capacity;
+@@ -4767,7 +4779,7 @@
+ #ifdef ENABLE_FILTER_DIAGNOSTIC
+     ppp_fd_state("PRE_PREDICTION",rtk->x,rtk->P,NT(opt)?ppp_total_trop(rtk,rtk->x):0.0,rtk->ppp_trop_base,rtk->ppp_trop_zhd);
+ #endif
+-    udstate_ppp(rtk, obs, n, nav);
++    udstate_ppp(rtk, obs, n, nav,seed_source);
+     ppp_innovation_core_events(obs,n,rtk,&observed_slip[0][0]);
+     info=!numeric_finite(rtk->x,rtk->nx)?FILTER_NAN_STATE:
+         ppp_covariance_gate(rtk->P,rtk->nx,ppp_safe_covariance(opt),0);
+@@ -4848,6 +4860,12 @@
+               valid_satpos, n, osb_ok, osb_expired, osb_missing);
+     }
+ 
++    if(opt->ionoopt!=IONOOPT_EST || opt->modear!=ARMODE_OFF ||
++        !ppp_verified_joseph(opt) || opt->ppp_iekf || ND(opt)>S8_RCB_SLOTS) {
++        trace(2,"$S8_INVALID_PROFILE\n");
++        rtk->ppp_failure=FILTER_BAD_DIM;
++        goto cleanup;
++    }
+     /* 第 6 步：按开关处理地影和潮汐。潮汐接口使用 UTC，观测仍保持 GPST。
+      * dr 仅用于几何位置，不能把这一位移再重复写进最终解坐标。 */
+     /* exclude measurements of eclipsing satellite (block IIA) */
+@@ -4878,7 +4896,7 @@
+         ) {
+         row_meta=(ppp_innovation_meta_t *)calloc(capacity,sizeof(*row_meta));
+         if(!row_meta)trace(2,"$INNOV_DIAG_FAILURE,reason=NO_MEMORY,estimator_unchanged=1\n");
+-        if(!row_meta && (smartphone_ppp_policy(opt).common_clock || opt->ppp_iekf)) {
++        if(!row_meta) {
+             rtk->ppp_failure=FILTER_NO_MEMORY;goto cleanup;
+         }
+     }
+@@ -4922,6 +4940,32 @@
+                 group,peers,shift,xp[IC(0,opt)],Pp[IC(0,opt)*(rtk->nx+1)],
+                 rtk->ppp_spp_clock_valid,rtk->ppp_spp_clock_m,have);
+         }
++        {
++            s8_prior_t before[MAXSAT+3];
++            memset(&seed_audit,0,sizeof(seed_audit));
++            seed_audit.pseudo_count=s8_prior_rows(row_meta,v,R,nv,before);
++            if(s8_isb(rtk,xp,v,row_meta,nv,&seed_audit)) {
++                nv=ppp_res(0,obs,n,rs,dts,var,svh,dr,exc,mexc,nav,xp,rtk,
++                    v,H,R,azel,NULL,product_use,row_meta,robust_gnss);
++                if(nv<=0){if(!rtk->ppp_failure)rtk->ppp_failure=PPP_FAILURE_NO_OBS;break;}
++            }
++            if(s8_rcb(rtk,xp,v,row_meta,nv,seed_source,&seed_audit)) {
++                nv=ppp_res(0,obs,n,rs,dts,var,svh,dr,exc,mexc,nav,xp,rtk,
++                    v,H,R,azel,NULL,product_use,row_meta,robust_gnss);
++                if(nv<=0){if(!rtk->ppp_failure)rtk->ppp_failure=PPP_FAILURE_NO_OBS;break;}
++            }
++            seed_audit.p_unchanged=!memcmp(Pp,rtk->P,(size_t)rtk->nx*rtk->nx*sizeof(double));
++            seed_audit.pseudo_unchanged=s8_same_priors(before,seed_audit.pseudo_count,row_meta,v,R,nv);
++            if(!seed_audit.p_unchanged || !seed_audit.pseudo_unchanged) {
++                trace(2,"$S8_SEED_INVARIANT_FAILURE\n");
++                rtk->ppp_failure=FILTER_BAD_DIM;
++                break;
++            }
++        }
++        if(with_A) {
++            s7_row_t weights[S7_ROWS];
++            s7_apply(S7_A,rtk,obs,n,nav,xp,dr,azel,v,R,row_meta,nv,weights);
++        }
+         /* Snapshot pre-fit diagnostics before filter mutates xp/Pp. Outputs
+          * have independent ownership; allocation failure affects logs only. */
+         if(robust_gnss && (info=apply_huber_robust_ppp_masked(xp,Pp,v,H,R,
+@@ -4954,6 +4998,8 @@
+ #endif
+         /* filter 在 rtkcmn 中完成 EKF 测量更新：根据 v/H/R 算增益，更新
+          * xp/Pp。info!=0 为数值更新失败，不能把该试算状态提交成有效 PPP。 */
++        memcpy(s8_before,xp,sizeof(s8_before));
++        s7_gain_count=nv;
+         if(opt->ppp_iekf) {
+             ppp_iekf_context_t ctx;int iterations=0;
+             memset(&ctx,0,sizeof(ctx));ctx.rtk=rtk;ctx.obs=obs;ctx.n=n;ctx.nav=nav;
+@@ -4972,6 +5018,7 @@
+             (opt->ppp_wet_correction || opt->ppp_rcb_datum)?filter_active(xp,Pp,H,v,R,rtk->nx,nv):
+             ppp_verified_joseph(opt)?filter_verified(xp,Pp,H,v,R,rtk->nx,nv):
+             filter(xp,Pp,H,v,R,rtk->nx,nv);
++        s7_gain_count=0;
+ #ifdef ENABLE_FILTER_DIAGNOSTIC
+         ppp_fd_trial_result(info,xp,Pp,NT(opt)?ppp_total_trop(rtk,xp):0.0,rtk->ppp_trop_base,rtk->ppp_trop_zhd);
+ #endif
+@@ -5012,6 +5059,7 @@
+             if(opt->ppp_iekf)trace(2,"$PPP_IEKF_COMMIT,%s,trial=%d,posterior_commits=1\n",str,i);
+             rtk->ppp_clock_valid=1;rtk->ppp_clock_m=rtk->x[IC(0,opt)];
+             rtk->ppp_clock_time=obs[0].time;
++            s8_report(rtk,obs,nv,i,row_meta,s8_before,&seed_audit);
+             stat = SOLQ_PPP;
+             /* Trial editing iterations start from the same prior P: they are
+                not extra measurements. Commit consumption only on success. */
+--- a/core/rtkcmn.c
++++ b/core/rtkcmn.c
+@@ -1572,6 +1572,8 @@
+     }
+     free(C);free(ix);free(scale);return info;
+ }
++extern void s7_active_indices(const int *ix,int n);
++extern void s7_capture_gain(const double *K,const double *v,int n,int m);
+ static int filter_(const double *x, const double *P, const double *H,
+                    const double *v, const double *R, int n, int m,
+                    double *xp, double *Pp,int physical)
+@@ -1594,6 +1596,7 @@
+     }
+     if (!info && !(info=matinv(Q,m))) {
+         matmul("NN",n,m,m,F,Q,K);   /* K=P*H*Q^-1 */
++        s7_capture_gain(K,v,n,m);
+ #ifdef ENABLE_FILTER_DIAGNOSTIC
+         ppp_fd_matrix("K",K,n,m);
+ #endif
+@@ -1656,6 +1659,7 @@
+ #ifdef ENABLE_FILTER_DIAGNOSTIC
+     ppp_fd_filter_begin(x_,P_,H_,v,R,n,m,ix,k,allow_zero);
+ #endif
++    s7_active_indices(ix,k);
+     info=filter_(x_,P_,H_,v,R,k,m,xp_,Pp_,physical);
+     /* copy values from compressed arrays back to full arrays */
+     for (i=0;!info && i<k;i++) {
