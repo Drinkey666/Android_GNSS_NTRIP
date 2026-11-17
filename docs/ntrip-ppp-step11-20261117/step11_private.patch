@@ -1,0 +1,280 @@
+--- a/core/ppp.c
++++ b/core/ppp.c
+@@ -2500,27 +2500,34 @@
+ /* iontec 给 L1 斜路径延迟和方差：除 mapf/mapf^2 得到垂直先验及方差。
+  * 若产品没有 RMS，仍至少使用 IONCONS^2 的方差；异常数值/高度角返回失败。
+  * 本函数只算外部先验，不更新 PPP 状态、不做重复信息时间记账。 */
++static int ionex_vertical_prior_floor(gtime_t time, const nav_t* nav,
++    const double* pos, const double* azel, const prcopt_t* opt,
++    double sig, double* ion_v, double* var_v)
++{
++    double ion_s = 0.0, var_s = 0.0, mapf;
++
++    if (!nav || !pos || !azel || azel[1] <= 0.0) return 0;
++    if ((mapf = ppp_iono_mapf(nav, pos, azel)) <= 0.0) return 0;
++    if (!iontec(time, nav, pos, azel, 1, &ion_s, &var_s)) return 0;
++
++    *ion_v = ion_s / mapf;
++    *var_v = var_s > 0.0 ? var_s / SQR(mapf) : 0.0;
++
++    if (*var_v < SQR(sig)) *var_v = SQR(sig);
++
++    if (!isfinite(*ion_v) || !isfinite(*var_v) || fabs(*ion_v) > 1E4 || *var_v <= 0.0) {
++        return 0;
++    }
++    return 1;
++}
+ static int ionex_vertical_prior(gtime_t time, const nav_t* nav,
+     const double* pos, const double* azel, const prcopt_t* opt,
+     double* ion_v, double* var_v)
+ {
+-    double ion_s = 0.0, var_s = 0.0, mapf, sig;
+-
+-    if (!nav || !pos || !azel || azel[1] <= 0.0) return 0;
+-    if ((mapf = ppp_iono_mapf(nav, pos, azel)) <= 0.0) return 0;
+-    if (!iontec(time, nav, pos, azel, 1, &ion_s, &var_s)) return 0;
+-
+-    *ion_v = ion_s / mapf;
+-    *var_v = var_s > 0.0 ? var_s / SQR(mapf) : 0.0;
+-
+-    sig = ion_constraint_sigma(opt);
+-    if (*var_v < SQR(sig)) *var_v = SQR(sig);
+-
+-    if (!isfinite(*ion_v) || !isfinite(*var_v) || fabs(*ion_v) > 1E4 || *var_v <= 0.0) {
+-        return 0;
+-    }
+-    return 1;
+-}
++    return ionex_vertical_prior_floor(time, nav, pos, azel, opt,
++        ion_constraint_sigma(opt), ion_v, var_v);
++}
++#include "step11_mods.inc"
+ 
+ /* =============================================================================
+  * 功能：卡尔曼滤波时间更新 (预测) -> 电离层参数 (每颗卫星单独估计)
+@@ -2598,6 +2605,12 @@
+     }
+ 
+     ecef2pos(rtk->sol.rr, pos);
++    int s11_o1_on = s11_use_o1_robust(s11_scheme());
++    double s11_ud_delta = 0.0;
++    int s11_ud_ndf = 0;
++    if (s11_o1_on) {
++        s11_ud_delta = s11_df_iono_delta(rtk, obs, n, nav, rtk->x, pos, NULL, NULL, &s11_ud_ndf);
++    }
+ 
+     for (i = 0; i < n && i < MAXOBS; i++) {
+         sat = obs[i].sat;
+@@ -2614,9 +2627,12 @@
+             /* First choice: initialize from the same IONEX product that will be
+              * used as a soft constraint. This avoids noisy phone code-difference
+              * initialization being contaminated by receiver IFB/code noise. */
++            int s11_sf = s11_o1_on && s11_sat_freq_count(rtk, obs + i, nav) == 1;
++            double s11_sig = s11_sf ? 0.90 : ion_constraint_sigma(&rtk->opt);
+             if ((smartphone_ppp_policy(&rtk->opt).atmosphere_constraints ||
+                 rtk->opt.ppp_physical_atmosphere) &&
+-                ionex_vertical_prior(obs[i].time, nav, pos, azel, &rtk->opt, &ion, &vari)) {
++                ionex_vertical_prior_floor(obs[i].time, nav, pos, azel, &rtk->opt, s11_sig, &ion, &vari)) {
++                if (s11_sf) ion += s11_ud_delta;
+                 if (!rtk->opt.ppp_physical_atmosphere && fabs(ion) < 1E-8)
+                     ion = 1E-6; /* legacy active-state sentinel */
+                 initx(rtk, ion, vari, j);
+@@ -2647,7 +2663,9 @@
+         }
+         else {
+             sinel = sin(MAX(azel[1], 5.0 * D2R));
+-            rtk->P[j + j * rtk->nx] += SQR(rtk->opt.prn[1] / sinel) *
++            int s11_sf = s11_o1_on && s11_sat_freq_count(rtk, obs + i, nav) == 1;
++            double s11_prn = s11_sf ? 0.7 * rtk->opt.prn[1] : rtk->opt.prn[1];
++            rtk->P[j + j * rtk->nx] += SQR(s11_prn / sinel) *
+                 (observation_lifecycle?observed_dt[sat-1]:fabs(rtk->tt));
+         }
+     }
+@@ -3501,6 +3519,8 @@
+     int maxobs = -1, maxfrq = -1, rej = -1;
+     int i, j, k, sat, sys, nv = 0, nx = rtk->nx, stat = 1, frq, code;
+     int ionex_constraints = 0, vmf3_zwd_constraints = 0;
++    int s11_sc = s11_scheme(), s11_cmd_inflated = 0, s11_cmd_rows = 0;
++    double s11_cmd_max_f = 1.0, s11_cmd_sum_f = 0.0;
+     int statmodel=statistical_model_ppp(opt);
+     unsigned char gnss_used[MAXSAT]={0};
+     double res, C;
+@@ -3800,6 +3820,25 @@
+             if(!isfinite(z0)) {rtk->ppp_failure=FILTER_NAN_INPUT;return FILTER_NAN_INPUT;}
+             if (diag && frq < NFREQ)
+                 diag->obs[i][frq].physical_sigma[code]=sigma0;
++            if (code == 1 && s11_use_cmd(s11_sc) && frq < NFREQ &&
++                s11_cmd_count[sat - 1][frq] >= 4) {
++                double denom = MAX(base_obs_var, 1.0);
++                double f_cmd = 0.5 * s11_cmd_var_ema[sat - 1][frq] / denom;
++                if (!isfinite(f_cmd) || f_cmd < 1.0) f_cmd = 1.0;
++                if (f_cmd > 16.0) f_cmd = 16.0;
++                if (!post) {
++                    s11_cmd_rows++;
++                    s11_cmd_sum_f += f_cmd;
++                    if (f_cmd > 1.0 + 1E-12) s11_cmd_inflated++;
++                    if (f_cmd > s11_cmd_max_f) s11_cmd_max_f = f_cmd;
++                }
++                if (f_cmd > 1.0) {
++                    double code_base = base_obs_var * signal_weight_ppp(sys, obs[i].code[frq], code, opt);
++                    if (sys == SYS_CMP) code_base *= bds_code_factor;
++                    if (!sat_has_phase && !rtk->ppp_code_warmup) code_base *= code_only_factor;
++                    var[nv] += (f_cmd - 1.0) * code_base;
++                }
++            }
+             /* Never claim the white-noise variance reduction as independent
+                PPP information: retain the raw-code floor. An experimental
+                causal row-sum accounts for temporal covariance approximately,
+@@ -3912,6 +3951,11 @@
+         !post && opt->ionoopt == IONOOPT_EST && v && H) {
+         unsigned char used[MAXSAT] = { 0 };
+         int logged_interval = 0;
++        double s11_res_delta = 0.0;
++        int s11_res_ndf = 0, s11_res_nsf = 0;
++        if (s11_use_o1_robust(s11_sc)) {
++            s11_res_delta = s11_df_iono_delta(rtk, obs, n, nav, x, pos, azel, exc, &s11_res_ndf);
++        }
+ 
+         for (i = 0; i < n && i < MAXOBS; i++) {
+             double ion_prior, var_prior, sigma_prior, zc, penalty = 1.0;
+@@ -3928,10 +3972,14 @@
+                 rtk->P[ii+ii*nx]<=0.0:x[ii]==0.0)) continue;
+             if(opt->ppp_physical_atmosphere && !gnss_used[sat-1])continue;
+ 
+-            if (!ionex_vertical_prior(obs[i].time, nav, pos, azel + i * 2,
+-                opt, &ion_prior, &var_prior)) {
++            int s11_sf = s11_use_o1_robust(s11_sc) && s11_sat_freq_count(rtk, obs + i, nav) == 1;
++            double s11_sig = s11_sf ? 0.90 : ion_constraint_sigma(opt);
++            if (s11_sf) s11_res_nsf++;
++            if (!ionex_vertical_prior_floor(obs[i].time, nav, pos, azel + i * 2,
++                opt, s11_sig, &ion_prior, &var_prior)) {
+                 continue;
+             }
++            if (s11_sf) ion_prior += s11_res_delta;
+             interval = opt->ppp_physical_atmosphere?physical_iono_interval(nav):ion_constraint_interval(opt);
+             if(opt->ppp_physical_atmosphere && interval<=0.0)continue;
+             if ((statmodel&2) || opt->ppp_physical_atmosphere) {
+@@ -4058,6 +4106,25 @@
+     if (!post && product_use) {
+         product_use[0] = ionex_constraints;
+         product_use[1] = vmf3_zwd_constraints;
++    }
++    if (!post) {
++        s11_last_cmd_inflated = s11_cmd_inflated;
++        s11_last_cmd_rows = s11_cmd_rows;
++        s11_last_cmd_max_f = s11_cmd_max_f;
++        s11_last_cmd_sum_f = s11_cmd_sum_f;
++        if (s11_use_o1_robust(s11_sc) && v && H) {
++            int s11_idx;
++            s11_last_delta_df = 0.0; s11_last_ndf = 0; s11_last_nsf = 0;
++            for (s11_idx = 0; s11_idx < n && s11_idx < MAXOBS; s11_idx++) {
++                if (!exc[s11_idx] && azel[1 + s11_idx * 2] >= opt->elmin && s11_sat_freq_count(rtk, obs + s11_idx, nav) == 1) {
++                    int s11_ii = II(obs[s11_idx].sat, opt);
++                    if (s11_ii >= 0 && s11_ii < nx && x[s11_ii] != 0.0) s11_last_nsf++;
++                }
++            }
++            s11_last_delta_df = s11_df_iono_delta(rtk, obs, n, nav, x, pos, azel, exc, &s11_last_ndf);
++        } else {
++            s11_last_delta_df = 0.0; s11_last_ndf = 0; s11_last_nsf = 0;
++        }
+     }
+ 
+     /* 一次编辑只屏蔽验后 z0 最大的单条观测，并返回 stat=0 请求重算。
+@@ -4624,6 +4691,8 @@
+     char str[40];
+     const char* diag_opt;
+     ppp_diag_epoch_t diag, evidence;
++    const int step11_mode = s11_scheme();
++    double s11_before[3];
+     ppp_innovation_meta_t *row_meta=NULL,*trial_meta[MAX_ITER]={0};
+     ppp_innovation_value_t *trial_value[MAX_ITER]={0};
+     int trial_count[MAX_ITER]={0},capacity;
+@@ -4734,6 +4803,7 @@
+         if (smartphone_ppp_policy(opt).startup_qc)
+             precheck_startup_code_ppp(rtk,obs,n,nav,rs,dts,var,svh);
+     }
++    s11_cmd_update(rtk, obs, n, nav);
+     phase_osb_arcs_ppp(rtk,obs,n,nav);
+     /* 第 3 步：平滑及可选码阶段选择，各执行一次；严禁移进残差编辑循环，
+      * 否则同一 epoch 会重复平滑和增加历史计数，fast/realtime 也可能不等价。 */
+@@ -4848,6 +4918,12 @@
+               valid_satpos, n, osb_ok, osb_expired, osb_missing);
+     }
+ 
++    if (step11_mode < 0 || opt->ionoopt != IONOOPT_EST || opt->modear != ARMODE_OFF ||
++        !ppp_verified_joseph(opt) || opt->ppp_iekf) {
++        trace(2, "$S11_INVALID_PROFILE\n");
++        rtk->ppp_failure = FILTER_BAD_DIM;
++        goto cleanup;
++    }
+     /* 第 6 步：按开关处理地影和潮汐。潮汐接口使用 UTC，观测仍保持 GPST。
+      * dr 仅用于几何位置，不能把这一位移再重复写进最终解坐标。 */
+     /* exclude measurements of eclipsing satellite (block IIA) */
+@@ -4968,10 +5044,14 @@
+             trace(2,"$PPP_IEKF,%s,trial=%d,iterations=%d,reason=%s,fixed_prior=1,fixed_R=1,posterior_committed=0\n",
+                 str,i,iterations,filter_reason(info));
+         }
++        memcpy(s11_before, xp, sizeof(s11_before));
++        s11_gain_count = nv;
++        if (0) {}
+         else info=opt->ppp_physical_atmosphere?filter_physical(xp,Pp,H,v,R,rtk->nx,nv):
+             (opt->ppp_wet_correction || opt->ppp_rcb_datum)?filter_active(xp,Pp,H,v,R,rtk->nx,nv):
+             ppp_verified_joseph(opt)?filter_verified(xp,Pp,H,v,R,rtk->nx,nv):
+             filter(xp,Pp,H,v,R,rtk->nx,nv);
++        s11_gain_count = 0;
+ #ifdef ENABLE_FILTER_DIAGNOSTIC
+         ppp_fd_trial_result(info,xp,Pp,NT(opt)?ppp_total_trop(rtk,xp):0.0,rtk->ppp_trop_base,rtk->ppp_trop_zhd);
+ #endif
+@@ -5069,6 +5149,7 @@
+         /* 把状态复制为 rtk->sol，按实际通过的载波卫星数决定最终 Q/ns；
+          * 隔离只跨历元更新一次，不随前面的试算次数增加。 */
+         update_stat(rtk, obs, n, stat);
++        if (rtk->sol.stat == SOLQ_PPP) s11_report(rtk, obs, nv, s11_before);
+         if (smartphone_ppp_policy(opt).quality_learning)
+             update_phase_quarantine_ppp(rtk, obs, n, mexc, &diag);
+ 
+--- a/core/rtkcmn.c
++++ b/core/rtkcmn.c
+@@ -1572,6 +1572,8 @@
+     }
+     free(C);free(ix);free(scale);return info;
+ }
++extern void s11_active_indices(const int *ix, int n);
++extern void s11_capture_gain(const double *K, const double *v, int n, int m);
+ static int filter_(const double *x, const double *P, const double *H,
+                    const double *v, const double *R, int n, int m,
+                    double *xp, double *Pp,int physical)
+@@ -1594,6 +1596,7 @@
+     }
+     if (!info && !(info=matinv(Q,m))) {
+         matmul("NN",n,m,m,F,Q,K);   /* K=P*H*Q^-1 */
++        s11_capture_gain(K, v, n, m);
+ #ifdef ENABLE_FILTER_DIAGNOSTIC
+         ppp_fd_matrix("K",K,n,m);
+ #endif
+@@ -1656,6 +1659,7 @@
+ #ifdef ENABLE_FILTER_DIAGNOSTIC
+     ppp_fd_filter_begin(x_,P_,H_,v,R,n,m,ix,k,allow_zero);
+ #endif
++    s11_active_indices(ix, k);
+     info=filter_(x_,P_,H_,v,R,k,m,xp_,Pp_,physical);
+     /* copy values from compressed arrays back to full arrays */
+     for (i=0;!info && i<k;i++) {
+--- a/src/gnss_replay.c
++++ b/src/gnss_replay.c
+@@ -6,6 +6,7 @@
+ #include "gnss_replay.h"
+ #include "ppp_product_check.h"
+ #include "pc_ssr_replay.h"
++extern void ppp_presmooth_wait(rtk_t *rtk, const obsd_t *obs, int n, const nav_t *nav);
+ #include <windows.h>
+ #include <ctype.h>
+ #include <math.h>
+@@ -886,6 +887,7 @@
+         pc_ssr_preserve_rejected_arcs(rtk,obs,nobs,corrected,ready);
+         if(ready<4) {
+             /* No fake solution and no mutation of the last trusted filter state. */
++            ppp_presmooth_wait(rtk,obs,nobs,nav);
+             tow=time2gpst(source_epoch,&week);
+             if(result_file)fprintf(result_file,"%d,%.9f,0,0,0,,,,,,,,,,0\n",week,tow);
+             fprintf(stderr,"SSR_WAIT,week=%d,tow=%.9f,corrected_sat=%d\n",week,tow,ready);
