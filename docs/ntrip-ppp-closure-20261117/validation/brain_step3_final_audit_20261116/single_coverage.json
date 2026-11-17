@@ -1,0 +1,38 @@
+[
+  {
+    "device": "vivo",
+    "q6": 301,
+    "pp_pos_epochs": 301,
+    "trace_stat": {
+      "matrix_v_R_rows": 363,
+      "stat_post_rows": 6583
+    },
+    "civ_count_checks": {
+      "compared": 301,
+      "propagated_count_matches": 296,
+      "trace_rejects": 1,
+      "modeled_rejects": 3,
+      "matching_reject_values": 1
+    },
+    "phone_quality_events": [],
+    "replay_quality_events": []
+  },
+  {
+    "device": "xiaomi",
+    "q6": 293,
+    "pp_pos_epochs": 293,
+    "trace_stat": {
+      "matrix_v_R_rows": 498,
+      "stat_post_rows": 8660
+    },
+    "civ_count_checks": {
+      "compared": 293,
+      "propagated_count_matches": 268,
+      "trace_rejects": 2,
+      "modeled_rejects": 2,
+      "matching_reject_values": 0
+    },
+    "phone_quality_events": [],
+    "replay_quality_events": []
+  }
+]

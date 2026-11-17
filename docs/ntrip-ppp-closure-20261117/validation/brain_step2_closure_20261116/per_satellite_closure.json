@@ -1,0 +1,114 @@
+{
+  "reruns": 0,
+  "code_rows": 861,
+  "comparison": [
+    {
+      "device": "vivo",
+      "group": "GPS_1C",
+      "window": "epoch1",
+      "errors": {
+        "U": -1.1102230246251565e-16,
+        "IC0": 0.0
+      }
+    },
+    {
+      "device": "vivo",
+      "group": "GPS_1C",
+      "window": "first20",
+      "errors": {
+        "U": 0.0,
+        "IC0": 8.881784197001252e-16
+      }
+    },
+    {
+      "device": "vivo",
+      "group": "GAL_1C",
+      "window": "epoch1",
+      "errors": {
+        "U": 0.0,
+        "IC0": 0.0
+      }
+    },
+    {
+      "device": "vivo",
+      "group": "GAL_1C",
+      "window": "first20",
+      "errors": {
+        "U": 0.0,
+        "IC0": 0.0
+      }
+    },
+    {
+      "device": "vivo",
+      "group": "BDS_CODE",
+      "window": "epoch1",
+      "errors": {
+        "U": 1.7763568394002505e-15,
+        "IC0": 4.440892098500626e-16
+      }
+    },
+    {
+      "device": "vivo",
+      "group": "BDS_CODE",
+      "window": "first20",
+      "errors": {
+        "U": 1.7763568394002505e-15,
+        "IC0": 6.938893903907228e-16
+      }
+    },
+    {
+      "device": "xiaomi",
+      "group": "GPS_1C",
+      "window": "epoch1",
+      "errors": {
+        "U": 0.0,
+        "IC0": -9.020562075079397e-17
+      }
+    },
+    {
+      "device": "xiaomi",
+      "group": "GPS_1C",
+      "window": "first20",
+      "errors": {
+        "U": -4.440892098500626e-16,
+        "IC0": 0.0
+      }
+    },
+    {
+      "device": "xiaomi",
+      "group": "GAL_1C",
+      "window": "epoch1",
+      "errors": {
+        "U": 1.6653345369377348e-16,
+        "IC0": 5.551115123125783e-17
+      }
+    },
+    {
+      "device": "xiaomi",
+      "group": "GAL_1C",
+      "window": "first20",
+      "errors": {
+        "U": 2.220446049250313e-16,
+        "IC0": 5.551115123125783e-17
+      }
+    },
+    {
+      "device": "xiaomi",
+      "group": "BDS_CODE",
+      "window": "epoch1",
+      "errors": {
+        "U": 2.220446049250313e-16,
+        "IC0": -6.661338147750939e-16
+      }
+    },
+    {
+      "device": "xiaomi",
+      "group": "BDS_CODE",
+      "window": "first20",
+      "errors": {
+        "U": -1.3322676295501878e-15,
+        "IC0": 0.0
+      }
+    }
+  ]
+}

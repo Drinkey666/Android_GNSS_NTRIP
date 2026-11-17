@@ -141,6 +141,52 @@ int main() {
     reverse_whu->feed(nav.get(),2,older_bias.data(),(int)older_bias.size(),timeadd(t,5));
     CHECK(reverse_whu->blocked&&reverse_whu->reason=="WHU_OSB_EPOCH_REGRESSION");
 
+    for(bool start_with_first_bias:{false,true}) {
+        auto isolated=std::make_unique<NtripSsr>();CHECK(isolated->init());
+        CHECK(isolated->useWhuOsb("SSRC00WHU0","OSBC00WHU1",true,start_with_first_bias));
+        auto embedded=frame(3,9,77,3,false,false,475,99999);
+        auto orbit_only=frame(4,2,12,1);
+        auto independent=frame(3,5,1,1,false,false,125,99900);
+        auto update_orbit=frame(4,2,12,1,false,false,125,100001);
+        auto feed_isolated=[&](int channel,const std::vector<unsigned char> &bytes,gtime_t receipt) {
+            isolated->feed(nav.get(),channel,bytes.data(),(int)bytes.size(),receipt);
+        };
+        auto &cached=isolated->committed[0];
+        feed_isolated(0,embedded,t);
+        CHECK(!isolated->blocked && isolated->provider==-1);
+        CHECK(isolated->decoder[0]->ssr[0].cbias[CODE_L1C-1]==4.75);
+        CHECK(!cached.t0[4].time && !cached.cbias_valid[CODE_L1C-1] && !cached.update);
+        if(!start_with_first_bias)feed_isolated(2,first_bias,timeadd(t,-5));
+        feed_isolated(2,independent,t);
+        const ssr_t bias_snapshot=cached;
+        CHECK(timediff(cached.t0[4],t)==-100.0 && cached.udi[4]==5.0);
+        CHECK(cached.iod[4]==5 && cached.provider[4]==1 && cached.solution[4]==1);
+        CHECK(cached.cbias_valid[CODE_L1C-1] && cached.cbias[CODE_L1C-1]==1.25);
+        CHECK(cached.cbias_valid[CODE_L5Q-1] && cached.cbias[CODE_L5Q-1]==0.0);
+        CHECK(!cached.cbias_valid[CODE_L1W-1]);
+        auto bias_preserved=[&]() {
+            return timediff(cached.t0[4],bias_snapshot.t0[4])==0.0 &&
+                cached.udi[4]==bias_snapshot.udi[4] && cached.iod[4]==bias_snapshot.iod[4] &&
+                cached.provider[4]==bias_snapshot.provider[4] && cached.solution[4]==bias_snapshot.solution[4] &&
+                std::memcmp(cached.cbias,bias_snapshot.cbias,sizeof(cached.cbias))==0 &&
+                std::memcmp(cached.cbias_valid,bias_snapshot.cbias_valid,sizeof(cached.cbias_valid))==0;
+        };
+        feed_isolated(0,embedded,t);
+        CHECK(!isolated->blocked && !cached.t0[0].time && bias_preserved());
+        feed_isolated(0,orbit_only,t);
+        CHECK(!isolated->blocked && isolated->provider==12 && isolated->solution==1 && bias_preserved());
+        CHECK(isolated->usable(1,t,&why));
+        CHECK(why==(start_with_first_bias?"READY_WHU_OSB_FIRST_COMPLETE":"READY_WHU_OSB_CONTINUITY"));
+        const auto later=timeadd(t,1);
+        feed_isolated(0,embedded,later);
+        CHECK(!isolated->blocked && timediff(cached.t0[0],t)==0.0 && bias_preserved());
+        CHECK(isolated->usable(1,later,&why));
+        feed_isolated(0,update_orbit,later);
+        CHECK(!isolated->blocked && bias_preserved());
+        CHECK(timediff(cached.t0[0],later)==0.0 && timediff(cached.t0[1],later)==0.0);
+        CHECK(isolated->usable(1,later,&why));
+    }
+
     auto bds=std::make_unique<NtripSsr>();CHECK(bds->init());
     const int c01=satno(SYS_CMP,1)-1;
     auto bo=frame(4,2,12,1,false,false,125,99986,true);

@@ -4,6 +4,20 @@
 #include <cstdlib>
 #include <cstring>
 
+/* Components 0-3 are orbit, clock, high-rate clock and URA. */
+static void copy_orbit_clock(ssr_t &to,const ssr_t &from) {
+    for(int k=0;k<4;k++) {
+        to.t0[k]=from.t0[k];to.udi[k]=from.udi[k];to.iod[k]=from.iod[k];
+        to.provider[k]=from.provider[k];to.solution[k]=from.solution[k];
+    }
+    to.iode=from.iode;to.iodcrc=from.iodcrc;to.ura=from.ura;to.refd=from.refd;
+    memcpy(to.deph,from.deph,sizeof(to.deph));
+    memcpy(to.ddeph,from.ddeph,sizeof(to.ddeph));
+    memcpy(to.dclk,from.dclk,sizeof(to.dclk));
+    to.hrclk=from.hrclk;
+    to.bds_iod_mode=from.bds_iod_mode;to.bds_toe_mod=from.bds_toe_mod;
+    to.update=from.update;
+}
 static void copy_phase(ssr_t &to,const ssr_t &from) {
     to.t0[5]=from.t0[5];to.udi[5]=from.udi[5];to.iod[5]=from.iod[5];
     to.provider[5]=from.provider[5];to.solution[5]=from.solution[5];
@@ -227,7 +241,9 @@ void NtripSsr::feed(nav_t *nav,int channel,const unsigned char *data,int count,g
              * A change requires an explicit new filter session, not stale arcs. */
             int &pid=channel==2?bias_provider:provider;
             int &sid=channel==2?bias_solution:solution;
-            for(int k: {0,1,4})if(s.t0[k].time && (channel==0 || k==4)) {
+            for(int k: {0,1,4}) {
+                const bool owns_component=k==4 ? (channel==2 || !whu_osb) : channel==0;
+                if(!owns_component || !s.t0[k].time)continue;
                 if(pid<0){pid=s.provider[k];sid=s.solution[k];}
                 if(pid!=s.provider[k]||sid!=s.solution[k]) {
                     blocked=true;reason="SSR_PROVIDER_CHANGED_RESTART_REQUIRED";return;
@@ -246,8 +262,10 @@ void NtripSsr::feed(nav_t *nav,int channel,const unsigned char *data,int count,g
                 }
             }
             auto &target=committed[sat];
-            if(channel==0) {
-                // Independent bias transport must not erase orbit/clock or vice versa.
+            if(channel==0 && whu_osb) {
+                // Channel 2 owns the committed WHU code and phase biases.
+                if(s.t0[0].time || s.t0[1].time)copy_orbit_clock(target,s);
+            } else if(channel==0) {
                 const auto previous=target;target=s;
                 copy_phase(target,previous);
                 if(!s.t0[4].time && previous.t0[4].time) {

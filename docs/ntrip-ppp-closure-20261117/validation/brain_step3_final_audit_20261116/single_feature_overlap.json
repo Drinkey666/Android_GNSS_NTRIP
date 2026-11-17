@@ -1,0 +1,352 @@
+[
+  {
+    "scope": "first20",
+    "features": [
+      "no_second",
+      "sigma2",
+      "sigma3",
+      "mad3",
+      "mad4",
+      "phase_missing",
+      "cmc1",
+      "civ5",
+      "gf3"
+    ],
+    "counts": {
+      "no_second": {
+        "vivo": {
+          "samples": 105,
+          "hits": 105
+        },
+        "xiaomi": {
+          "samples": 118,
+          "hits": 79
+        }
+      },
+      "sigma2": {
+        "vivo": {
+          "samples": 105,
+          "hits": 0
+        },
+        "xiaomi": {
+          "samples": 118,
+          "hits": 0
+        }
+      },
+      "sigma3": {
+        "vivo": {
+          "samples": 105,
+          "hits": 0
+        },
+        "xiaomi": {
+          "samples": 118,
+          "hits": 0
+        }
+      },
+      "mad3": {
+        "vivo": {
+          "samples": 105,
+          "hits": 24
+        },
+        "xiaomi": {
+          "samples": 118,
+          "hits": 9
+        }
+      },
+      "mad4": {
+        "vivo": {
+          "samples": 105,
+          "hits": 22
+        },
+        "xiaomi": {
+          "samples": 118,
+          "hits": 5
+        }
+      },
+      "phase_missing": {
+        "vivo": {
+          "samples": 105,
+          "hits": 11
+        },
+        "xiaomi": {
+          "samples": 118,
+          "hits": 25
+        }
+      },
+      "cmc1": {
+        "vivo": {
+          "samples": 85,
+          "hits": 30
+        },
+        "xiaomi": {
+          "samples": 82,
+          "hits": 43
+        }
+      },
+      "civ5": {
+        "vivo": {
+          "samples": 92,
+          "hits": 9
+        },
+        "xiaomi": {
+          "samples": 92,
+          "hits": 6
+        }
+      },
+      "gf3": {
+        "vivo": {
+          "samples": 0,
+          "hits": 0
+        },
+        "xiaomi": {
+          "samples": 39,
+          "hits": 5
+        }
+      }
+    },
+    "overlap_patterns": 11,
+    "overlapping_rows_vivo": 84,
+    "overlapping_rows_xiaomi": 70,
+    "same_sat_examples": [
+      {
+        "sat": "C10",
+        "pattern": [
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          null
+        ],
+        "vivo_second": "530690",
+        "xiaomi_second": "530690"
+      },
+      {
+        "sat": "G03",
+        "pattern": [
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          null,
+          null,
+          null
+        ],
+        "vivo_second": "530689",
+        "xiaomi_second": "530689"
+      },
+      {
+        "sat": "G10",
+        "pattern": [
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          null
+        ],
+        "vivo_second": "530699",
+        "xiaomi_second": "530690"
+      },
+      {
+        "sat": "G25",
+        "pattern": [
+          true,
+          false,
+          false,
+          false,
+          false,
+          true,
+          null,
+          true,
+          null
+        ],
+        "vivo_second": "530711",
+        "xiaomi_second": "530694"
+      }
+    ]
+  },
+  {
+    "scope": "all_q6",
+    "features": [
+      "no_second",
+      "sigma2",
+      "sigma3",
+      "mad3",
+      "mad4",
+      "phase_missing",
+      "cmc1",
+      "civ5",
+      "gf3"
+    ],
+    "counts": {
+      "no_second": {
+        "vivo": {
+          "samples": 1611,
+          "hits": 1611
+        },
+        "xiaomi": {
+          "samples": 1574,
+          "hits": 1052
+        }
+      },
+      "sigma2": {
+        "vivo": {
+          "samples": 1607,
+          "hits": 12
+        },
+        "xiaomi": {
+          "samples": 1574,
+          "hits": 0
+        }
+      },
+      "sigma3": {
+        "vivo": {
+          "samples": 1607,
+          "hits": 0
+        },
+        "xiaomi": {
+          "samples": 1574,
+          "hits": 0
+        }
+      },
+      "mad3": {
+        "vivo": {
+          "samples": 1607,
+          "hits": 195
+        },
+        "xiaomi": {
+          "samples": 1574,
+          "hits": 107
+        }
+      },
+      "mad4": {
+        "vivo": {
+          "samples": 1607,
+          "hits": 165
+        },
+        "xiaomi": {
+          "samples": 1574,
+          "hits": 56
+        }
+      },
+      "phase_missing": {
+        "vivo": {
+          "samples": 1611,
+          "hits": 262
+        },
+        "xiaomi": {
+          "samples": 1574,
+          "hits": 270
+        }
+      },
+      "cmc1": {
+        "vivo": {
+          "samples": 1297,
+          "hits": 716
+        },
+        "xiaomi": {
+          "samples": 1269,
+          "hits": 786
+        }
+      },
+      "civ5": {
+        "vivo": {
+          "samples": 1493,
+          "hits": 119
+        },
+        "xiaomi": {
+          "samples": 1373,
+          "hits": 25
+        }
+      },
+      "gf3": {
+        "vivo": {
+          "samples": 0,
+          "hits": 0
+        },
+        "xiaomi": {
+          "samples": 522,
+          "hits": 31
+        }
+      }
+    },
+    "overlap_patterns": 24,
+    "overlapping_rows_vivo": 1590,
+    "overlapping_rows_xiaomi": 1049,
+    "same_sat_examples": [
+      {
+        "sat": "C10",
+        "pattern": [
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          null
+        ],
+        "vivo_second": "530690",
+        "xiaomi_second": "530690"
+      },
+      {
+        "sat": "G03",
+        "pattern": [
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          null
+        ],
+        "vivo_second": "530745",
+        "xiaomi_second": "530692"
+      },
+      {
+        "sat": "G10",
+        "pattern": [
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          null
+        ],
+        "vivo_second": "530699",
+        "xiaomi_second": "530690"
+      },
+      {
+        "sat": "G25",
+        "pattern": [
+          true,
+          false,
+          false,
+          false,
+          false,
+          true,
+          null,
+          false,
+          null
+        ],
+        "vivo_second": "530716",
+        "xiaomi_second": "530692"
+      }
+    ]
+  }
+]

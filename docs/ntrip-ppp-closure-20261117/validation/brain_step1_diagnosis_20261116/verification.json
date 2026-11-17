@@ -1,0 +1,11 @@
+{
+  "protected_file_hashes_match": 103,
+  "completed_runs": 14,
+  "new_ablation_runs": 10,
+  "unchanged_quality_sequences": 14,
+  "common_q6_epochs": 282,
+  "first_q6_paired_rows": 22,
+  "final_filter_q6_epochs": 40,
+  "ionex_robustified_rows": 0,
+  "notes": "No IF/IFLC or ambiguity fixing was enabled. Historical WHU_OSB_CONTINUITY_V1 retained."
+}

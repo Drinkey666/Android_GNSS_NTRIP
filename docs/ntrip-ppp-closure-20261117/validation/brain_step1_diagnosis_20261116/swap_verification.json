@@ -1,0 +1,226 @@
+{
+  "control:vivo": {
+    "planned_rows": 0,
+    "applied_rows": 0,
+    "changed_Q_epochs": 0,
+    "epochs": 635,
+    "observation_rows": 9155,
+    "corrections_byte_identical": true,
+    "only_P_m_changed": true,
+    "max_abs_group_net_injection_m": 0.0,
+    "max_abs_printed_code_error_m": 0.0,
+    "numerical_failures": 0,
+    "injection_epoch_count": 0,
+    "injection_groups": {}
+  },
+  "control:xiaomi": {
+    "planned_rows": 0,
+    "applied_rows": 0,
+    "changed_Q_epochs": 0,
+    "epochs": 629,
+    "observation_rows": 11537,
+    "corrections_byte_identical": true,
+    "only_P_m_changed": true,
+    "max_abs_group_net_injection_m": 0.0,
+    "max_abs_printed_code_error_m": 0.0,
+    "numerical_failures": 0,
+    "injection_epoch_count": 0,
+    "injection_groups": {}
+  },
+  "matrix:vivo": {
+    "planned_rows": 0,
+    "applied_rows": 0,
+    "changed_Q_epochs": 0,
+    "epochs": 635,
+    "observation_rows": 9155,
+    "corrections_byte_identical": true,
+    "only_P_m_changed": true,
+    "max_abs_group_net_injection_m": 0.0,
+    "max_abs_printed_code_error_m": 0.0,
+    "numerical_failures": 0,
+    "injection_epoch_count": 0,
+    "injection_groups": {}
+  },
+  "matrix:xiaomi": {
+    "planned_rows": 0,
+    "applied_rows": 0,
+    "changed_Q_epochs": 0,
+    "epochs": 629,
+    "observation_rows": 11537,
+    "corrections_byte_identical": true,
+    "only_P_m_changed": true,
+    "max_abs_group_net_injection_m": 0.0,
+    "max_abs_printed_code_error_m": 0.0,
+    "numerical_failures": 0,
+    "injection_epoch_count": 0,
+    "injection_groups": {}
+  },
+  "swap_only_GPS_1C:vivo": {
+    "planned_rows": 1500,
+    "applied_rows": 1500,
+    "changed_Q_epochs": 0,
+    "epochs": 635,
+    "observation_rows": 9155,
+    "corrections_byte_identical": true,
+    "only_P_m_changed": true,
+    "max_abs_group_net_injection_m": 3.000000525776869e-09,
+    "max_abs_printed_code_error_m": 9.694309212271435e-05,
+    "numerical_failures": 0,
+    "injection_epoch_count": 256,
+    "injection_groups": {
+      "G:1C": 1500
+    }
+  },
+  "swap_only_GPS_1C:xiaomi": {
+    "planned_rows": 1500,
+    "applied_rows": 1500,
+    "changed_Q_epochs": 0,
+    "epochs": 629,
+    "observation_rows": 11537,
+    "corrections_byte_identical": true,
+    "only_P_m_changed": true,
+    "max_abs_group_net_injection_m": 3.000000525776869e-09,
+    "max_abs_printed_code_error_m": 9.512037415126962e-05,
+    "numerical_failures": 0,
+    "injection_epoch_count": 256,
+    "injection_groups": {
+      "G:1C": 1500
+    }
+  },
+  "swap_only_GAL_1C:vivo": {
+    "planned_rows": 1238,
+    "applied_rows": 1238,
+    "changed_Q_epochs": 0,
+    "epochs": 635,
+    "observation_rows": 9155,
+    "corrections_byte_identical": true,
+    "only_P_m_changed": true,
+    "max_abs_group_net_injection_m": 2.000000609569952e-09,
+    "max_abs_printed_code_error_m": 9.801241587448217e-05,
+    "numerical_failures": 0,
+    "injection_epoch_count": 253,
+    "injection_groups": {
+      "E:1C": 1238
+    }
+  },
+  "swap_only_GAL_1C:xiaomi": {
+    "planned_rows": 1238,
+    "applied_rows": 1238,
+    "changed_Q_epochs": 0,
+    "epochs": 629,
+    "observation_rows": 11537,
+    "corrections_byte_identical": true,
+    "only_P_m_changed": true,
+    "max_abs_group_net_injection_m": 2.000000609569952e-09,
+    "max_abs_printed_code_error_m": 9.754390787697353e-05,
+    "numerical_failures": 0,
+    "injection_epoch_count": 253,
+    "injection_groups": {
+      "E:1C": 1238
+    }
+  },
+  "swap_only_GAL_5Q:vivo": {
+    "planned_rows": 1024,
+    "applied_rows": 1024,
+    "changed_Q_epochs": 0,
+    "epochs": 635,
+    "observation_rows": 9155,
+    "corrections_byte_identical": true,
+    "only_P_m_changed": true,
+    "max_abs_group_net_injection_m": 2.0000000683362273e-09,
+    "max_abs_printed_code_error_m": 9.809104957003711e-05,
+    "numerical_failures": 0,
+    "injection_epoch_count": 256,
+    "injection_groups": {
+      "E:5Q": 1024
+    }
+  },
+  "swap_only_GAL_5Q:xiaomi": {
+    "planned_rows": 1024,
+    "applied_rows": 1024,
+    "changed_Q_epochs": 0,
+    "epochs": 629,
+    "observation_rows": 11537,
+    "corrections_byte_identical": true,
+    "only_P_m_changed": true,
+    "max_abs_group_net_injection_m": 2.0000000683362273e-09,
+    "max_abs_printed_code_error_m": 9.467193119050421e-05,
+    "numerical_failures": 0,
+    "injection_epoch_count": 256,
+    "injection_groups": {
+      "E:5Q": 1024
+    }
+  },
+  "swap_epoch1_only:vivo": {
+    "planned_rows": 14,
+    "applied_rows": 14,
+    "changed_Q_epochs": 0,
+    "epochs": 635,
+    "observation_rows": 9155,
+    "corrections_byte_identical": true,
+    "only_P_m_changed": true,
+    "max_abs_group_net_injection_m": 1.0000004158072784e-09,
+    "max_abs_printed_code_error_m": 8.916197427177863e-05,
+    "numerical_failures": 0,
+    "injection_epoch_count": 1,
+    "injection_groups": {
+      "E:5Q": 4,
+      "E:1C": 4,
+      "G:1C": 6
+    }
+  },
+  "swap_epoch1_only:xiaomi": {
+    "planned_rows": 14,
+    "applied_rows": 14,
+    "changed_Q_epochs": 0,
+    "epochs": 629,
+    "observation_rows": 11537,
+    "corrections_byte_identical": true,
+    "only_P_m_changed": true,
+    "max_abs_group_net_injection_m": 1.0000004158072784e-09,
+    "max_abs_printed_code_error_m": 6.779222838404486e-05,
+    "numerical_failures": 0,
+    "injection_epoch_count": 1,
+    "injection_groups": {
+      "E:5Q": 4,
+      "E:1C": 4,
+      "G:1C": 6
+    }
+  },
+  "swap_after_epoch1_delta:vivo": {
+    "planned_rows": 3522,
+    "applied_rows": 3522,
+    "changed_Q_epochs": 0,
+    "epochs": 635,
+    "observation_rows": 9155,
+    "corrections_byte_identical": true,
+    "only_P_m_changed": true,
+    "max_abs_group_net_injection_m": 2.000003718194421e-09,
+    "max_abs_printed_code_error_m": 9.936059604642722e-05,
+    "numerical_failures": 0,
+    "injection_epoch_count": 280,
+    "injection_groups": {
+      "E:5Q": 1020,
+      "E:1C": 1008,
+      "G:1C": 1494
+    }
+  },
+  "swap_after_epoch1_delta:xiaomi": {
+    "planned_rows": 3522,
+    "applied_rows": 3522,
+    "changed_Q_epochs": 0,
+    "epochs": 629,
+    "observation_rows": 11537,
+    "corrections_byte_identical": true,
+    "only_P_m_changed": true,
+    "max_abs_group_net_injection_m": 2.000003718194421e-09,
+    "max_abs_printed_code_error_m": 9.627822785551743e-05,
+    "numerical_failures": 0,
+    "injection_epoch_count": 280,
+    "injection_groups": {
+      "E:5Q": 1020,
+      "E:1C": 1008,
+      "G:1C": 1494
+    }
+  }
+}

@@ -1,0 +1,37 @@
+1. Single-device 11:20, recorded old-policy Q6. Counts are modeled primary / modeled dual. Sigma/MAD uses the first postfit and >=5 satellites. CIV is reconstructed.
+
+Device | SV | Freq first20 | Freq full | vsat first20 | First20 peak sigma/MAD | Full peak sigma/MAD | Bad/streak first20 | First20 max CMC/CIV (m)
+vivo | C10 2I | 19/0 | 272/0 | 19 | 0.85/4.96 | 1.69/11.56 | 0/0 | 2.36/1.45
+vivo | C19 2I | 19/0 | 272/0 | 19 | 0.36/1.18 | 1.28/6.17 | 0/0 | 1.68/0.63
+vivo | C20 2I | 19/0 | 272/0 | 19 | 0.68/1.21 | 1.20/3.07 | 0/0 | 1.16/1.34
+vivo | C22 2I | 19/0 | 272/0 | 18 | 0.65/3.03 | 0.89/8.02 | 0/0 | 2.23/0.77
+vivo | C36 2I | 19/0 | 272/0 | 19 | 0.87/5.05 | 1.50/5.05 | 0/0 | 2.88/2.79
+vivo | E07 1C | 20/20 | 279/279 | 17 | 0.50/2.20 | 0.84/8.13 | 0/0 | 3.34/2.49
+vivo | E27 1C | 20/0 | 279/0 | 20 | 0.61/6.19 | 1.24/6.19 | 0/0 | 2.08/1.69
+vivo | G03 1C | 19/0 | 274/0 | 18 | 1.11/18.41 | 1.47/25.08 | 0/0 | 7.22/5.70
+vivo | G10 1C | 19/0 | 274/0 | 18 | 0.69/1.69 | 1.06/8.42 | 0/0 | 1.99/1.64
+vivo | G25 1C | 9/0 | 240/0 | 0 | 1.18/21.02 | 2.82/63.98 | 0/0 | -/13.36
+vivo | G28 1C | 19/19 | 274/274 | 0 | 0.42/2.20 | 2.72/42.33 | 0/0 | -/11.18
+xiaomi | C10 2I | 19/0 | 259/0 | 17 | 1.63/4.16 | 1.81/62.20 | 0/0 | 3.46/2.28
+xiaomi | C19 2I | 19/19 | 259/259 | 19 | 1.19/2.73 | 1.86/5.97 | 0/0 | 4.65/4.35
+xiaomi | C20 2I | 19/19 | 259/259 | 19 | 0.64/1.56 | 0.92/1.56 | 0/0 | 3.25/2.49
+xiaomi | C22 2I | 19/19 | 259/259 | 18 | 0.39/2.50 | 0.88/5.42 | 0/0 | 0.57/1.70
+xiaomi | C36 2I | 19/19 | 259/259 | 19 | 0.47/0.80 | 2.33/4.26 | 0/0 | 2.18/1.45
+xiaomi | E07 1C | 0/0 | 233/233 | 0 | -/- | 0.84/5.45 | 0/0 | -/-
+xiaomi | E27 1C | 20/20 | 263/263 | 20 | 0.49/0.86 | 1.47/4.35 | 0/0 | 1.48/1.27
+xiaomi | G03 1C | 20/0 | 266/0 | 17 | 1.29/4.52 | 1.29/6.64 | 0/0 | 3.56/3.45
+xiaomi | G10 1C | 20/0 | 266/0 | 20 | 0.40/0.73 | 0.90/7.83 | 0/0 | 2.37/1.65
+xiaomi | G25 1C | 20/0 | 261/0 | 0 | 0.50/4.47 | 1.05/8.49 | 0/0 | -/7.10
+xiaomi | G28 1C | 20/20 | 266/266 | 6 | 1.02/1.22 | 2.52/23.19 | 0/0 | 0.71/3.82
+
+No first-20 code row on the six focus satellites reached 2 physical sigmas on either phone. G03,G10,C10,G25 share feature patterns with Xiaomi. E27,C19 are single-code on vivo and dual-code on Xiaomi, yet the group patterns cannot separate all six targets. Absence of paired carrier makes CMC unavailable for G25.
+
+2. WHU four Xiaomi captures, first-complete V2. Tail means use candidate minus baseline in baseline solution ENU.
+
+Session | Q6 | Common | Mean SSR satellites | New rows | Final P/L | Delta E/N/U (m) | Tail H RMS | Tail U RMS
+1001 | 55->119 | 55 | 20.04->24.91 | 466 | 349/269 | -0.02/0.10/0.44 | 1.968->2.000 | 3.912->3.602
+1004 | 852->1466 | 852 | 15.74->25.30 | 14643 | 10055/8277 | -0.07/0.14/-0.58 | 2.054->2.083 | 2.423->2.998
+1041 | 45->63 | 45 | 18.18->22.87 | 379 | 266/242 | 0.31/0.03/0.38 | 1.927->1.427 | 2.770->2.316
+1120 | 488->587 | 488 | 23.44->25.48 | 1716 | 1314/1116 | 0.08/0.07/-0.01 | 0.629->0.719 | 0.615->0.623
+
+Private patch isolates the final code-cache fields. Both versions still check embedded k=4 provider/solution. Shared OSB values are unchanged. Earlier added observations account for the tested tail effects. No paired winning-trial matrix is stored for these WHU runs, so per-signal K*v is unavailable.

@@ -1,5 +1,7 @@
 # 手机实时 NTRIP PPP 问题报告
 
+本文记录 11/16 的诊断基线。11/17 的 WHU OSB 正式修复、回归和三轮诊断见 [后续归档](../ntrip-ppp-closure-20261117/README.md)。
+
 2026-11-16 · Android 分析基线 [`1932fda`](https://github.com/Drinkey666/Android_GNSS_NTRIP/commit/1932fdabb607412d89fe60615032320a14278e57)
 
 使用安卓 GNSS Raw 观测做实时 WHU NTRIP PPP。轨钟来自 `SSRC00WHU0`（CoM），偏差来自 `OSBC00WHU1`，广播星历来自 `BCEP00BKG0`，大气产品为同期预报 IONEX 和 VMF3。当前估计器是 B_VERIFIED 非组合浮点 PPP，显式估计逐星电离层，使用 Joseph 协方差更新。文中 Q6 指本项目接受的浮点 PPP 结果，Q0 指无解。

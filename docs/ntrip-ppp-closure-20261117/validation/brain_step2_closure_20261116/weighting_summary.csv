@@ -1,0 +1,13 @@
+case,device,scope,statmod,committed_code_rows,weighted_lock_rows,median_extra_multiplier,max_extra_multiplier,time_var_positive_rows,time_var_add_median_m2,time_var_add_max_m2,G25_1C_rows,G25_1C_deweighted
+single_control,vivo,all_q6,3,6583,0,,1,205,7.415842695479569e-08,27.609126885584658,240,0
+single_control,vivo,first20,3,462,0,,1,41,9.625143349012433e-08,27.609126885584658,9,0
+probe_statmod7,vivo,all_q6,7,6583,0,,1,6313,8.883669011169705,995.0010299411201,240,0
+probe_statmod7,vivo,first20,7,462,0,,1,410,17.496386029740208,995.0010299411201,9,0
+probe_phase_locked_code_deweight,vivo,all_q6,3,6583,5069,12,74,205,7.41584411656504e-08,27.60912310846173,240,0
+probe_phase_locked_code_deweight,vivo,first20,3,462,318,7.0,20,41,9.62514050684149e-08,27.60912310846173,9,0
+single_control,xiaomi,all_q6,3,8675,0,,1,255,5.655634538470622e-08,31.416429382762985,261,0
+single_control,xiaomi,first20,3,658,0,,1,38,8.186622935113519e-08,4.670579294962417,20,0
+probe_statmod7,xiaomi,all_q6,7,8675,0,,1,8337,8.708603496121057,1003.0050890767736,261,0
+probe_statmod7,xiaomi,first20,7,658,0,,1,603,15.871796648924953,1003.0050890767736,20,0
+probe_phase_locked_code_deweight,xiaomi,all_q6,3,8675,6706,8.0,40,255,5.655637735912933e-08,31.416426797679037,261,0
+probe_phase_locked_code_deweight,xiaomi,first20,3,658,455,7,16,38,8.186624000927623e-08,4.670578543255781,20,0

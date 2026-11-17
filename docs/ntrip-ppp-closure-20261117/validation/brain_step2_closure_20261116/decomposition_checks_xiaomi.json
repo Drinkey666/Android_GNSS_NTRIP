@@ -1,0 +1,11 @@
+{
+  "anchor_rows": 14,
+  "full_rows": 3762,
+  "pre_anchor_rows": 0,
+  "delta_matches_step1": 3522,
+  "nonzero_cohort_bridge": 904,
+  "bridge_max_abs_m": 1.0680282708490267,
+  "legacy_median_common_max_abs_m": 5.545682365860282,
+  "anchored_row_identity_max_error_m": 5.820766091346741e-11,
+  "rebuilt_legacy_max_error_m": 5.820766264819088e-11
+}

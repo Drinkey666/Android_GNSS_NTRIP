@@ -1,0 +1,130 @@
+{
+  "pc_native_assertions": {
+    "NTRIP_NATIVE_CHECKS": 637,
+    "NTRIP_PHASE_OSB_CHECKS": 137,
+    "CAUSAL_REPLAY_CHECKS": 40,
+    "FILTER_SAFETY_CHECKS": 15,
+    "IONEX_GEOMETRY_CHECKS": 121,
+    "SSR_BIAS_REFERENCE_CHECKS": 13
+  },
+  "pc_diagnostic_window_passed": true,
+  "pc_whu_continuity_fixture": {
+    "profile": "WHU_OSB_CONTINUITY_V1",
+    "first_ready_elapsed_s": 161.280129,
+    "max_ready_GEC": 88,
+    "GPS_code_epoch_count": 2,
+    "blocked": false
+  },
+  "pc_python_passed": 59,
+  "pc_python_excluded_historical_if": 4,
+  "android_native_x86_64_assertions": 617,
+  "android_native_arm64_compiled_and_linked": true,
+  "android_native_arm64_runtime_executed": false,
+  "android_assemble_abis": [
+    "arm64-v8a",
+    "armeabi-v7a",
+    "x86",
+    "x86_64"
+  ],
+  "android_jvm": {
+    "tests": 168,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3,
+    "passed": 165,
+    "skipped_methods": [
+      "com.example.ftpget.NavHttpsPublicSmokeTest.whuFindsSameIssuePairAcrossSundayWeekBoundary",
+      "com.example.ftpget.NavHttpsPublicSmokeTest.whuNrtBiaFromExplicitPairDirectory",
+      "com.example.ftpget.NavHttpsPublicSmokeTest.bkgHttpsDownloadsAndValidatesRealNav"
+    ]
+  },
+  "android_apk_installed": false,
+  "changed_files_sha256": {
+    "E:\\GNSS\\PPP_NTRIP_PC\\src\\ntrip_ssr.cpp": {
+      "before": "ef8acaaaa652b15cc571ef2f95910b37becfd489af975b2ac924663ab23b9baf",
+      "after": "aabd4454a2515f8d5855735685d154b60148552cad88f66dc64cc8304079a314"
+    },
+    "E:\\android\\test\\PPP_NTRIP\\app\\src\\main\\cpp\\ntrip_ssr.cpp": {
+      "before": "ef8acaaaa652b15cc571ef2f95910b37becfd489af975b2ac924663ab23b9baf",
+      "after": "aabd4454a2515f8d5855735685d154b60148552cad88f66dc64cc8304079a314"
+    },
+    "E:\\GNSS\\PPP_NTRIP_PC\\tests\\ntrip_ssr_test.cpp": {
+      "before": "ad881a97c9e17f0006480fd6ae07ed34df80973031b775f50846499c2422cf77",
+      "after": "b1bfb14f76c2b1e47c437d0b8ad4781fa9b13a2ebd4b8119af9d481b8ac817bb"
+    },
+    "E:\\android\\test\\PPP_NTRIP\\app\\src\\main\\cpp\\tests\\ntrip_ssr_test.cpp": {
+      "before": "2fd662b14b60fe2a2d495c747376f19f1e04cf14af0799bf27807810e4bcffa2",
+      "after": "f3bc3bfef4d5ad2a16a3bed78dc024d4546384cf03f34113e9705a5ced586912"
+    },
+    "E:\\GNSS\\PPP_NTRIP_PC\\docs\\CURRENT_STATE.md": {
+      "before": "4d7ccc0fdc7d29838162b08104ed8d59c10ae9aabbd03eb60ef1a1f76f886165",
+      "after": "a46a8664086fbbcfa72d38a800b4ec0c6a53c8cab7de23e26de06a7dd757d505"
+    },
+    "E:\\android\\test\\PPP_NTRIP\\docs\\CURRENT_STATE.md": {
+      "before": "9589dac0bf182c91dca97ebddff4535dd158b30568347b73986fe3e46acdad0e",
+      "after": "22d20ff9c0e37167da57c8bb6f4bf1b8af95ae09a7efe02ac6ef6f09821abd52"
+    },
+    "E:\\GNSS\\PPP_NTRIP_PC\\docs\\PPP_INVESTIGATION_INDEX.md": {
+      "before": "35fb310b9759ea7d0cc502569b940f537ceb74f22ebf8c0de7f310bf54e92aaf",
+      "after": "4dd2bc1b255cfcfdca162c0a64576039f2e26f6029a728aaf48bdf87fc40967e"
+    },
+    "E:\\GNSS\\PPP_NTRIP_PC\\docs\\PPP_INVESTIGATION_LEDGER.json": {
+      "before": "da3d49f4b543a49ea03e910f7b2c0d4ca5e52dd0f439f03496bc3f11b965e377",
+      "after": "6ff7e76a7e5b03d68a2649bf0a30132b6c0ddc644419d4c56183e3be4d48f517"
+    }
+  },
+  "preserved_guard_count": 368,
+  "historical_evidence_count": 364,
+  "shared_pins_both_sides": {
+    "smartphone_ppp_config.c": "1bd7b119cc8579a8420b39539f5c6752fef4da538b8ec6fa51d93c8f7ee715ea",
+    "smartphone_ppp_config.h": "bfb035e589d2efb50bd7abe38b43f4713f9217054d87e7b17f8facae2cd30685",
+    "rtklib.h": "3db34fbb7baaabde2a45f09ef9589cd84584691d93d24a2fcf6869b87cce382e",
+    "gnss_raw.h": "6a33baf5a1d751c5bf8398c1b9b79d708fcf393aca4b7cb777dddb7103cb2f1f",
+    "gnss_adapter.c": "1cbf1cc3685fb17f6fd8bc8b1ad7f4b26529b9aa577f2c9891d9402822ad969f",
+    "gnss_adapter.h": "39ed682130ebac4adc12512851527c9e7e5d087363fe1753a7c0e294c1bdabc9",
+    "gnss_signal_policy.c": "76ed65904b7e22acfeb08d799dea32c377339bf64087f1c2f0aa0e60c9244a7f",
+    "gnss_signal_policy.h": "8b47c9e1e70ca4d0af6c1f043b46c85a8812fcf522433a430816253038feeaa4",
+    "rtkcmn.c": "edb03a943b08ac8a25d14bc229fa300b9c2aed9852c61df6f41361af84835034",
+    "rtkpos.c": "3be217e44ea939b4b5448cdb7779f55dae2e29c2fa85a8d68d55a3093b90d478",
+    "ppp.c": "40baac2ed9563a1bf940c76850d3248d9789db99a526a1556a7ce0c4a59ca234",
+    "ppp_ar.c": "6d877315f817eb6eddf25b1121d7c521a8fa6f4d3ca270f1f2d34242b23667a9",
+    "pntpos.c": "093bcb9fa5e2328f7539345d7121539ca1fb288f4727e0192fa19d85ff3899bf",
+    "preceph.c": "f457edde362e5364c9bd831f3484901648ed9db404e12ce09af053e25a9b2be0",
+    "rinex.c": "132b2315fd7967cca1642f4c38d896cbac38c541462ba232bcf9a95e45e054fe",
+    "ionex.c": "99dbb6fc9222d00f51469a9ecbf1bb2d1277e9cf7b13afd1a864bc1e1e19c3bb",
+    "tides.c": "b6810c02d7cc4b234d44cf698aeaf3698407204ab5be669c14a9046a35d94e89",
+    "sofa.c": "857b77f2f06a9463b3cd2a217937885ffa3c5a5a0cc2bea46878a20d5646b9c0",
+    "sbas.c": "e7c5c3ddd0f878f4a038b042e31e107a18b8c399476ea1b09712a75a89a773cd",
+    "ephemeris.c": "24d61d93ab33202a933fca64cf0cc3b1910675ef6c5869eaf1cb8cada13c8aa8",
+    "geoid.c": "767e9c880cf097663dfe061ca6445f6c389cec8992470a05dbf57f3853bcca0d",
+    "solution.c": "33ebc230e01aacdfc47f1f0b39d7b57c8606b8faad6cc6c416541f63a764154c",
+    "trace.c": "42c557904b75644d8b9b1c5b6ec8193397dbcab603a70129567bf6ab99c716a3",
+    "postpos.c": "b1fd5b7a211fb2b6ebb7c48a01f06ca0dfd53cf5c28c0d88f2d092c19542bc7e",
+    "rtcm.c": "b782428fbd46e346eebb9708a7090005cd5c042b1b80fd96853153dbda7ab0fa",
+    "rtcm2.c": "bb497c21bee86598d6c6b38f4713be9dbe1d74bb75eb9001194abbba9850b1fe",
+    "rtcm3.c": "8ddf3522a22b266d5f5937277cac05b6ed2b31b583e837c8041d90ffbc1cf9be",
+    "rtcm3e.c": "ec2abfdbbada712242976e1d4e3f1933b31073da6101e9e4e4166b0a4154df5d",
+    "ppp_innovation_diag.c": "1184a2a640fdf836aeb9050cec3dae8f57dbdad8fbe100fea763a0280d44008d",
+    "ppp_innovation_diag.h": "dfbaf5062700e327215ead95bd15965069a9a6109cfb709c9f2771a21206ab27",
+    "ppp_filter_diagnostic.c": "84673f822ad11371d3f756e221bf61d4da41657b731c36e4de27b97ac7c7e006",
+    "ppp_filter_diagnostic.h": "157b727ac2af831ebc4c80ca2a1bb4857cd06bba45b6cc6c63363d0ad0b8a2e4",
+    "gnss_clock_reference.h": "4225c2a95de1108940beaca0a8c664f55f56958a4f2d3900152c78b304a46948"
+  },
+  "artifacts_sha256": {
+    "E:\\GNSS\\PPP_NTRIP_PC\\bin\\ppp_ssr_replay.exe": "ade219b70ceedfab089e74d95ae1af92ae80cb981887d905c90f5942b51def7a",
+    "E:\\GNSS\\PPP_NTRIP_PC\\validation\\build.json": "b134e0f987d0bad3ed1372369900e1cb886f61b860ca40edca8af25da0ece907",
+    "E:\\GNSS\\PPP_NTRIP_PC\\validation\\whu_osb_formal_fix_20261117\\whu_q6_and_admission_by_epoch.csv": "adb8e73fc6530c920789abf4835798447b0473f17093f2d721786eef7815bf10",
+    "E:\\GNSS\\PPP_NTRIP_PC\\validation\\whu_osb_formal_fix_20261117\\replay_verification.json": "2b1e36008fc45cebfa0ec9ac10b505dd6a4ac79846df3d682d2342140b21ec57",
+    "E:\\GNSS\\PPP_NTRIP_PC\\validation\\whu_osb_formal_fix_20261117\\android-native-arm64-v8a\\ntrip_native_test": "59e39f65535ee8faa0573e6b078275ab31af6a20e0812f65bfe6dae0b16bd91c",
+    "E:\\GNSS\\PPP_NTRIP_PC\\validation\\whu_osb_formal_fix_20261117\\android-native-x86_64\\ntrip_native_test": "fad44166c3be41e616c38dddf838394819245ca6ad3d5212461f3f83a09069d4",
+    "E:\\android\\test\\PPP_NTRIP\\app\\build\\outputs\\apk\\debug\\app-debug.apk": "cb6493abe2fb7efd82373120896863244e394a9749a13e7c58f42c26b9dbc17b"
+  },
+  "all_four_replays_match_full_audit_table": true,
+  "epoch_table_rows": 2623,
+  "epoch_table_columns": 17,
+  "hash_scope": "Windows 工作区在正式验证完成时的文件字节。后续 GitHub 交接更新和发布副本转换独立记录。",
+  "published_git_lf_source_sha256": {
+    "app/src/main/cpp/ntrip_ssr.cpp": "4297acca234472d29404c6550e5c2c6c08c519037df19f67e811474d46baf2fa",
+    "app/src/main/cpp/tests/ntrip_ssr_test.cpp": "c798a0e86d3b803ff8c49fa0033243c0c571e96f908c14515e46fcd4d3721a8e"
+  }
+}

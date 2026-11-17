@@ -1,0 +1,75 @@
+EXCLUDED_BY_USER_CONSTRAINT: test_ntrip_continuous_code.py Historical dual-frequency ionosphere-cancelling diagnostic; user forbids further execution.
+test_dropped_raw_data_is_not_accuracy_input (test_android_import.AndroidImportTests.test_dropped_raw_data_is_not_accuracy_input) ... ok
+test_incomplete_manifest_is_not_accepted (test_android_import.AndroidImportTests.test_incomplete_manifest_is_not_accepted) ... ok
+test_modified_txt_is_not_accepted (test_android_import.AndroidImportTests.test_modified_txt_is_not_accepted) ... ok
+test_path_traversal_rejected_before_extraction (test_android_import.AndroidImportTests.test_path_traversal_rejected_before_extraction) ... ok
+test_phone_clock_mismatch_does_not_shift_data (test_android_import.AndroidImportTests.test_phone_clock_mismatch_does_not_shift_data) ... ok
+test_real_kotlin_zip_native_txt_and_no_clock_shift (test_android_import.AndroidImportTests.test_real_kotlin_zip_native_txt_and_no_clock_shift) ... ok
+test_callback_without_anchor_rejected (test_android_ledger.LedgerTests.test_callback_without_anchor_rejected) ... ok
+test_confirmed_same_hcdc_step_matches_native_normalization (test_android_ledger.LedgerTests.test_confirmed_same_hcdc_step_matches_native_normalization) ... ok
+test_duplicate_epoch_rejected (test_android_ledger.LedgerTests.test_duplicate_epoch_rejected) ... ok
+test_empty_ledger_does_not_claim_replay_readiness (test_android_ledger.LedgerTests.test_empty_ledger_does_not_claim_replay_readiness) ... ok
+test_explicit_causal_order_does_not_require_wall_clock_shift (test_android_ledger.LedgerTests.test_explicit_causal_order_does_not_require_wall_clock_shift) ... ok
+test_fixed_fine_update_and_bias_do_not_reanchor (test_android_ledger.LedgerTests.test_fixed_fine_update_and_bias_do_not_reanchor) ... ok
+test_fixed_gap_keeps_reference (test_android_ledger.LedgerTests.test_fixed_gap_keeps_reference) ... ok
+test_fixed_hcdc_acquires_new_reference (test_android_ledger.LedgerTests.test_fixed_hcdc_acquires_new_reference) ... ok
+test_fixed_missing_estimate_uses_same_segment_only (test_android_ledger.LedgerTests.test_fixed_missing_estimate_uses_same_segment_only) ... ok
+test_fixed_new_session_does_not_reuse_previous_reference (test_android_ledger.LedgerTests.test_fixed_new_session_does_not_reuse_previous_reference) ... ok
+test_fixed_small_step_current_reference_is_rejected (test_android_ledger.LedgerTests.test_fixed_small_step_current_reference_is_rejected) ... ok
+test_fractional_bias_is_applied_after_normalization (test_android_ledger.LedgerTests.test_fractional_bias_is_applied_after_normalization) ... ok
+test_future_receipt_rejected (test_android_ledger.LedgerTests.test_future_receipt_rejected) ... ok
+test_hcdc_change_is_not_silently_normalized (test_android_ledger.LedgerTests.test_hcdc_change_is_not_silently_normalized) ... ok
+test_long_gap_is_not_normalized (test_android_ledger.LedgerTests.test_long_gap_is_not_normalized) ... ok
+test_mismatched_gnss_clock_rejected (test_android_ledger.LedgerTests.test_mismatched_gnss_clock_rejected) ... ok
+test_preinitialization_anchor_does_not_seed_native_history (test_android_ledger.LedgerTests.test_preinitialization_anchor_does_not_seed_native_history) ... ok
+test_raw_gps_after_normalized_step_is_not_accepted (test_android_ledger.LedgerTests.test_raw_gps_after_normalized_step_is_not_accepted) ... ok
+test_small_step_below_native_threshold_remains (test_android_ledger.LedgerTests.test_small_step_below_native_threshold_remains) ... ok
+test_unknown_policy_fails_closed (test_android_ledger.LedgerTests.test_unknown_policy_fails_closed) ... ok
+test_v1_keeps_original_strict_utc_mode (test_android_ledger.LedgerTests.test_v1_keeps_original_strict_utc_mode) ... ok
+channel=0 status=HTTP_401
+test_401_no_retry_and_no_fake_data (test_capture.CaptureTests.test_401_no_retry_and_no_fake_data) ... ok
+channel=0 mount=TEST_SSR HTTP=200
+channel=1 mount=TEST_NAV HTTP=200
+test_actual_two_stream_capture_integrity_and_no_secret (test_capture.CaptureTests.test_actual_two_stream_capture_integrity_and_no_secret) ... ok
+test_bad_status_text_redirect_encoding (test_capture.CaptureTests.test_bad_status_text_redirect_encoding) ... ok
+test_bounds_and_truncation (test_capture.CaptureTests.test_bounds_and_truncation) ... ok
+test_chunked_binary_split (test_capture.CaptureTests.test_chunked_binary_split) ... ok
+test_config_and_header_injection (test_capture.CaptureTests.test_config_and_header_injection) ... ok
+test_crc_and_partial_reconnect (test_capture.CaptureTests.test_crc_and_partial_reconnect) ... ok
+test_enu_known_axes_and_normal_height (test_capture.CaptureTests.test_enu_known_axes_and_normal_height) ... ok
+channel=1 mount=TEST_NAV HTTP=200
+channel=0 mount=TEST_SSR HTTP=200
+test_hash_tamper_is_rejected (test_capture.CaptureTests.test_hash_tamper_is_rejected) ... ok
+test_http_binary (test_capture.CaptureTests.test_http_binary) ... ok
+test_icy (test_capture.CaptureTests.test_icy) ... ok
+channel=2 mount=TEST_BIAS HTTP=200
+channel=1 mount=TEST_NAV HTTP=200
+channel=0 mount=TEST_SSR HTTP=200
+test_independent_bias_is_recorded_as_third_channel (test_capture.CaptureTests.test_independent_bias_is_recorded_as_third_channel) ... ok
+channel=1 mount=TEST_NAV HTTP=200
+channel=0 mount=TEST_SSR HTTP=200
+test_native_txt_preflight_and_replay_plan_time_gate (test_capture.CaptureTests.test_native_txt_preflight_and_replay_plan_time_gate) ... ok
+test_no_convergence_across_missing_solution (test_capture.CaptureTests.test_no_convergence_across_missing_solution) ... ok
+test_whu_profile_cannot_silently_bind_other_mounts_or_apc (test_capture.CaptureTests.test_whu_profile_cannot_silently_bind_other_mounts_or_apc) ... ok
+test_center_clock_origins_cannot_change_noncommon_component (test_code_304_reference.IndependentCodeTests.test_center_clock_origins_cannot_change_noncommon_component) ... ok
+test_projection_respects_full_covariance (test_code_304_reference.IndependentCodeTests.test_projection_respects_full_covariance) ... ok
+test_raw_code_prediction_signs (test_code_304_reference.IndependentCodeTests.test_raw_code_prediction_signs) ... ok
+test_zero_osb_is_valid_but_missing_is_rejected (test_code_304_reference.IndependentCodeTests.test_zero_osb_is_valid_but_missing_is_rejected) ... ok
+test_control_exact_formal_solution (test_full_product_comparison.FullProductComparisonTests.test_control_exact_formal_solution) ... ok
+test_full_run_and_same_window (test_full_product_comparison.FullProductComparisonTests.test_full_run_and_same_window) ... ok
+test_height_is_not_hidden_by_horizontal_ranking (test_full_product_comparison.FullProductComparisonTests.test_height_is_not_hidden_by_horizontal_ranking) ... ok
+test_missing_bias_never_kept_as_zero (test_full_product_comparison.FullProductComparisonTests.test_missing_bias_never_kept_as_zero) ... ok
+test_paired_observations_and_causal_prefix_are_identical (test_full_product_comparison.FullProductComparisonTests.test_paired_observations_and_causal_prefix_are_identical) ... ok
+test_product_checks_and_numeric_guards (test_full_product_comparison.FullProductComparisonTests.test_product_checks_and_numeric_guards) ... ok
+test_only_the_committed_retry_is_returned (test_ntrip_formal_audit.AuditAnalysisTests.test_only_the_committed_retry_is_returned) ... ok
+test_position_fit_separates_constellation_signal_offsets (test_ntrip_formal_audit.AuditAnalysisTests.test_position_fit_separates_constellation_signal_offsets) ... ok
+test_rank_deficient_fit_is_explicit (test_ntrip_formal_audit.AuditAnalysisTests.test_rank_deficient_fit_is_explicit) ... ok
+test_invalid_settings_fall_back (test_ntrip_formal_audit.DiagnosticWindowTests.test_invalid_settings_fall_back) ... ok
+test_late_window_keeps_absolute_epoch_numbers (test_ntrip_formal_audit.DiagnosticWindowTests.test_late_window_keeps_absolute_epoch_numbers) ... ok
+test_original_six_epoch_default (test_ntrip_formal_audit.DiagnosticWindowTests.test_original_six_epoch_default) ... ok
+test_window_covers_more_than_six_epochs (test_ntrip_formal_audit.DiagnosticWindowTests.test_window_covers_more_than_six_epochs) ... ok
+
+----------------------------------------------------------------------
+Ran 59 tests in 9.777s
+
+OK
