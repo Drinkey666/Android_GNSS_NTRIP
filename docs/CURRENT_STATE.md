@@ -15,6 +15,9 @@
 
 ## 当前任务
 
+11/18 当前真机安装核验。2026-11-18 实查 vivo V2507A，com.example.pppntrip 最后更新 2026-11-18 15:09:06。手机 arm64 版与本地最新多 ABI APK 的全部 DEX、资源、资产和 arm64 原生库逐项一致。整体 APK SHA 不同，手机 Manifest 额外设置 testOnly=true，本地额外包含其他三种 ABI 共九个库。安装内容与当前最新本地程序内容一致，实时 PPP 采集验收待执行。 [核验报告](ntrip-device-apk-check-20261118/REPORT.md)
+
+
 11/17 Step 11 完成已保存基线全段/末 60 秒东向 `K·v` 平衡切片（Part A）与 `S1_O1_robust`、`S2_Q0_presmooth`、`S3_presmooth_cmd`、`S4_joint` 隔离提精实验（Part B）。Part A 只读复核 Step 5 六组基线：除总长 84 历元的 `10/31 V1` 仍在收敛（末 60s 净东移 `+0.307 m`）外，其余 5 组长序列末 60s 净东移仅 `−0.013 ~ +0.089 m`（步均 Code `≤ 0.0011 m/ep`，累计相位 `≤ 0.002 m`）；全段相位净推力 `−0.042 ~ +0.184 m`、`VMF3_ZWD ≤ 0.005 m`、`5Q/5P` 次频码偏差已入 `$RCB`（`GPS_C5Q +0.614~+3.856 m`、`GAL_C5Q +1.150~+2.999 m`、`BDS_C5P +0.200~+2.646 m`），`+0.626 ~ +1.620 m` 稳态东偏锁定于收敛期首频码（`1C/2I`）与 IONEX 平衡。Part B 完成 24 组隔离回放，全部同 Q 序列且 `observations/corrections` 逐字节一致，`K·v` 最大闭合差 `4.66e-10 m`：`S1` 仍使 `10/31 V1/V2` 末 60s `U_rms` 反退（`0.460→0.896 m`、`0.407→1.007 m`）；`S2` 真实运行于各 `Q0` 等待期（`5~585` 历元），`first20` 呈双向敏感且对末段东偏无改观；`S3` 在 124,363 条码行上 `f_cmd > 1` 仅触发 `0.0%~0.3%`，证实 1s 高频 CMD 噪声已小于现有 C/N0+高度角 `base_obs_var`（`5~160 m²`）。四组统一归档为 `NEGATIVE_NOT_FIX`，正式源码不变。 [Step 11 报告](ntrip-ppp-step11-20261117/README.md) · [PC 交接镜像](ntrip-pc-handoff/CURRENT_STATE.md)
 
 11/17 Step 10 完成 SPP/首期相对残差物理拆解（Part A）与 `O1`/`O2`/`O3_joint` 隔离提精消融（Part B）。Part A 复用 Step 9 115 行及首 Q6 快照证实：共视卫星钟差、SSR OSB 与大气相对差完全相消（`0.000 m`），`11:20` 双机 `+3.635 m` 启动东向差中纯手机原始测码相对差贡献 `+4.252 m`（`G25 1C` 相对差 `−21.311 m` 贡献 `+3.300 m`）；`Saastamoinen vs VMF3` 东推力 `≤0.017 m`，`startup_fde` 与 `STARTQC` 最高仅达 30 m 门限 `0.625` 倍。Part B 完成 18 组隔离回放，同 Q 序列且 `observations/corrections` 逐字节一致，`K·v` 最大闭合差 `4.66e-10 m`；但 `O1` 使 `10/31 V2` 末 60 s U 反退（`0.407→1.245 m`），`O2` 使 `11:20/10:04 vivo` 全段 U 反退（`2.289/1.390→2.707/2.463 m`），三档均归档为 `NEGATIVE_NOT_FIX`，正式源码不变。 [Step 10 报告](ntrip-ppp-step10-20261117/README.md) · [PC 交接镜像](ntrip-pc-handoff/CURRENT_STATE.md)

@@ -1,0 +1,51 @@
+{
+  "date": "2026-11-18",
+  "model": "vivo V2507A",
+  "package": "com.example.pppntrip",
+  "installed_last_update_device_time": "2026-11-18 15:09:06",
+  "installed_apk_sha256": "cf0eedfd15b96d950d279d3e6d7549509fe2967cdd83a486138cf708cf1df91d",
+  "local_apk_sha256": "6a280c7b4e03b76ca49bd587556e0ed7a2bcb05b6962c7518121cd3c0ace038b",
+  "installed_entries": 956,
+  "local_entries": 965,
+  "shared_non_directory_entries": 956,
+  "identical_entries": 955,
+  "differing_entries": [
+    "AndroidManifest.xml"
+  ],
+  "local_only_entries": [
+    "lib/armeabi-v7a/libandroidx.graphics.path.so",
+    "lib/armeabi-v7a/libgnss_ppp_live.so",
+    "lib/armeabi-v7a/librtklib_engine.so",
+    "lib/x86/libandroidx.graphics.path.so",
+    "lib/x86/libgnss_ppp_live.so",
+    "lib/x86/librtklib_engine.so",
+    "lib/x86_64/libandroidx.graphics.path.so",
+    "lib/x86_64/libgnss_ppp_live.so",
+    "lib/x86_64/librtklib_engine.so"
+  ],
+  "dex_files_identical": [
+    "classes.dex",
+    "classes2.dex",
+    "classes3.dex",
+    "classes4.dex",
+    "classes5.dex",
+    "classes6.dex"
+  ],
+  "installed_arm64_libraries_identical": {
+    "lib/arm64-v8a/libandroidx.graphics.path.so": "41e9a793c43a0f4fddb19e33f346bace464f30f888ba7b9eaf96294ea115bfb6",
+    "lib/arm64-v8a/libgnss_ppp_live.so": "bcff767e8cab4727cd83ab4a9a0000bccbf37f9ef7ae776515b1bfd7c32669d2",
+    "lib/arm64-v8a/librtklib_engine.so": "43d5e1dc0854ccbdd02871d675f6ab9c948dcccb743f457b85f0a194bcafd29f"
+  },
+  "core_pins_matched_both_sides": 33,
+  "source_business_commit": "18be1550a3df422654c82d7f6af9b971c5e30eec",
+  "result": "INSTALLED_PROGRAM_CONTENT_MATCHES_LATEST_LOCAL_APK",
+  "device_writes_performed": false,
+  "installation_performed": false,
+  "live_ppp_collection_tested": false,
+  "manifest_semantic_differences": {
+    "application.testOnly": {
+      "installed": true,
+      "local": null
+    }
+  }
+}

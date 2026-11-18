@@ -37,6 +37,9 @@ Android 当时未跟踪项为 `.agents/`、`.idea/`、`AGENTS.pre_live_ssr_20261
 
 ## 已实现、已验证
 
+11/18 当前真机安装核验。2026-11-18 实查 vivo V2507A，com.example.pppntrip 最后更新 2026-11-18 15:09:06。手机 arm64 版与本地最新多 ABI APK 的全部 DEX、资源、资产和 arm64 原生库逐项一致。整体 APK SHA 不同，手机 Manifest 额外设置 testOnly=true，本地额外包含其他三种 ABI 共九个库。安装内容与当前最新本地程序内容一致，实时 PPP 采集验收待执行。 [核验报告](../ntrip-device-apk-check-20261118/REPORT.md)
+
+
 |工作|证据与边界|
 |---|---|
 |正式产品与估计器| WHU `SSRC00WHU0` CoM 轨钟 + `OSBC00WHU1` 独立偏差 + `BCEP00BKG0` 广播星历，配套预报 IONEX/VMF3。沿用 `B_VERIFIED` 非组合联合估计、Joseph 更新及现有 R/Q/P0。采集包保存时序、流、产品和参考高程类型。参考坐标只用于解后评估。 `config/caster_whu.json` · `src/verified_profile.h`|
@@ -51,7 +54,7 @@ Android 当时未跟踪项为 `.agents/`、`.idea/`、`AGENTS.pre_live_ssr_20261
 - **首个 Q6 前东偏已完成 SPP 方程归因与物理项拆解（Step 9 / Step 10 Part A）。** 六组无损复现 6,202 历元、4,703 个 Q6；SPP 接纳坐标原样进入首个 Q6 验前。Step 10 双机同秒配对拆解证实：卫星钟、SSR OSB 与大气相对差完全相消（`0.000 m`），`11:20` 双机 `+3.635 m` 东向差中，共视测量差占 `+4.904 m`（其中纯手机原始测码相对差 `+4.252 m`，`G25 1C` 相对差 `−21.311 m` 贡献 `+3.300 m`），权阵差占 `+0.376 m`，vivo 独有 `E07` 抵消 `−1.644 m`。`Saastamoinen vs VMF3` 东推力 `≤0.017 m`；`SPP 广播电离层 vs GIM` 仅在 `11:20` 产生约 `+0.56 m` 净东推，扣除后各包主推星座仍留存米级东偏。`startup_fde`（最大 `11.15 m / z=3.24`）与 `STARTQC`（最大比值 `0.625`）均未触及 `30 m` 门槛。 [Step 9 报告](../ntrip-ppp-step9-20261117/README.md) · [Step 10 报告](../ntrip-ppp-step10-20261117/README.md)
 - **末段东偏与收敛平衡已完成 `tail60` 全段切片（Step 11 Part A）。** 六组 Step 5 基线的末 60 秒 E 均值约 +0.63～+1.62 m；只读 `K·v` 切片证实 5 组长序列末 60 秒几乎冻结（净ΔE `−0.013 ~ +0.089 m`、步均 Code `≤0.0011 m/ep`、累计 Phase `≤0.002 m`），全段相位净推力仅 `−0.042 ~ +0.184 m`、`VMF3_ZWD ≤ 0.005 m`、`5Q/5P` 码偏已入 `$RCB`（`GPS_C5Q +0.614~+3.856 m`、`GAL_C5Q +1.150~+2.999 m`、`BDS_C5P +0.200~+2.646 m`），稳态水平基准主要由收敛期首频伪距（`1C/2I`）与 IONEX 平衡锁定。另见 10:04 小米 GPS 1C 屏蔽对照（全段 H/U 2.342/2.977→1.424/1.893 m，末段 E 仍 +1.108 m）。 [Step 11 切片](../ntrip-ppp-step11-20261117/README.md) · [Step 5 消融](../ntrip-ppp-step5-20261117/README.md) · [GPS 逐星明细](../ntrip-ppp-step6-20261117/gps1c_first60_satellites.csv)
 - **11:20 vivo 的单频码质控盲区已有证据。** 前 20 个 Q6 的 G03 1C、G10 1C、E27 1C 各累计下拉 U 4.1955、1.0219、1.2554 m；G25 1C 首期双机去均值码差 +21.335 m，已有 12 倍码方差档，累计净上推 +0.799 m。部分单频参考码的误差由逐星垂直电离层、高程和公共钟差分摊，验后组偏差最大约 1.11 倍物理 σ₀，低于现有质控门限。双机互换已拆分锚点静态项、随后时变项及 E07 等无首期锚点的差异，组中心口径也影响结果。单频标志、MAD、CMC 和相位弧状态在这两机样本中存在重叠，尚无稳定的单机观测判据。 [Step 2 排行与互换](../ntrip-ppp-closure-20261117/validation/brain_step2_closure_20261116/REPORT.md) · [Step 3 核查](../ntrip-ppp-closure-20261117/validation/brain_step3_final_audit_20261116/REPORT.md)
-- **部署与观测风险。** 现行 Android 修复版的 arm64 真机首解、定时收尾和真实 PPP 地图来源切换尚待验证。首份完整 OSB 的绝对时效尚未获得独立认证。Native 零值哨兵、异步表示、100 ms 发送时标冲突、GAL7Q ADR/PRR 不一致仍是已知限制。已有用户确认无同期测量型接收机数据。旧报告的 ADB 状态只代表原核验时点。 [原生与真机边界](../ntrip-ppp-closure-20261117/validation/whu_osb_formal_fix_20261117/REPORT.md) · [历史索引](../ntrip-ppp-step12-20261117/pc-docs/PPP_INVESTIGATION_INDEX.md)
+- **部署与观测风险。** 11/18 已核验 vivo 的当前安装内容与最新本地构建一致。arm64 真机首解、定时收尾和真实 PPP 地图来源切换尚待验证。首份完整 OSB 的绝对时效尚未获得独立认证。Native 零值哨兵、异步表示、100 ms 发送时标冲突、GAL7Q ADR/PRR 不一致仍是已知限制。已有用户确认无同期测量型接收机数据。旧报告的 ADB 状态只代表原核验时点。 [原生与真机边界](../ntrip-ppp-closure-20261117/validation/whu_osb_formal_fix_20261117/REPORT.md) · [历史索引](../ntrip-ppp-step12-20261117/pc-docs/PPP_INVESTIGATION_INDEX.md)
 - **非实时旁支。** 文件 CLK3.04 列偏移及产品预检的 CLK 天线头解析还有已记录问题，实时 SSR 不走这些入口。 `docs/NTRIP_FULL_PRODUCT_COMPARISON_20261110.md`
 
 以上误差以各包绑定的参考位置与高程类型评估。E/N/U 为米，H 为水平误差，末 60 秒为按相应报告定义的有效坐标时间窗。原版实录、正式来源修复基线和私有互换有不同准入窗口；比较时以同一包、启动策略和共同 Q6 口径为准。
