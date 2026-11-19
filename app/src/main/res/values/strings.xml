@@ -177,7 +177,7 @@
     <string name="capture_channel">GNSS 与 NTRIP 同步采集</string>
     <string name="capture_notification_title">正在录制 TXT＋SSR＋广播星历</string>
     <string name="capture_notification_text">同步记录原始观测和三路数据；检查有效后实时 PPP</string>
-    <string name="capture_active">同步录制中。连接成功不代表完整 PPP 产品或定位精度已验收。</string>
+    <string name="capture_active">正在录制原始 GNSS 观测。实时流断开时，原始观测继续录制。</string>
     <string name="capture_finishing">正在关闭连接、完成 TXT 写入并生成 ZIP…</string>
     <string name="capture_saved">录制包已保存，可导出到电脑。</string>
     <string name="capture_failed">录制未完整完成（%1$s）；应用内已写入文件保留，不能冒充完整回放包。</string>
@@ -193,8 +193,8 @@
     <string name="capture_connecting">正在连接…</string>
     <string name="capture_connected">已连接，正在等待／接收 RTCM</string>
     <string name="capture_reconnecting">网络中断，将自动重连</string>
-    <string name="capture_auth_failed">账号或挂载点权限未通过，已停止</string>
-    <string name="capture_mount_failed">挂载点错误或返回了源列表，已停止</string>
+    <string name="capture_auth_failed">账号或挂载点权限未通过，此路连接已停止</string>
+    <string name="capture_mount_failed">挂载点错误或返回了源列表，此路连接已停止</string>
     <string name="capture_network_failed">连接或协议异常，请检查设置</string>
     <string name="capture_bias_label">WHU 码偏差：%1$s</string>
     <string name="ntrip_bias_mount">WHU 偏差挂载点</string>

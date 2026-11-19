@@ -5,9 +5,6 @@ import android.os.SystemClock
 import java.io.File
 import java.io.RandomAccessFile
 import java.util.Locale
-import java.util.concurrent.ArrayBlockingQueue
-import java.util.concurrent.ThreadPoolExecutor
-import java.util.concurrent.TimeUnit
 
 /** One serial queue owns JNI. The recorder's gateway orders receipts and GNSS callbacks.
  * Forecasts are frozen before init; reference coordinates are used only AFTER a solution.
@@ -16,10 +13,12 @@ internal class LiveSsrSession(
     private val store:NtripCaptureStore, private val products:File,
     private val settings:NtripSettings, private val reference:ReferencePosition?,
     private val publish:(String,LivePppResult?)->Unit,
-    private val fatal:(String)->Unit,
     private val prepareProducts:()->Unit = {},
 ) {
-    private val worker=ThreadPoolExecutor(1,1,0,TimeUnit.SECONDS,ArrayBlockingQueue(512))
+    private val worker=LiveSsrWorkQueue { reason ->
+        store.liveProcessingFailed(reason)
+        publish("LIVE_SESSION_ERROR：实时解算已停止，原始观测继续录制（$reason）",null)
+    }
     private var initialized=false
     private var disabled=false
     private var appliedSeq=store.initialSequence
@@ -41,8 +40,7 @@ internal class LiveSsrSession(
         errors.write(PositionErrorCsv.header)
     }
     private fun enqueue(work:()->Unit) {
-        try {worker.execute {try {work()}catch(_:Exception){disabled=true;publish("LIVE_SESSION_ERROR：已停止解算，保留原始采集",null);fatal("LIVE_RECORD_ERROR")}}}
-        catch(_:java.util.concurrent.RejectedExecutionException){fatal("LIVE_QUEUE_OVERFLOW")}
+        worker.enqueue(work)
     }
     fun arrival(channel:Int,event:String,data:ByteArray,receipt:CaptureReceipt) = enqueue {
         if(initialized && !disabled) {
@@ -144,7 +142,7 @@ internal class LiveSsrSession(
     }
     /** Called only after both the socket workers and Raw callback producer stop. */
     fun close() {
-        worker.shutdown();check(worker.awaitTermination(30,TimeUnit.SECONDS)) { "LIVE_WORKER_NOT_DRAINED" }
+        worker.close()
         if(nativeTouched)LivePppNative.nativeRelease()
         listOf(epochs,corrections,observations,solutions,errors).forEach {it.close()}
     }

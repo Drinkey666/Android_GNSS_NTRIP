@@ -93,6 +93,7 @@ internal class NtripCaptureStore(
     private var lastQ6: Map<String, Any>? = null
     private var productInitElapsedNs: Long? = null
     private var productSetupFailures = 0L
+    private var liveProcessingFailure: String? = null
     private var lastProductSetupFailure: Map<String, Any>? = null
     private val outsideProductCoverage = sortedMapOf<String, Long>()
     private val rawNames = listOf("ssr.rtcm3", "broadcast.rtcm3") + if(settings.biasMount.isEmpty()) emptyList() else listOf("bias.rtcm3")
@@ -148,6 +149,10 @@ internal class NtripCaptureStore(
 
     @Synchronized fun productInitialized() {
         productInitElapsedNs = elapsedNanos() - startElapsed
+    }
+
+    @Synchronized fun liveProcessingFailed(reason: String) {
+        liveProcessingFailure = reason
     }
 
     @Synchronized fun recordPppResult(result: LivePppResult?, status: String, callbackElapsedNs: Long) {
@@ -239,6 +244,7 @@ internal class NtripCaptureStore(
                 "processed_epochs_without_solution" to epochsWithoutSolution,
                 "product_init_elapsed_ns" to productInitElapsedNs,
                 "product_setup_failure_count" to productSetupFailures,
+                "live_processing_failure" to liveProcessingFailure,
                 "last_product_setup_failure" to lastProductSetupFailure,
                 "epochs_outside_product_coverage" to outsideProductCoverage,
             ),

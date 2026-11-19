@@ -91,7 +91,7 @@ class NtripCaptureService:Service() {
                         }
                         display.copy(pppStatus=status,solution=result,
                             latestMapSolution=mapSolution)
-                    }},fatal=::finish,
+                    }},
                     prepareProducts={BundledProducts.ensure(applicationContext,productDirectory) { message ->
                         publish {it.copy(pppStatus=message)}
                     }})
@@ -122,12 +122,13 @@ class NtripCaptureService:Service() {
                     onStatus={status ->
                         publish { if(channel==0)it.copy(ssr=status) else if(channel==1)it.copy(nav=status) else it.copy(bias=status) }
                         if(status!="CONNECTING" && status!="CONNECTED_WAITING_RTCM" && !stopping.get()) {
-                            runCatching {synchronized(gateway) {if(!stopping.get()) {
+                            try {synchronized(gateway) {if(!stopping.get()) {
                                 val receipt=recording.event(channel,"CLOSED",reason=status)
                                 live?.arrival(channel,"CLOSED",byteArrayOf(),receipt)
-                            }}}
+                            }}} catch(_:Exception){finish("SSR_WRITE_OR_LIMIT_FAILED")}
                         }
-                        if(status.startsWith("NTRIP_HTTP_4") || status=="NTRIP_SOURCETABLE_NOT_CORRECTION")finish(status)
+                        // The client owns retries and terminal errors for its mount.
+                        // Raw, clock anchors and other mounts share the acquisition deadline.
                     })
                 synchronized(clients) { if(!stopping.get()){clients+=client;client.start()} }
             }
