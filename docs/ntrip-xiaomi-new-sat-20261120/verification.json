@@ -1,0 +1,89 @@
+{
+  "guard_count": 130,
+  "guard_digest": "ad8d73147cf7bf381c846ab4009e24b9f4521bf246f1988ab19388cb106c7521",
+  "binary_digest": "b3269f9c546a8913f72f0b24874b4c39ff7cd51d9e8f2a512c6c65899c522594",
+  "sessions": {
+    "2221": {
+      "original": {
+        "raw": 758,
+        "q6": 739,
+        "first_Q6_elapsed_s": 6.0,
+        "q_sequence_changes": 0,
+        "common_Q6": 739,
+        "max_kv_closure_m": 5.224657686244087e-10,
+        "observations_sha256": "1cf5bd18b51453ba1fcbb8b638377c4fb2b4a350387930f24d2a14abe1e9b03a",
+        "corrections_sha256": "7152dd7d1d65164d0ed283cea51017e9ca624970c836a0e23a4cba5a3f6ee46a",
+        "solution_sha256": "d728c2a63529ff2b1806dbe180bcd228d0feba3ebc3da9a48ad7f9f981d438ef",
+        "archive_control_exact": true,
+        "legacy_row_Kv_matched": true
+      },
+      "ema": {
+        "raw": 758,
+        "q6": 739,
+        "first_Q6_elapsed_s": 6.0,
+        "q_sequence_changes": 0,
+        "common_Q6": 739,
+        "max_kv_closure_m": 5.140125883793485e-10,
+        "observations_sha256": "1cf5bd18b51453ba1fcbb8b638377c4fb2b4a350387930f24d2a14abe1e9b03a",
+        "corrections_sha256": "7152dd7d1d65164d0ed283cea51017e9ca624970c836a0e23a4cba5a3f6ee46a",
+        "solution_sha256": "92ebd491d0d29752d62421f143f7c7cd07705c344e280f2f9dfb78411217d1f4",
+        "archive_control_exact": true,
+        "legacy_row_Kv_matched": false
+      },
+      "new_sat": {
+        "raw": 758,
+        "q6": 739,
+        "first_Q6_elapsed_s": 6.0,
+        "q_sequence_changes": 0,
+        "common_Q6": 739,
+        "max_kv_closure_m": 5.179174161251094e-10,
+        "observations_sha256": "1cf5bd18b51453ba1fcbb8b638377c4fb2b4a350387930f24d2a14abe1e9b03a",
+        "corrections_sha256": "7152dd7d1d65164d0ed283cea51017e9ca624970c836a0e23a4cba5a3f6ee46a",
+        "solution_sha256": "177f0cf6986bd182bff46b47281441358882a8a4ba343a25ee84e13366a51948",
+        "archive_control_exact": false,
+        "legacy_row_Kv_matched": false
+      }
+    },
+    "2236": {
+      "original": {
+        "raw": 900,
+        "q6": 830,
+        "first_Q6_elapsed_s": 8.0,
+        "q_sequence_changes": 0,
+        "common_Q6": 830,
+        "max_kv_closure_m": 5.124854439229935e-10,
+        "observations_sha256": "d69ce24ef4c19bee92329e581367216f981dfb8ea5e38baa3039fcf89e881e74",
+        "corrections_sha256": "bdfae7102fc7c55bc3730e54a6a9768c83fe1dd2b9f2cc2ecb652b2f79f52287",
+        "solution_sha256": "301980ad47b97902ec8fcc8c183b03bbaa536628a216b47a98fd201d53717de9",
+        "archive_control_exact": true,
+        "legacy_row_Kv_matched": true
+      },
+      "ema": {
+        "raw": 900,
+        "q6": 830,
+        "first_Q6_elapsed_s": 8.0,
+        "q_sequence_changes": 0,
+        "common_Q6": 830,
+        "max_kv_closure_m": 5.245943506637935e-10,
+        "observations_sha256": "d69ce24ef4c19bee92329e581367216f981dfb8ea5e38baa3039fcf89e881e74",
+        "corrections_sha256": "bdfae7102fc7c55bc3730e54a6a9768c83fe1dd2b9f2cc2ecb652b2f79f52287",
+        "solution_sha256": "1306e8705da12991619ed43c523616b68ce45517d27daaae320d976799c8e6ca",
+        "archive_control_exact": true,
+        "legacy_row_Kv_matched": false
+      },
+      "new_sat": {
+        "raw": 900,
+        "q6": 830,
+        "first_Q6_elapsed_s": 8.0,
+        "q_sequence_changes": 0,
+        "common_Q6": 830,
+        "max_kv_closure_m": 5.12418425031923e-10,
+        "observations_sha256": "d69ce24ef4c19bee92329e581367216f981dfb8ea5e38baa3039fcf89e881e74",
+        "corrections_sha256": "bdfae7102fc7c55bc3730e54a6a9768c83fe1dd2b9f2cc2ecb652b2f79f52287",
+        "solution_sha256": "faab974ac501775eaeedf9a80383bf3991466adad6f109da23c27fb785b47894",
+        "archive_control_exact": false,
+        "legacy_row_Kv_matched": false
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "2221": {
+    "compressed_states": 40,
+    "rows": 46,
+    "max_abs_state_difference": 1.1652900866465643e-12,
+    "max_covariance_error_scaled_by_state_sigmas": 1.3016864141152305e-15,
+    "bias_m": 0.7959403183645534
+  },
+  "2236": {
+    "compressed_states": 47,
+    "rows": 42,
+    "max_abs_state_difference": 2.255973186038318e-12,
+    "max_covariance_error_scaled_by_state_sigmas": 8.934590401625212e-16,
+    "bias_m": 1.892413300969466
+  }
+}
