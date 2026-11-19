@@ -62,12 +62,13 @@ internal object NtripProtocol {
             out.write(b)
         }
     }
-    fun body(input: BufferedInputStream): InputStream {
+    fun body(input: BufferedInputStream, onStatusOk: () -> Unit = {}): InputStream {
         val status = line(input, 1024)
         if (status.startsWith("SOURCETABLE")) error("NTRIP_SOURCETABLE_NOT_CORRECTION")
         val words = status.split(' ')
         require(words.size >= 2 && words[1] == "200" &&
             (words[0] == "ICY" || words[0].startsWith("HTTP/1."))) { "NTRIP_HTTP_${words.getOrNull(1)?.take(3) ?: "INVALID"}" }
+        onStatusOk()
         val headers = linkedMapOf<String, String>()
         var bytes = status.length
         // Some v1 casters send only ICY + CRLF, immediately followed by RTCM.
@@ -151,13 +152,17 @@ class NtripClient(
             var delay = 1000L
             val reconnect=NtripReconnectPolicy()
             while (active) {
+                var stage = "DNS"
                 try {
                     onStatus("CONNECTING")
                     val plain = Socket(); socket = plain
                     if (!active) { plain.close(); break }
-                    plain.connect(InetSocketAddress(settings.host, settings.port), 10000)
+                    val endpoint = InetSocketAddress(java.net.InetAddress.getByName(settings.host), settings.port)
+                    stage = "TCP_CONNECT"
+                    plain.connect(endpoint, 10000)
                     plain.soTimeout = 15000
                     val streamSocket = if (settings.tls) {
+                        stage = "TLS_HANDSHAKE"
                         (SSLSocketFactory.getDefault() as SSLSocketFactory)
                             .createSocket(plain, settings.host, settings.port, true).let { it as SSLSocket }.apply {
                                 sslParameters = sslParameters.apply { endpointIdentificationAlgorithm = "HTTPS" }
@@ -166,10 +171,15 @@ class NtripClient(
                                 startHandshake()
                             }
                     } else plain
+                    stage = "REQUEST_WRITE"
                     streamSocket.getOutputStream().apply {
                         write(NtripProtocol.request(settings, mount, credentials)); flush()
                     }
-                    val body = NtripProtocol.body(BufferedInputStream(streamSocket.getInputStream()))
+                    stage = "STATUS_LINE"
+                    val body = NtripProtocol.body(BufferedInputStream(streamSocket.getInputStream())) {
+                        stage = "RESPONSE_HEADERS"
+                    }
+                    stage = "BODY_READ"
                     onConnect(); onStatus("CONNECTED_WAITING_RTCM")
                     val buffer = ByteArray(8192)
                     while (active) {
@@ -180,7 +190,7 @@ class NtripClient(
                 } catch (e: Exception) {
                     // Do not echo arbitrary remote response, URL, request or credentials.
                     val safe = e.message?.takeIf { it.matches(Regex("NTRIP_[A-Z0-9_]+")) }
-                    val status=reconnect.failure(safe ?: "NETWORK_DISCONNECTED")
+                    val status=reconnect.failure(safe ?: "NETWORK_DISCONNECTED_${stage}_${e.javaClass.simpleName}")
                     if (active) onStatus(status)
                     if (status.startsWith("NTRIP_HTTP_4") || status == "NTRIP_SOURCETABLE_NOT_CORRECTION") {
                         active = false // a credential/mount error cannot be solved by repeated requests

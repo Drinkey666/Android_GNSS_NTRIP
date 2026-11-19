@@ -360,7 +360,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun captureNetworkStatus(code:String):String {
-        if(code.startsWith("RETRY_HTTP_404_"))return getString(R.string.capture_reconnecting)
+        if(code.startsWith("NETWORK_DISCONNECTED_") || code.startsWith("RETRY_HTTP_404_"))return getString(R.string.capture_reconnecting)
         return getString(when(code) {
         "CONNECTING" -> R.string.capture_connecting
         "CONNECTED_WAITING_RTCM" -> R.string.capture_connected
