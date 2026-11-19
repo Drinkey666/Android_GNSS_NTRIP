@@ -1,0 +1,938 @@
+{
+  "prefix_checks": [
+    {
+      "dataset": "1120_xiaomi",
+      "scheme": "B1_ema_only",
+      "control": "A2_stoch_ema_r",
+      "first_action_week": 2444,
+      "first_action_tow": 530695.002000064,
+      "identical_prior_q6": 6
+    },
+    {
+      "dataset": "1120_xiaomi",
+      "scheme": "B2_a1_ionq",
+      "control": "A1_outlier_gim_mad",
+      "first_action_week": 2444,
+      "first_action_tow": 530690.002000064,
+      "identical_prior_q6": 1
+    },
+    {
+      "dataset": "1120_xiaomi",
+      "scheme": "B4_a1_ema_ionq",
+      "control": "B3_a1_ema",
+      "first_action_week": 2444,
+      "first_action_tow": 530690.002000064,
+      "identical_prior_q6": 1
+    },
+    {
+      "dataset": "1120_vivo",
+      "scheme": "B1_ema_only",
+      "control": "A2_stoch_ema_r",
+      "first_action_week": 2444,
+      "first_action_tow": 530700.000999872,
+      "identical_prior_q6": 11
+    },
+    {
+      "dataset": "1120_vivo",
+      "scheme": "B2_a1_ionq",
+      "control": "A1_outlier_gim_mad",
+      "first_action_week": 2444,
+      "first_action_tow": 530691.000999872,
+      "identical_prior_q6": 2
+    },
+    {
+      "dataset": "1120_vivo",
+      "scheme": "B4_a1_ema_ionq",
+      "control": "B3_a1_ema",
+      "first_action_week": 2444,
+      "first_action_tow": 530691.000999872,
+      "identical_prior_q6": 2
+    },
+    {
+      "dataset": "1004_xiaomi",
+      "scheme": "B1_ema_only",
+      "control": "A2_stoch_ema_r",
+      "first_action_week": 2444,
+      "first_action_tow": 525888.000999936,
+      "identical_prior_q6": 5
+    },
+    {
+      "dataset": "1004_xiaomi",
+      "scheme": "B2_a1_ionq",
+      "control": "A1_outlier_gim_mad",
+      "first_action_week": 2444,
+      "first_action_tow": 525901.000999936,
+      "identical_prior_q6": 17
+    },
+    {
+      "dataset": "1004_xiaomi",
+      "scheme": "B4_a1_ema_ionq",
+      "control": "B3_a1_ema",
+      "first_action_week": 2444,
+      "first_action_tow": 525901.000999936,
+      "identical_prior_q6": 17
+    },
+    {
+      "dataset": "1004_vivo",
+      "scheme": "B1_ema_only",
+      "control": "A2_stoch_ema_r",
+      "first_action_week": 2444,
+      "first_action_tow": 525888.000000064,
+      "identical_prior_q6": 5
+    },
+    {
+      "dataset": "1004_vivo",
+      "scheme": "B2_a1_ionq",
+      "control": "A1_outlier_gim_mad",
+      "first_action_week": 2444,
+      "first_action_tow": 525884.000000064,
+      "identical_prior_q6": 1
+    },
+    {
+      "dataset": "1004_vivo",
+      "scheme": "B4_a1_ema_ionq",
+      "control": "B3_a1_ema",
+      "first_action_week": 2444,
+      "first_action_tow": 525884.000000064,
+      "identical_prior_q6": 1
+    },
+    {
+      "dataset": "1031_xiaomi_V1",
+      "scheme": "B1_ema_only",
+      "control": "A2_stoch_ema_r",
+      "first_action_week": 2442,
+      "first_action_tow": 531610.999999936,
+      "identical_prior_q6": 6
+    },
+    {
+      "dataset": "1031_xiaomi_V1",
+      "scheme": "B2_a1_ionq",
+      "control": "A1_outlier_gim_mad",
+      "first_action_week": 2442,
+      "first_action_tow": 531610.999999936,
+      "identical_prior_q6": 6
+    },
+    {
+      "dataset": "1031_xiaomi_V1",
+      "scheme": "B4_a1_ema_ionq",
+      "control": "B3_a1_ema",
+      "first_action_week": 2442,
+      "first_action_tow": 531610.999999936,
+      "identical_prior_q6": 6
+    },
+    {
+      "dataset": "1031_xiaomi_V2",
+      "scheme": "B1_ema_only",
+      "control": "A2_stoch_ema_r",
+      "first_action_week": 2442,
+      "first_action_tow": 531034.000999936,
+      "identical_prior_q6": 9
+    },
+    {
+      "dataset": "1031_xiaomi_V2",
+      "scheme": "B2_a1_ionq",
+      "control": "A1_outlier_gim_mad",
+      "first_action_week": 2442,
+      "first_action_tow": 531029.000999936,
+      "identical_prior_q6": 4
+    },
+    {
+      "dataset": "1031_xiaomi_V2",
+      "scheme": "B4_a1_ema_ionq",
+      "control": "B3_a1_ema",
+      "first_action_week": 2442,
+      "first_action_tow": 531029.000999936,
+      "identical_prior_q6": 4
+    }
+  ],
+  "reused_step12_controls": 12,
+  "new_replays": 24,
+  "reused_baselines": 6,
+  "all_same_week_tow": true,
+  "all_same_observations": true,
+  "all_same_corrections": true,
+  "all_same_q_sequence": true,
+  "max_kv_closure_m": 4.6564629322537465e-10,
+  "max_kv_closure_l2_m": 5.266853712235602e-10,
+  "baseline_summary_max_difference": 0,
+  "candidate_offsets_sha256": "eb2a969b2dd6837ffaacf724c418ce6b1380c9199579f8215de09484d8cf4b46",
+  "baseline_candidate_approximation_max_difference_m": 5.273379602765971e-06,
+  "formal_binary_sha256": {
+    "filter_diagnostic_window_test.exe": "ba6de37b69b14d0a2df8efe812a946129262b1c365af22deeefeb269cc42615c",
+    "filter_safety_test.exe": "4dcaa56082e4a5f858799b00050b2fe07ccc48a8dd7e1cbaf2e3e4b89104ffda",
+    "ionex_geometry_test.exe": "e81f1e177e5c4586db479fce7e019d8df75cd6bd72f0a1143a40e1c46077d029",
+    "ntrip_phase_osb_test.exe": "4c12c1d5c74de40aa559ab6fc6a4a470ced3180ee9ca81eb6a868facf981897b",
+    "ntrip_ssr_test.exe": "c47c5bef9bab4ebc7066f4f51c6dd1489b1f534e1970d704818e305142c721c3",
+    "ppp_ssr_replay.exe": "ade219b70ceedfab089e74d95ae1af92ae80cb981887d905c90f5942b51def7a",
+    "replay_timeline_test.exe": "4f858a5e594b11edece06eab14ba5c786f0295dd118da67c85a07618f93e0ef6",
+    "ssr_bias_reference_test.exe": "93cfe6ca757e3cf8d98697548fba8bf8ebaa2f22f1de93d1ed75dae142ab5de9",
+    "whu_policy_capture_test.exe": "6de4724b4a292f78f8b06ce70ac7610eebc4693e8024d19a4ae9f68506f3bede"
+  },
+  "extended_step12_sha256": {
+    "input_guard_sha256.json": "a081539a2c8b46aed1e31b7d141c87a26e194ca2820f6c56526ee35ddfba0274",
+    "verification.json": "923afb5444fc06d6f69786b86132f3fb7609a56dddb8253cc7cc7b425eb5c5f9",
+    "REPORT.md": "596a52e5b94049de3e22692fc86550bccaf6972c9e9faae04638afc7ead4516c",
+    "TERMINAL_TABLES.md": "8d8686130204d80874512eec215b6d60d25713637bc75be897f7648b9a7e4499"
+  },
+  "private_guard_manifest_sha256": "c7c5e3017036b06d35f13309b9503d59966aa65d7ada928a3de7876690dae690",
+  "local_dependency_guard_sha256": "abe263cf818bdcad2549b9dff5babf64afcd623774b01868b4370a55909d30be",
+  "before": {
+    "official_binaries": {
+      "count": 9,
+      "failures": []
+    },
+    "extended_step12_inputs": {
+      "count": 251,
+      "failures": []
+    },
+    "production_dependencies": {
+      "count": 89,
+      "failures": []
+    },
+    "controls_and_evaluation": {
+      "count": 24,
+      "failures": []
+    }
+  },
+  "after": {
+    "official_binaries": {
+      "count": 9,
+      "failures": []
+    },
+    "extended_step12_inputs": {
+      "count": 251,
+      "failures": []
+    },
+    "production_dependencies": {
+      "count": 89,
+      "failures": []
+    },
+    "controls_and_evaluation": {
+      "count": 24,
+      "failures": []
+    }
+  },
+  "cases": [
+    {
+      "dataset": "1120_xiaomi",
+      "scheme": "B1_ema_only",
+      "epochs": 629,
+      "q_counts": {
+        "0": 280,
+        "6": 349
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "84d44aa49cd8b35bb5f264ccc8e356b70ea59e1e8a4014fd8226bc732176678d",
+        "corrections.csv": "fb8863c46b861c59418628a7e1978cc97f7cd13ced6302080b2e625be048d146"
+      },
+      "q6_closure_rows": 349,
+      "max_kv_closure_m": 4.6555137522830137e-10,
+      "max_kv_closure_l2_m": 5.192951473114959e-10,
+      "committed": 349,
+      "commits_after_retry": 0,
+      "code_rows": 11409,
+      "a1_inflated_rows": 0,
+      "ema_inflated_rows": 432,
+      "ion_q_halved_satellites": 0,
+      "ion_q_removed_m2": 0.0,
+      "a1_ema_overlap_rows": 0,
+      "max_f_out": 1,
+      "max_f_stoch": 4.731220913691468
+    },
+    {
+      "dataset": "1120_xiaomi",
+      "scheme": "B2_a1_ionq",
+      "epochs": 629,
+      "q_counts": {
+        "0": 280,
+        "6": 349
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "84d44aa49cd8b35bb5f264ccc8e356b70ea59e1e8a4014fd8226bc732176678d",
+        "corrections.csv": "fb8863c46b861c59418628a7e1978cc97f7cd13ced6302080b2e625be048d146"
+      },
+      "q6_closure_rows": 349,
+      "max_kv_closure_m": 4.654653511584894e-10,
+      "max_kv_closure_l2_m": 5.120975166634786e-10,
+      "committed": 349,
+      "commits_after_retry": 0,
+      "code_rows": 11409,
+      "a1_inflated_rows": 242,
+      "ema_inflated_rows": 0,
+      "ion_q_halved_satellites": 49,
+      "ion_q_removed_m2": 0.00019396402146865482,
+      "a1_ema_overlap_rows": 0,
+      "max_f_out": 20.951026527175316,
+      "max_f_stoch": 1
+    },
+    {
+      "dataset": "1120_xiaomi",
+      "scheme": "B3_a1_ema",
+      "epochs": 629,
+      "q_counts": {
+        "0": 280,
+        "6": 349
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "84d44aa49cd8b35bb5f264ccc8e356b70ea59e1e8a4014fd8226bc732176678d",
+        "corrections.csv": "fb8863c46b861c59418628a7e1978cc97f7cd13ced6302080b2e625be048d146"
+      },
+      "q6_closure_rows": 349,
+      "max_kv_closure_m": 4.6102038766399067e-10,
+      "max_kv_closure_l2_m": 5.254284166350374e-10,
+      "committed": 349,
+      "commits_after_retry": 0,
+      "code_rows": 11409,
+      "a1_inflated_rows": 244,
+      "ema_inflated_rows": 434,
+      "ion_q_halved_satellites": 0,
+      "ion_q_removed_m2": 0.0,
+      "a1_ema_overlap_rows": 117,
+      "max_f_out": 21.065075097223044,
+      "max_f_stoch": 4.803080754096761
+    },
+    {
+      "dataset": "1120_xiaomi",
+      "scheme": "B4_a1_ema_ionq",
+      "epochs": 629,
+      "q_counts": {
+        "0": 280,
+        "6": 349
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "84d44aa49cd8b35bb5f264ccc8e356b70ea59e1e8a4014fd8226bc732176678d",
+        "corrections.csv": "fb8863c46b861c59418628a7e1978cc97f7cd13ced6302080b2e625be048d146"
+      },
+      "q6_closure_rows": 349,
+      "max_kv_closure_m": 4.6448528356890506e-10,
+      "max_kv_closure_l2_m": 5.114553719488354e-10,
+      "committed": 349,
+      "commits_after_retry": 0,
+      "code_rows": 11409,
+      "a1_inflated_rows": 244,
+      "ema_inflated_rows": 434,
+      "ion_q_halved_satellites": 51,
+      "ion_q_removed_m2": 0.00019997734917731721,
+      "a1_ema_overlap_rows": 117,
+      "max_f_out": 21.065075016895538,
+      "max_f_stoch": 4.803080501058278
+    },
+    {
+      "dataset": "1120_vivo",
+      "scheme": "B1_ema_only",
+      "epochs": 635,
+      "q_counts": {
+        "0": 273,
+        "6": 362
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "9bbe81262f6f479d2b07ec13a6aa6481b165fab0d646e7a8f649e8587dba743b",
+        "corrections.csv": "b07b3fce25e194e4cec9ddde8ec71471187d560ae3df10383904572090d77990"
+      },
+      "q6_closure_rows": 362,
+      "max_kv_closure_m": 4.6505910233918257e-10,
+      "max_kv_closure_l2_m": 5.17672960340772e-10,
+      "committed": 362,
+      "commits_after_retry": 2,
+      "code_rows": 8657,
+      "a1_inflated_rows": 0,
+      "ema_inflated_rows": 428,
+      "ion_q_halved_satellites": 0,
+      "ion_q_removed_m2": 0.0,
+      "a1_ema_overlap_rows": 0,
+      "max_f_out": 1,
+      "max_f_stoch": 6.105332126104404
+    },
+    {
+      "dataset": "1120_vivo",
+      "scheme": "B2_a1_ionq",
+      "epochs": 635,
+      "q_counts": {
+        "0": 273,
+        "6": 362
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "9bbe81262f6f479d2b07ec13a6aa6481b165fab0d646e7a8f649e8587dba743b",
+        "corrections.csv": "b07b3fce25e194e4cec9ddde8ec71471187d560ae3df10383904572090d77990"
+      },
+      "q6_closure_rows": 362,
+      "max_kv_closure_m": 4.6409915689139825e-10,
+      "max_kv_closure_l2_m": 5.131314218413348e-10,
+      "committed": 362,
+      "commits_after_retry": 2,
+      "code_rows": 8657,
+      "a1_inflated_rows": 475,
+      "ema_inflated_rows": 0,
+      "ion_q_halved_satellites": 264,
+      "ion_q_removed_m2": 0.00113663736237612,
+      "a1_ema_overlap_rows": 0,
+      "max_f_out": 36.0,
+      "max_f_stoch": 1
+    },
+    {
+      "dataset": "1120_vivo",
+      "scheme": "B3_a1_ema",
+      "epochs": 635,
+      "q_counts": {
+        "0": 273,
+        "6": 362
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "9bbe81262f6f479d2b07ec13a6aa6481b165fab0d646e7a8f649e8587dba743b",
+        "corrections.csv": "b07b3fce25e194e4cec9ddde8ec71471187d560ae3df10383904572090d77990"
+      },
+      "q6_closure_rows": 362,
+      "max_kv_closure_m": 4.656204597233704e-10,
+      "max_kv_closure_l2_m": 5.111772107769568e-10,
+      "committed": 362,
+      "commits_after_retry": 2,
+      "code_rows": 8657,
+      "a1_inflated_rows": 468,
+      "ema_inflated_rows": 440,
+      "ion_q_halved_satellites": 0,
+      "ion_q_removed_m2": 0.0,
+      "a1_ema_overlap_rows": 202,
+      "max_f_out": 36.0,
+      "max_f_stoch": 6.116607388271203
+    },
+    {
+      "dataset": "1120_vivo",
+      "scheme": "B4_a1_ema_ionq",
+      "epochs": 635,
+      "q_counts": {
+        "0": 273,
+        "6": 362
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "9bbe81262f6f479d2b07ec13a6aa6481b165fab0d646e7a8f649e8587dba743b",
+        "corrections.csv": "b07b3fce25e194e4cec9ddde8ec71471187d560ae3df10383904572090d77990"
+      },
+      "q6_closure_rows": 362,
+      "max_kv_closure_m": 4.643036267959477e-10,
+      "max_kv_closure_l2_m": 5.220850168296247e-10,
+      "committed": 362,
+      "commits_after_retry": 2,
+      "code_rows": 8657,
+      "a1_inflated_rows": 468,
+      "ema_inflated_rows": 440,
+      "ion_q_halved_satellites": 261,
+      "ion_q_removed_m2": 0.001124729581142396,
+      "a1_ema_overlap_rows": 202,
+      "max_f_out": 36.0,
+      "max_f_stoch": 6.116665379743794
+    },
+    {
+      "dataset": "1004_xiaomi",
+      "scheme": "B1_ema_only",
+      "epochs": 1800,
+      "q_counts": {
+        "0": 337,
+        "6": 1459,
+        "5": 4
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "a95260c8b5606eb76a01aeaa5b07c76a6f2ff2bd0e5fb7c09de3666dc65986c4",
+        "corrections.csv": "1ed780fba695db363d16871ae80f0f441e19e99dadd8ed709c87838e310ff5d9"
+      },
+      "q6_closure_rows": 1459,
+      "max_kv_closure_m": 4.6551346458145737e-10,
+      "max_kv_closure_l2_m": 5.231260379881345e-10,
+      "committed": 1463,
+      "commits_after_retry": 0,
+      "code_rows": 45198,
+      "a1_inflated_rows": 0,
+      "ema_inflated_rows": 2916,
+      "ion_q_halved_satellites": 0,
+      "ion_q_removed_m2": 0.0,
+      "a1_ema_overlap_rows": 0,
+      "max_f_out": 1,
+      "max_f_stoch": 20.0
+    },
+    {
+      "dataset": "1004_xiaomi",
+      "scheme": "B2_a1_ionq",
+      "epochs": 1800,
+      "q_counts": {
+        "0": 337,
+        "6": 1459,
+        "5": 4
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "a95260c8b5606eb76a01aeaa5b07c76a6f2ff2bd0e5fb7c09de3666dc65986c4",
+        "corrections.csv": "1ed780fba695db363d16871ae80f0f441e19e99dadd8ed709c87838e310ff5d9"
+      },
+      "q6_closure_rows": 1459,
+      "max_kv_closure_m": 4.6545503909478647e-10,
+      "max_kv_closure_l2_m": 5.256390554564182e-10,
+      "committed": 1463,
+      "commits_after_retry": 0,
+      "code_rows": 45198,
+      "a1_inflated_rows": 1589,
+      "ema_inflated_rows": 0,
+      "ion_q_halved_satellites": 826,
+      "ion_q_removed_m2": 0.001855341487831443,
+      "a1_ema_overlap_rows": 0,
+      "max_f_out": 36.0,
+      "max_f_stoch": 1
+    },
+    {
+      "dataset": "1004_xiaomi",
+      "scheme": "B3_a1_ema",
+      "epochs": 1800,
+      "q_counts": {
+        "0": 337,
+        "6": 1459,
+        "5": 4
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "a95260c8b5606eb76a01aeaa5b07c76a6f2ff2bd0e5fb7c09de3666dc65986c4",
+        "corrections.csv": "1ed780fba695db363d16871ae80f0f441e19e99dadd8ed709c87838e310ff5d9"
+      },
+      "q6_closure_rows": 1459,
+      "max_kv_closure_m": 4.650074789201014e-10,
+      "max_kv_closure_l2_m": 5.210983099832498e-10,
+      "committed": 1463,
+      "commits_after_retry": 0,
+      "code_rows": 45198,
+      "a1_inflated_rows": 1582,
+      "ema_inflated_rows": 2913,
+      "ion_q_halved_satellites": 0,
+      "ion_q_removed_m2": 0.0,
+      "a1_ema_overlap_rows": 624,
+      "max_f_out": 36.0,
+      "max_f_stoch": 20.0
+    },
+    {
+      "dataset": "1004_xiaomi",
+      "scheme": "B4_a1_ema_ionq",
+      "epochs": 1800,
+      "q_counts": {
+        "0": 337,
+        "6": 1459,
+        "5": 4
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "a95260c8b5606eb76a01aeaa5b07c76a6f2ff2bd0e5fb7c09de3666dc65986c4",
+        "corrections.csv": "1ed780fba695db363d16871ae80f0f441e19e99dadd8ed709c87838e310ff5d9"
+      },
+      "q6_closure_rows": 1459,
+      "max_kv_closure_m": 4.648885642763445e-10,
+      "max_kv_closure_l2_m": 5.177700535595236e-10,
+      "committed": 1463,
+      "commits_after_retry": 0,
+      "code_rows": 45198,
+      "a1_inflated_rows": 1582,
+      "ema_inflated_rows": 2913,
+      "ion_q_halved_satellites": 841,
+      "ion_q_removed_m2": 0.0018668777930261919,
+      "a1_ema_overlap_rows": 624,
+      "max_f_out": 36.0,
+      "max_f_stoch": 20.0
+    },
+    {
+      "dataset": "1004_vivo",
+      "scheme": "B1_ema_only",
+      "epochs": 1800,
+      "q_counts": {
+        "0": 12,
+        "6": 1786,
+        "5": 2
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "141859efd9264ed4ec56034e4603228dfbf2f8f3e4e91c8a90562c791e8791ba",
+        "corrections.csv": "279f37fd001b060d4148a36fd3dbf215a9921f5a44db47dc5668a2d4cf43c7a3"
+      },
+      "q6_closure_rows": 1786,
+      "max_kv_closure_m": 4.655893118959975e-10,
+      "max_kv_closure_l2_m": 5.152775706171899e-10,
+      "committed": 1788,
+      "commits_after_retry": 12,
+      "code_rows": 44062,
+      "a1_inflated_rows": 0,
+      "ema_inflated_rows": 3106,
+      "ion_q_halved_satellites": 0,
+      "ion_q_removed_m2": 0.0,
+      "a1_ema_overlap_rows": 0,
+      "max_f_out": 1,
+      "max_f_stoch": 14.208940935381978
+    },
+    {
+      "dataset": "1004_vivo",
+      "scheme": "B2_a1_ionq",
+      "epochs": 1800,
+      "q_counts": {
+        "0": 12,
+        "6": 1786,
+        "5": 2
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "141859efd9264ed4ec56034e4603228dfbf2f8f3e4e91c8a90562c791e8791ba",
+        "corrections.csv": "279f37fd001b060d4148a36fd3dbf215a9921f5a44db47dc5668a2d4cf43c7a3"
+      },
+      "q6_closure_rows": 1786,
+      "max_kv_closure_m": 4.6564629322537465e-10,
+      "max_kv_closure_l2_m": 5.224699929126762e-10,
+      "committed": 1788,
+      "commits_after_retry": 12,
+      "code_rows": 44062,
+      "a1_inflated_rows": 3066,
+      "ema_inflated_rows": 0,
+      "ion_q_halved_satellites": 1891,
+      "ion_q_removed_m2": 0.005422836353403393,
+      "a1_ema_overlap_rows": 0,
+      "max_f_out": 36.0,
+      "max_f_stoch": 1
+    },
+    {
+      "dataset": "1004_vivo",
+      "scheme": "B3_a1_ema",
+      "epochs": 1800,
+      "q_counts": {
+        "0": 12,
+        "6": 1786,
+        "5": 2
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "141859efd9264ed4ec56034e4603228dfbf2f8f3e4e91c8a90562c791e8791ba",
+        "corrections.csv": "279f37fd001b060d4148a36fd3dbf215a9921f5a44db47dc5668a2d4cf43c7a3"
+      },
+      "q6_closure_rows": 1786,
+      "max_kv_closure_m": 4.6558749260475207e-10,
+      "max_kv_closure_l2_m": 5.162286993859405e-10,
+      "committed": 1788,
+      "commits_after_retry": 12,
+      "code_rows": 44062,
+      "a1_inflated_rows": 3068,
+      "ema_inflated_rows": 3117,
+      "ion_q_halved_satellites": 0,
+      "ion_q_removed_m2": 0.0,
+      "a1_ema_overlap_rows": 1385,
+      "max_f_out": 36.0,
+      "max_f_stoch": 14.198059195722339
+    },
+    {
+      "dataset": "1004_vivo",
+      "scheme": "B4_a1_ema_ionq",
+      "epochs": 1800,
+      "q_counts": {
+        "0": 12,
+        "6": 1786,
+        "5": 2
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "141859efd9264ed4ec56034e4603228dfbf2f8f3e4e91c8a90562c791e8791ba",
+        "corrections.csv": "279f37fd001b060d4148a36fd3dbf215a9921f5a44db47dc5668a2d4cf43c7a3"
+      },
+      "q6_closure_rows": 1786,
+      "max_kv_closure_m": 4.653265446574739e-10,
+      "max_kv_closure_l2_m": 5.201642157787268e-10,
+      "committed": 1788,
+      "commits_after_retry": 12,
+      "code_rows": 44062,
+      "a1_inflated_rows": 3068,
+      "ema_inflated_rows": 3117,
+      "ion_q_halved_satellites": 1896,
+      "ion_q_removed_m2": 0.005409869818285054,
+      "a1_ema_overlap_rows": 1385,
+      "max_f_out": 36.0,
+      "max_f_stoch": 14.198687701196933
+    },
+    {
+      "dataset": "1031_xiaomi_V1",
+      "scheme": "B1_ema_only",
+      "epochs": 669,
+      "q_counts": {
+        "0": 585,
+        "6": 84
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "536496cda4bb3382426200472a4e00ee4665e581353cb0c7720f00250eb02f6f",
+        "corrections.csv": "f7dc59b10ca1c3b6fa7f8d687573e8de2c3b7fd04b23d417ae9d3623dbf9e775"
+      },
+      "q6_closure_rows": 84,
+      "max_kv_closure_m": 4.6315456331269544e-10,
+      "max_kv_closure_l2_m": 4.916121967270426e-10,
+      "committed": 84,
+      "commits_after_retry": 4,
+      "code_rows": 2688,
+      "a1_inflated_rows": 0,
+      "ema_inflated_rows": 184,
+      "ion_q_halved_satellites": 0,
+      "ion_q_removed_m2": 0.0,
+      "a1_ema_overlap_rows": 0,
+      "max_f_out": 1,
+      "max_f_stoch": 10.30205618727061
+    },
+    {
+      "dataset": "1031_xiaomi_V1",
+      "scheme": "B2_a1_ionq",
+      "epochs": 669,
+      "q_counts": {
+        "0": 585,
+        "6": 84
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "536496cda4bb3382426200472a4e00ee4665e581353cb0c7720f00250eb02f6f",
+        "corrections.csv": "f7dc59b10ca1c3b6fa7f8d687573e8de2c3b7fd04b23d417ae9d3623dbf9e775"
+      },
+      "q6_closure_rows": 84,
+      "max_kv_closure_m": 4.514917606446289e-10,
+      "max_kv_closure_l2_m": 5.037248415902199e-10,
+      "committed": 84,
+      "commits_after_retry": 4,
+      "code_rows": 2688,
+      "a1_inflated_rows": 121,
+      "ema_inflated_rows": 0,
+      "ion_q_halved_satellites": 112,
+      "ion_q_removed_m2": 0.00012996086333485712,
+      "a1_ema_overlap_rows": 0,
+      "max_f_out": 34.55813846374393,
+      "max_f_stoch": 1
+    },
+    {
+      "dataset": "1031_xiaomi_V1",
+      "scheme": "B3_a1_ema",
+      "epochs": 669,
+      "q_counts": {
+        "0": 585,
+        "6": 84
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "536496cda4bb3382426200472a4e00ee4665e581353cb0c7720f00250eb02f6f",
+        "corrections.csv": "f7dc59b10ca1c3b6fa7f8d687573e8de2c3b7fd04b23d417ae9d3623dbf9e775"
+      },
+      "q6_closure_rows": 84,
+      "max_kv_closure_m": 4.494383615272213e-10,
+      "max_kv_closure_l2_m": 4.754650446068366e-10,
+      "committed": 84,
+      "commits_after_retry": 4,
+      "code_rows": 2688,
+      "a1_inflated_rows": 127,
+      "ema_inflated_rows": 178,
+      "ion_q_halved_satellites": 0,
+      "ion_q_removed_m2": 0.0,
+      "a1_ema_overlap_rows": 82,
+      "max_f_out": 33.64956287033418,
+      "max_f_stoch": 10.589620794673777
+    },
+    {
+      "dataset": "1031_xiaomi_V1",
+      "scheme": "B4_a1_ema_ionq",
+      "epochs": 669,
+      "q_counts": {
+        "0": 585,
+        "6": 84
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "536496cda4bb3382426200472a4e00ee4665e581353cb0c7720f00250eb02f6f",
+        "corrections.csv": "f7dc59b10ca1c3b6fa7f8d687573e8de2c3b7fd04b23d417ae9d3623dbf9e775"
+      },
+      "q6_closure_rows": 84,
+      "max_kv_closure_m": 4.5156415065528144e-10,
+      "max_kv_closure_l2_m": 4.885152025579137e-10,
+      "committed": 84,
+      "commits_after_retry": 4,
+      "code_rows": 2688,
+      "a1_inflated_rows": 127,
+      "ema_inflated_rows": 178,
+      "ion_q_halved_satellites": 112,
+      "ion_q_removed_m2": 0.00012980436712861448,
+      "a1_ema_overlap_rows": 82,
+      "max_f_out": 33.649567054745866,
+      "max_f_stoch": 10.589620161376082
+    },
+    {
+      "dataset": "1031_xiaomi_V2",
+      "scheme": "B1_ema_only",
+      "epochs": 669,
+      "q_counts": {
+        "0": 5,
+        "6": 663,
+        "5": 1
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "1583b9394a359e60a01dc59925dc0c33a2147c04ea5cd5e6c966a352564f9c43",
+        "corrections.csv": "0708ca28d7715cf358bcae27d42d7f62ef2af4f663c9c974534e1df95efdba16"
+      },
+      "q6_closure_rows": 663,
+      "max_kv_closure_m": 4.653920629947572e-10,
+      "max_kv_closure_l2_m": 5.266853712235602e-10,
+      "committed": 664,
+      "commits_after_retry": 4,
+      "code_rows": 21967,
+      "a1_inflated_rows": 0,
+      "ema_inflated_rows": 1690,
+      "ion_q_halved_satellites": 0,
+      "ion_q_removed_m2": 0.0,
+      "a1_ema_overlap_rows": 0,
+      "max_f_out": 1,
+      "max_f_stoch": 20.0
+    },
+    {
+      "dataset": "1031_xiaomi_V2",
+      "scheme": "B2_a1_ionq",
+      "epochs": 669,
+      "q_counts": {
+        "0": 5,
+        "6": 663,
+        "5": 1
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "1583b9394a359e60a01dc59925dc0c33a2147c04ea5cd5e6c966a352564f9c43",
+        "corrections.csv": "0708ca28d7715cf358bcae27d42d7f62ef2af4f663c9c974534e1df95efdba16"
+      },
+      "q6_closure_rows": 663,
+      "max_kv_closure_m": 4.655583210610992e-10,
+      "max_kv_closure_l2_m": 5.148012239874606e-10,
+      "committed": 664,
+      "commits_after_retry": 4,
+      "code_rows": 21967,
+      "a1_inflated_rows": 900,
+      "ema_inflated_rows": 0,
+      "ion_q_halved_satellites": 517,
+      "ion_q_removed_m2": 0.00041093813964634366,
+      "a1_ema_overlap_rows": 0,
+      "max_f_out": 36.0,
+      "max_f_stoch": 1
+    },
+    {
+      "dataset": "1031_xiaomi_V2",
+      "scheme": "B3_a1_ema",
+      "epochs": 669,
+      "q_counts": {
+        "0": 5,
+        "6": 663,
+        "5": 1
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "1583b9394a359e60a01dc59925dc0c33a2147c04ea5cd5e6c966a352564f9c43",
+        "corrections.csv": "0708ca28d7715cf358bcae27d42d7f62ef2af4f663c9c974534e1df95efdba16"
+      },
+      "q6_closure_rows": 663,
+      "max_kv_closure_m": 4.653080733219017e-10,
+      "max_kv_closure_l2_m": 5.189097700473553e-10,
+      "committed": 664,
+      "commits_after_retry": 4,
+      "code_rows": 21967,
+      "a1_inflated_rows": 981,
+      "ema_inflated_rows": 1652,
+      "ion_q_halved_satellites": 0,
+      "ion_q_removed_m2": 0.0,
+      "a1_ema_overlap_rows": 508,
+      "max_f_out": 36.0,
+      "max_f_stoch": 20.0
+    },
+    {
+      "dataset": "1031_xiaomi_V2",
+      "scheme": "B4_a1_ema_ionq",
+      "epochs": 669,
+      "q_counts": {
+        "0": 5,
+        "6": 663,
+        "5": 1
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "1583b9394a359e60a01dc59925dc0c33a2147c04ea5cd5e6c966a352564f9c43",
+        "corrections.csv": "0708ca28d7715cf358bcae27d42d7f62ef2af4f663c9c974534e1df95efdba16"
+      },
+      "q6_closure_rows": 663,
+      "max_kv_closure_m": 4.634062968425501e-10,
+      "max_kv_closure_l2_m": 5.032571807922067e-10,
+      "committed": 664,
+      "commits_after_retry": 4,
+      "code_rows": 21967,
+      "a1_inflated_rows": 981,
+      "ema_inflated_rows": 1652,
+      "ion_q_halved_satellites": 578,
+      "ion_q_removed_m2": 0.0004505554007012554,
+      "a1_ema_overlap_rows": 508,
+      "max_f_out": 36.0,
+      "max_f_stoch": 20.0
+    }
+  ],
+  "sha256": {
+    "step13_probe.exe": "a978e60238969e2c1dd1abafcee36a005c389111fe63627093b2c80f67584729",
+    "step13_private.patch": "20fed076b0562e408c8c0177c93ce84e42e979b324e008e575a2b2ba76cf6bc7",
+    "core/ppp.c": "25a68fe0044094d6b6a28025ae702a1fdb261429c6daee2dc7b8741fc8b3e141",
+    "core/rtkcmn.c": "48f4e2ef67e5fd1ac31b80885018de7f27ff8625fc34ac993ea3eb782a2eb250",
+    "partB_accuracy_summary.csv": "677ec621ca40930d9dd4602b94b1eeac033be111597f206eb5951a3fd27d7209",
+    "partB_adaptive_action_stats.csv": "03085a1445e23546c8c9ff81b24b265f88e5c2943264d28720d8c9bb3666ef81",
+    "partB_paired_common_q6.csv": "8e137244664bf96fc3bbd3e6f3fcdfdb560fd3ada65daeb9252ae01cdb777843",
+    "partB_candidate_frame_sensitivity.csv": "18936f4c82d1c8b517e23facf782ac14de1047e791fc717e776a04f035462624",
+    "partB_ablation_contrasts.csv": "30feee3b4d93b4f451661213bd5e0276fe6f85ea8f9acde16e03e152b83bacf1",
+    "partB_focus_effects.csv": "381d64b664677b7b9d06648e2868bfbdadaebaeadf7e5bc38a7e48f1bcbb71a9",
+    "partB_ionq_effects.csv": "04877e1cc037751e1929445102f197a1eefdea8612a7d7a7a68ac99739f48813"
+  }
+}

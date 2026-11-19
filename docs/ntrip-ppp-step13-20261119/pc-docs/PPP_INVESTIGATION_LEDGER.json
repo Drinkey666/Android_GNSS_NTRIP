@@ -1,0 +1,36 @@
+{
+  "previous": "../../ntrip-ppp-step12-20261119/pc-docs/PPP_INVESTIGATION_LEDGER.json",
+  "entries": [
+    {
+      "id": "E41",
+      "date": "2026-11-19",
+      "title": "固定 A1 与 EMA 参数的六包自适应消融",
+      "status": "PARTIAL_TRADEOFF",
+      "prior": [
+        "E39",
+        "E40",
+        "E40-A"
+      ],
+      "scheme_verdicts": {
+        "B1": "PARTIAL_TRADEOFF",
+        "B2": "PARTIAL_TRADEOFF",
+        "B3": "PARTIAL_TRADEOFF",
+        "B4": "PARTIAL_TRADEOFF"
+      },
+      "formal_estimator_changed": false,
+      "default_promotion": false,
+      "reference_feedback": false,
+      "new_replays": 24,
+      "reused_baselines": 6,
+      "reused_step12_controls": 12,
+      "q6_closures": 18812,
+      "all_same_q_sequence": true,
+      "observations_corrections_byte_identical": true,
+      "max_kv_closure_l2_m": 5.266853712235602e-10,
+      "evidence": "validation/brain_step13_adaptive_refine",
+      "report": "../REPORT.md",
+      "verification_sha256": "2f6a97568bb5f3de87f97b305263d9e75036cbb2947755887cd4dc164f496147",
+      "summary": "只关闭原 A2 的 CMC 附加倍率，10/31 小米 V2 末 60 秒 U RMS 从 0.9902 降到 0.9443 m，仅挽回原反退的 7.9%，U 均值仍为 −0.9438 m。10:04 小米保留原 A2 全段水平／高程收益的 76.4%／64.4%。在原 A1 或原 A1 加纯 EMA 上，电离层 Q 减半的最大单历元垂向影响分别为 0.583／0.415 mm。"
+    }
+  ]
+}

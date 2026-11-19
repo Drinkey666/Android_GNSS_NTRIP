@@ -1,0 +1,6 @@
+* whitespace=trailing-space,space-before-tab,cr-at-eol
+*.csv -text
+*.json -text
+*.md -text
+*.py -text
+*.patch -text whitespace=-blank-at-eol,cr-at-eol

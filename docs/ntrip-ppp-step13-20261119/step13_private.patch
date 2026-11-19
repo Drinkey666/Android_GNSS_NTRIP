@@ -1,0 +1,318 @@
+--- a/core/ppp.c
++++ b/core/ppp.c
+@@ -2529,6 +2529,167 @@
+  *       GNSS 测量。随后增加 (prn[1]/sin(el))^2*abs(tt) 的过程方差。
+  *       仅所有可用频槽均超 GAP_RESION 中断计数时重置，避免首频暂缺误清状态。
+  * ============================================================================= */
++/* Step 13 private single-session PC replay. All inputs are prior/current epoch. */
++enum { EMA_ONLY=1, A1_IONQ, A1_EMA, A1_EMA_IONQ };
++static int s13_scheme, s13_epoch;
++static int s13_read_scheme(void)
++{
++    const char *p=getenv("STEP13_SCHEME");
++    const char *names[]={"B1_ema_only","B2_a1_ionq","B3_a1_ema","B4_a1_ema_ionq"};
++    for (int i=0;p && i<4;i++) if (!strcmp(p,names[i])) return i+1;
++    return 0;
++}
++
++typedef struct {
++    int signal, last_epoch, had_phase, ema_count;
++    gtime_t seen, ema_time;
++    double ema_var;
++} s13_track_t;
++static s13_track_t s13_track[MAXSAT][NFREQ];
++
++typedef struct {
++    int idx, sat, f, grp;
++    double vg, base;
++} s13_code_t;
++static s13_code_t s13_codes[MAXOBS*NFREQ];
++static int s13_ncode, s13_slotmask[MAXSAT], s13_learned;
++static double s13_ion_increment[MAXSAT];
++typedef struct {
++    int code_rows, outliers, stochastic, ion_limited, fallback, no_group, overlap;
++    double max_out, max_stoch, sum_stoch, ion_q_removed;
++} s13_counts_t;
++static s13_counts_t s13_trial;
++
++static void s13_begin_epoch(const rtk_t *rtk,const obsd_t *obs,int n)
++{
++    s13_epoch++;
++    s13_learned=0;
++    memset(s13_ion_increment,0,sizeof(s13_ion_increment));
++    for (int i=0;i<n;i++) for (int f=0;f<rtk->opt.nf;f++) {
++        const int s=obs[i].sat-1;
++        const ssat_t *ss=rtk->ssat+s;
++        s13_track_t *t=&s13_track[s][f];
++        double dt=t->seen.time?timediff(obs[i].time,t->seen):0;
++        int phase=obs[i].L[f]!=0.0 && !(obs[i].LLI[f]&LLI_HALFC);
++        int loss=t->had_phase && (!phase || t->last_epoch+1!=s13_epoch);
++        if (loss || dt<=0.0 || dt>10.0 || t->signal!=obs[i].code[f] ||
++            ss->ppp_arc_reset[f] || ((ss->slip[f]|obs[i].LLI[f])&LLI_SLIP))
++            memset(t,0,sizeof(*t));
++        t->signal=obs[i].code[f];
++        t->last_epoch=s13_epoch;
++        t->seen=obs[i].time;
++        t->had_phase=phase;
++    }
++}
++
++/* Keep the physical code variance (including signal/code-only scaling)
++ * separate from products, smoother variance and legacy robust penalties. */
++static void s13_add_code(int idx,int sat,int f,int grp,double res,double base,
++    double scale,double ion_state,int gim_ok,double gim)
++{
++    s13_code_t *r=s13_codes+s13_ncode++;
++    r->idx=idx; r->sat=sat; r->f=f; r->grp=grp; r->base=base;
++    r->vg=res+(gim_ok?scale*(ion_state-gim):0.0);
++}
++
++static int s13_group(const s13_code_t *r,int any_slot,double *med,double *mad)
++{
++    double vals[MAXOBS*NFREQ];
++    int n=0,nsat=0;
++    unsigned char seen[MAXSAT]={0};
++    for (int j=0;j<s13_ncode;j++) {
++        const s13_code_t *p=s13_codes+j;
++        if (p->grp!=r->grp || (!any_slot && p->f!=r->f)) continue;
++        vals[n++]=p->vg;
++        if (!seen[p->sat-1]++) nsat++;
++    }
++    if ((any_slot?n:nsat)<4) return 0;
++    *med=ppp_median(vals,n);
++    for (int j=0;j<n;j++) vals[j]=fabs(vals[j]-*med);
++    double spread=1.4826*ppp_median(vals,n);
++    *mad=MAX(1.5,spread);
++    return 1;
++}
++
++/* Advance empirical history once on the complete pre-edit rows. Subsequent
++ * trials may change A1 groups but reuse this epoch's EMA. */
++static void s13_learn(s13_track_t *t,gtime_t time,
++                      int grouped,double dv)
++{
++    if (!grouped) return;
++    double dt=t->ema_time.time?timediff(time,t->ema_time):0.0;
++    if (!t->ema_count || dt<=0.0 || dt>10.0) {
++        t->ema_count=1; t->ema_var=SQR(dv);
++    } else {
++        t->ema_count++; t->ema_var=0.92*t->ema_var+0.08*MIN(SQR(dv),400.0);
++    }
++    t->ema_time=time;
++}
++
++static void s13_weight(const rtk_t *rtk,gtime_t time,int nv,double *R,double *Pp)
++{
++    int stochastic=s13_scheme!=A1_IONQ;
++    unsigned char out_sat[MAXSAT]={0};
++    memset(&s13_trial,0,sizeof(s13_trial));
++    s13_trial.max_out=s13_trial.max_stoch=1.0;
++    for (int i=0;i<s13_ncode;i++) {
++        s13_code_t *r=&s13_codes[i];
++        s13_track_t *t=&s13_track[r->sat-1][r->f];
++        double med=0.0,mad=1.5,fs=1.0,fo=1.0;
++        int grouped=s13_group(r,0,&med,&mad);
++        if (!grouped) {
++            grouped=s13_group(r,1,&med,&mad);
++            if (grouped) s13_trial.fallback++;
++            else s13_trial.no_group++;
++        }
++        double dv=r->vg-med;
++        if (stochastic && !s13_learned) s13_learn(t,time,grouped,dv);
++        if (stochastic && grouped && t->ema_count>=3 &&
++            timediff(time,t->ema_time)==0.0) {
++            fs=MIN(20.0,MAX(1.0,t->ema_var/MAX(r->base,2.25)));
++        }
++        if (grouped && s13_scheme!=EMA_ONLY) {
++            double u=fabs(dv)/mad;
++            if (u>2.5) {
++                fo=MIN(36.0,SQR(u/2.5)*(u>4.5?2.0:1.0));
++                out_sat[r->sat-1]=1;
++                s13_trial.outliers++;
++            }
++        }
++        /* Diagonal is var[row] as emitted by ppp_res. Add only the
++         * stochastic code increment, then A1 scales the complete row. */
++        int idx=r->idx*(nv+1);
++        R[idx]=(R[idx]+(fs-1.0)*r->base)*fo;
++        s13_trial.code_rows++; s13_trial.sum_stoch+=fs;
++        s13_trial.stochastic+=fs>1.0;
++        s13_trial.overlap+=(fs>1.0 && fo>1.0);
++        s13_trial.max_stoch=MAX(s13_trial.max_stoch,fs);
++        s13_trial.max_out=MAX(s13_trial.max_out,fo);
++    }
++    s13_learned=1;
++    if (s13_scheme==A1_IONQ || s13_scheme==A1_EMA_IONQ) for (int s=0;s<MAXSAT;s++) {
++        int mask=s13_slotmask[s];
++        if (!out_sat[s] || !mask || (mask&(mask-1)) || s13_ion_increment[s]<=0) continue;
++        int j=II(s+1,&rtk->opt);
++        Pp[j*(rtk->nx+1)]-=0.5*s13_ion_increment[s];
++        s13_trial.ion_limited++;
++        s13_trial.ion_q_removed+=0.5*s13_ion_increment[s];
++    }
++}
++
++static void s13_report(gtime_t time,int q,int iteration)
++{
++    int week;
++    double tow=time2gpst(time,&week);
++    const s13_counts_t *a=&s13_trial;
++    trace(2,"$S13_ACTION,%d,%.9f,%d,%d,%d,%d,%.17g,%d,%.17g,%.17g,%d,%.17g,%d,%d,%d\n",
++        week,tow,q,iteration,a->code_rows,a->outliers,a->max_out,a->stochastic,
++        a->code_rows?a->sum_stoch/a->code_rows:1.0,a->max_stoch,
++        a->ion_limited,a->ion_q_removed,a->fallback,a->no_group,a->overlap);
++}
++extern void s13_closure_begin(const double *x);
++extern void s13_closure_commit(gtime_t time,const double *x);
++
+ static void udiono_ppp(rtk_t* rtk, const obsd_t* obs, int n, const nav_t* nav)
+ {
+     double ion, vari, sinel, pos[3], * azel;
+@@ -2647,8 +2808,10 @@
+         }
+         else {
+             sinel = sin(MAX(azel[1], 5.0 * D2R));
+-            rtk->P[j + j * rtk->nx] += SQR(rtk->opt.prn[1] / sinel) *
++            double q_ion=SQR(rtk->opt.prn[1] / sinel) *
+                 (observation_lifecycle?observed_dt[sat-1]:fabs(rtk->tt));
++            rtk->P[j + j * rtk->nx] += q_ion;
++            s13_ion_increment[sat-1]=q_ion;
+         }
+     }
+ }
+@@ -3506,6 +3669,7 @@
+     double res, C;
+ 
+     time2str(obs[0].time, str, 2);
++    if (!post) {s13_ncode=0; memset(s13_slotmask,0,sizeof(s13_slotmask));}
+     if (!post && product_use) memset(product_use,0,sizeof(int)*(MAXSAT+3));
+     if ((code_only_opt = strstr(opt->pppopt, "-CODENOPH=")) &&
+         sscanf(code_only_opt, "-CODENOPH=%lf", &code_only_factor) != 1) {
+@@ -3639,6 +3803,12 @@
+                 d->cmc_ok = 1;
+             }
+         }
++        double gim=0.0,gim_var=0.0,map=0.0;
++        int gim_ok=0;
++        if (!post) {
++            gim_ok=ionex_vertical_prior(obs[i].time,nav,pos,azel+2*i,opt,&gim,&gim_var);
++            if (gim_ok) map=ppp_iono_mapf(nav,pos,azel+2*i);
++        }
+         applydoppsm_ppp(rtk, obs + i, P);
+ 
+         /* stack phase and code residuals {L1,P1,L2,P2,...} */
+@@ -3781,6 +3951,11 @@
+             if (sys == SYS_CMP && code) var[nv] *= bds_code_factor;
+             if (code && !sat_has_phase && !rtk->ppp_code_warmup) {
+                 var[nv] *= code_only_factor;
++            }
++            if (!post) {
++                s13_slotmask[sat-1]|=1<<frq;
++                if (code) s13_add_code(nv,sat,frq,ppp_clk_index(sys),res,var[nv],
++                    C*map,x[II(sat,opt)],gim_ok,gim);
+             }
+             /* 模型误差合入 R：对流层+频率缩放后的电离层+卫星位置/钟差产品。
+              * EST 电离层的不确定度由状态 P 处理，不在此重复加一份先验方差。
+@@ -4635,6 +4810,13 @@
+         product_use[MAXSAT+3] = {0},
+         svh[MAXOBS], exc[MAXOBS] = { 0 }, stat = SOLQ_SINGLE;
+     unsigned char mexc[MAXOBS * 2 * NFREQ] = { 0 };
++    s13_scheme=s13_read_scheme();
++    if (!s13_scheme || opt->ionoopt!=IONOOPT_EST || opt->modear!=ARMODE_OFF ||
++        !ppp_verified_joseph(opt) || opt->ppp_iekf || opt->ppp_wet_correction ||
++        opt->ppp_rcb_datum || opt->ppp_physical_atmosphere) {
++        trace(2,"$S13_INVALID_PROFILE\n"); rtk->ppp_failure=FILTER_BAD_DIM;
++        rtk->sol.stat=SOLQ_NONE; return;
++    }
+     memset(&evidence,0,sizeof(evidence));
+     rtk->ppp_failure=0;
+     if(!obs || !nav || n<=0 || n>MAXOBS || opt->nf<1 || opt->nf>NFREQ ||
+@@ -4735,6 +4917,7 @@
+             precheck_startup_code_ppp(rtk,obs,n,nav,rs,dts,var,svh);
+     }
+     phase_osb_arcs_ppp(rtk,obs,n,nav);
++    s13_begin_epoch(rtk,obs,n);
+     /* 第 3 步：平滑及可选码阶段选择，各执行一次；严禁移进残差编辑循环，
+      * 否则同一 epoch 会重复平滑和增加历史计数，fast/realtime 也可能不等价。 */
+     nsmooth = uddoppsm_ppp(rtk, obs, n, nav, rs);
+@@ -4922,6 +5105,7 @@
+                 group,peers,shift,xp[IC(0,opt)],Pp[IC(0,opt)*(rtk->nx+1)],
+                 rtk->ppp_spp_clock_valid,rtk->ppp_spp_clock_m,have);
+         }
++        s13_weight(rtk,obs[0].time,nv,R,Pp);
+         /* Snapshot pre-fit diagnostics before filter mutates xp/Pp. Outputs
+          * have independent ownership; allocation failure affects logs only. */
+         if(robust_gnss && (info=apply_huber_robust_ppp_masked(xp,Pp,v,H,R,
+@@ -4954,6 +5138,7 @@
+ #endif
+         /* filter 在 rtkcmn 中完成 EKF 测量更新：根据 v/H/R 算增益，更新
+          * xp/Pp。info!=0 为数值更新失败，不能把该试算状态提交成有效 PPP。 */
++        s13_closure_begin(xp);
+         if(opt->ppp_iekf) {
+             ppp_iekf_context_t ctx;int iterations=0;
+             memset(&ctx,0,sizeof(ctx));ctx.rtk=rtk;ctx.obs=obs;ctx.n=n;ctx.nav=nav;
+@@ -5096,6 +5281,8 @@
+             }
+         }
+ 
++        s13_report(obs[0].time,rtk->sol.stat,i+1);
++        if (rtk->sol.stat==SOLQ_PPP) s13_closure_commit(obs[0].time,rtk->x);
+         if (stat == SOLQ_FIX && test_hold_amb(rtk)) {
+             matcpy(rtk->x, xp, rtk->nx, 1);
+             matcpy(rtk->P, Pp, rtk->nx, rtk->nx);
+--- a/core/rtkcmn.c
++++ b/core/rtkcmn.c
+@@ -1572,6 +1572,26 @@
+     }
+     free(C);free(ix);free(scale);return info;
+ }
++/* Measure the independent gain-row dot product only for the flagged PPP trial. */
++static double s13_prior[3],s13_kv[3];
++static int s13_pos_index[3],s13_gain_ready,s13_capture;
++void s13_closure_begin(const double *x)
++{
++    memcpy(s13_prior,x,3*sizeof(double));
++    memset(s13_kv,0,sizeof(s13_kv));
++    s13_gain_ready=0;
++    s13_capture=1;
++}
++void s13_closure_commit(gtime_t time,const double *x)
++{
++    int week;
++    double tow=time2gpst(time,&week),d[3];
++    for (int a=0;a<3;a++) d[a]=(x[a]-s13_prior[a])-s13_kv[a];
++    trace(2,"$S13_CLOSURE,%d,%.9f,%d,%.17g,%.17g,%.17g\n",
++          week,tow,s13_gain_ready,d[0],d[1],d[2]);
++}
++
++
+ static int filter_(const double *x, const double *P, const double *H,
+                    const double *v, const double *R, int n, int m,
+                    double *xp, double *Pp,int physical)
+@@ -1597,6 +1617,13 @@
+ #ifdef ENABLE_FILTER_DIAGNOSTIC
+         ppp_fd_matrix("K",K,n,m);
+ #endif
++        if (s13_capture) {
++            for (int a=0;a<3;a++) {
++                int idx=s13_pos_index[a];
++                if (idx>=0) for (int col=0;col<m;col++) s13_kv[a]+=K[idx+n*col]*v[col];
++            }
++            s13_gain_ready=1;
++        }
+         matmulp("NN",n,1,m,K,v,xp);  /* xp=x+K*v */
+         matmulm("NT",n,n,m,K,H,I);  /* Pp=(I-K*H')*P */
+         if(physical) {
+@@ -1656,7 +1683,12 @@
+ #ifdef ENABLE_FILTER_DIAGNOSTIC
+     ppp_fd_filter_begin(x_,P_,H_,v,R,n,m,ix,k,allow_zero);
+ #endif
++    if (s13_capture) {
++        for (i=0;i<3;i++) s13_pos_index[i]=-1;
++        for (i=0;i<k;i++) if (ix[i]<3) s13_pos_index[ix[i]]=i;
++    }
+     info=filter_(x_,P_,H_,v,R,k,m,xp_,Pp_,physical);
++    s13_capture=0;
+     /* copy values from compressed arrays back to full arrays */
+     for (i=0;!info && i<k;i++) {
+         x[ix[i]]=xp_[i];
