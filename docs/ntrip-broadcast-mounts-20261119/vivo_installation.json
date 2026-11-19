@@ -1,0 +1,18 @@
+{
+  "device_model": "vivo V2507A",
+  "package": "com.example.pppntrip",
+  "source_commit": "6712d7310d0923875725eb0da6035659e0e71808",
+  "tested_at": "2026-11-19T21:45:49+08:00",
+  "update_mode": "adb install -r",
+  "installed_apk_sha256": "f455df7fd1596c32d0771640114189059ab18e096a5f480ea27611121b182a41",
+  "build_apk_sha256": "ce345d419f4589910ae774203145f5a181c4034829167efff922253219112b77",
+  "same_payload_entries": 965,
+  "signer_matches_previous": true,
+  "install_time_preserved": true,
+  "package_last_update": "2026-11-19 21:45:28",
+  "activity_launch": "ok",
+  "snip_enabled": true,
+  "previous_endpoint_preferences_preserved": true,
+  "orbit_mount": "SSRC00WHU0",
+  "bias_mount": "OSBC00WHU1"
+}

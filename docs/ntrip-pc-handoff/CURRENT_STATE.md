@@ -4,7 +4,7 @@
 
 ## 当前目标和停点
 
-11/19 已验证匿名广播星历 `ntrip.use-snip.com:2101/RTCM3EPH` 与原 WHU 轨钟、偏差分服并发。vivo 蜂窝网约 118 秒收到 3,856／93／97 帧（广播／轨钟／偏差），CRC 错误均为零。Android 新增「使用 SNIP 独立广播星历」开关，已构建，选用需在新版保存设置；PC 使用 `config/caster_whu_snip.json`。本轮只核验收流和产品期号，未评估定位精度。 [实测与切换](../ntrip-broadcast-mounts-20261119/REPORT.md)
+11/19 已验证匿名广播星历 `ntrip.use-snip.com:2101/RTCM3EPH` 与原 WHU 轨钟、偏差分服并发。vivo 蜂窝网约 118 秒收到 3,856／93／97 帧（广播／轨钟／偏差），CRC 错误均为零。21:45 已在 vivo V2507A 保留数据覆盖安装新版，已启动 App 并保存「使用 SNIP 独立广播星历」设置，两条 WHU 挂载已核对；PC 使用 `config/caster_whu_snip.json`。本轮只核验收流和产品期号，未评估定位精度。 [实测与切换](../ntrip-broadcast-mounts-20261119/REPORT.md)
 
 Step 13（E41）已完成 24 组 PC 私有因果回放。只关闭原 A2 的 CMC 附加倍率，10/31 小米 V2 末 60 秒 U RMS 从 0.9902 降到 0.9443 m，仅挽回原反退的 7.9%，U 均值仍为 −0.9438 m。10:04 小米保留原 A2 全段水平／高程收益的 76.4%／64.4%。在原 A1 或原 A1 加纯 EMA 上，电离层 Q 减半的最大单历元垂向影响分别为 0.583／0.415 mm。 四方案均为 PARTIAL_TRADEOFF。 [报告](../ntrip-ppp-step13-20261119/REPORT.md) · [逐包限幅效应](../ntrip-ppp-step13-20261119/partB_ionq_effects.csv)
 

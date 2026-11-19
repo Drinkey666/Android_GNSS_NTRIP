@@ -4,7 +4,7 @@
 
 ## 怎样切换
 
-- 新版 Android 打开「NTRIP 设置」，开启「使用 SNIP 独立广播星历」，点保存，在下一次采集生效。只将广播连接指向上述公开服务，不向它发送 Authorization。轨钟 `SSRC00WHU0` 和偏差 `OSBC00WHU1` 使用现有服务器及账号。关闭开关后恢复原来填写的广播挂载点。本次已构建个人 Debug APK，手机实测使用独立网络探针，应用内开关尚未在真机运行。
+- 新版 Android 打开「NTRIP 设置」，开启「使用 SNIP 独立广播星历」，点保存，在下一次采集生效。只将广播连接指向上述公开服务，不向它发送 Authorization。轨钟 `SSRC00WHU0` 和偏差 `OSBC00WHU1` 使用现有服务器及账号。关闭开关后恢复原来填写的广播挂载点。收流实测使用独立网络探针。21:45 已用原签名覆盖安装至 vivo V2507A，启动 App 并在设置页开启该开关，随后核验了存储的广播选项与 WHU 两路挂载。[安装核验](vivo_installation.json)
 - 使用原版 App 时，在「广播星历挂载点」填 `BCEP00CAS0` 可以用原账号试同服备用。原版的「服务器」字段供三路共用，直接改为 SNIP 会同时改变两条 WHU 请求的目的地。CAS 在 PC 上与两条 WHU 同时出流，在本轮手机短测中三路都遇到超时。经过对比，优先推荐独立广播入口。
 - PC 在工程根目录运行 `python tools/ntrip_capture.py --config config/caster_whu_snip.json --seconds 125`。同服 CAS 方案使用 `config/caster_whu_cas.json`。单独核查匿名广播可运行 `python tools/probe_ntrip_mounts.py --config config/caster_whu_snip.json --mount RTCM3EPH --seconds 15 --header-timeout 60`。默认配置继续使用历史 BKG 广播基线。
 - 另一个可申请的分发入口是 BKG 官方产品 caster。其完整源表列有 `BCEP00CAS0` 和 `BCEP00CHC0`，443/TLS 两路匿名请求实测均返回 401，需要该服务自己的账号。[BKG 官方注册](https://register.rtcm-ntrip.org/cgi-bin/registration.cgi?mod=register) · [IGS 广播产品目录](https://igs.org/rts/products/)

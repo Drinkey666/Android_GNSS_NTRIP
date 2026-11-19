@@ -5,7 +5,7 @@
 
 ## 路径和版本
 
-11/19 已验证匿名广播星历 `ntrip.use-snip.com:2101/RTCM3EPH` 与原 WHU 轨钟、偏差分服并发。vivo 蜂窝网约 118 秒收到 3,856／93／97 帧（广播／轨钟／偏差），CRC 错误均为零。Android 新增「使用 SNIP 独立广播星历」开关，已构建，选用需在新版保存设置；PC 使用 `config/caster_whu_snip.json`。本轮只核验收流和产品期号，未评估定位精度。 [实测与切换](ntrip-broadcast-mounts-20261119/REPORT.md)
+11/19 已验证匿名广播星历 `ntrip.use-snip.com:2101/RTCM3EPH` 与原 WHU 轨钟、偏差分服并发。vivo 蜂窝网约 118 秒收到 3,856／93／97 帧（广播／轨钟／偏差），CRC 错误均为零。21:45 已在 vivo V2507A 保留数据覆盖安装新版，已启动 App 并保存「使用 SNIP 独立广播星历」设置，两条 WHU 挂载已核对；PC 使用 `config/caster_whu_snip.json`。本轮只核验收流和产品期号，未评估定位精度。 [实测与切换](ntrip-broadcast-mounts-20261119/REPORT.md)
 - Android根目录 E:/android/test/PPP_NTRIP，PC根目录 E:/GNSS/PPP_NTRIP_PC。
 - Git 分支 main。11/17 修复与后续交付规则见 [GitHub 当前版本](https://github.com/Drinkey666/Android_GNSS_NTRIP/commits/main/)。
 - 11/16 在线源码提交 1932fda，Update Android NTRIP PPP startup, capture, and map。已推送至 https://github.com/Drinkey666/Android_GNSS_NTRIP 并核对远端 SHA。
