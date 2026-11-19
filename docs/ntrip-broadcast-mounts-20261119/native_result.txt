@@ -1,0 +1,1 @@
+{"profile":"WHU_OSB_CONTINUITY_V1","first_ready_elapsed_s":-1.000000,"max_ready_GEC":0,"GPS_code_epoch_count":2,"blocked":false}

@@ -19,12 +19,22 @@ class NtripCredentials(val user: String, val password: String) {
     override fun toString() = "NtripCredentials(REDACTED)"
 }
 
+internal data class CasterEndpoint(val host: String, val port: Int, val tls: Boolean)
+internal val SNIP_ENDPOINT = CasterEndpoint("ntrip.use-snip.com", 2101, false)
+internal const val SNIP_MOUNT = "RTCM3EPH"
+
 data class NtripSettings(
     val host: String = "ntrip.gnsslab.cn", val port: Int = 2101,
     val correctionMount: String = "SSRA00BKG0", val navigationMount: String = "BCEP00BKG0",
     val tls: Boolean = false, val centerOfMass: Boolean = false,
     val biasMount: String = "",
+    val useSnipBroadcast: Boolean = false,
 ) {
+    val activeNavigationMount get() = if (useSnipBroadcast) SNIP_MOUNT else navigationMount
+    internal fun isPublicBroadcast(mount: String) = useSnipBroadcast && mount == activeNavigationMount
+    internal fun endpointFor(mount: String) = if (isPublicBroadcast(mount)) SNIP_ENDPOINT
+        else CasterEndpoint(host, port, tls)
+
     fun validate() {
         require(host.matches(Regex("[A-Za-z0-9.-]+")) && !host.startsWith('.') && host.length <= 253) {
             "HOST_INVALID"
@@ -33,7 +43,7 @@ data class NtripSettings(
         for (mount in listOf(correctionMount, navigationMount) + listOf(biasMount).filter { it.isNotEmpty() }) {
             require(mount.matches(Regex("[A-Za-z0-9_.-]{1,128}"))) { "MOUNT_INVALID" }
         }
-        require(listOf(correctionMount,navigationMount,biasMount).filter { it.isNotEmpty() }.distinct().size == if(biasMount.isEmpty()) 2 else 3) { "MOUNTS_MUST_DIFFER" }
+        require(listOf(correctionMount,activeNavigationMount,biasMount).filter { it.isNotEmpty() }.distinct().size == if(biasMount.isEmpty()) 2 else 3) { "MOUNTS_MUST_DIFFER" }
     }
 }
 
@@ -41,13 +51,14 @@ data class NtripSettings(
 internal object NtripProtocol {
     fun request(settings: NtripSettings, mount: String, credentials: NtripCredentials): ByteArray {
         settings.validate()
-        require(mount == settings.correctionMount || mount == settings.navigationMount || mount == settings.biasMount)
+        require(mount == settings.correctionMount || mount == settings.activeNavigationMount || mount == settings.biasMount)
         require(credentials.user.none { it == ':' || it == '\r' || it == '\n' })
         require(credentials.password.none { it == '\r' || it == '\n' })
-        val authorization = if (credentials.user.isNotEmpty()) "Authorization: Basic " +
+        val endpoint = settings.endpointFor(mount)
+        val authorization = if (!settings.isPublicBroadcast(mount) && credentials.user.isNotEmpty()) "Authorization: Basic " +
             Base64.getEncoder().encodeToString((credentials.user + ":" + credentials.password)
                 .toByteArray(StandardCharsets.UTF_8)) + "\r\n" else ""
-        return ("GET /$mount HTTP/1.1\r\nHost: ${settings.host}:${settings.port}\r\n" +
+        return ("GET /$mount HTTP/1.1\r\nHost: ${endpoint.host}:${endpoint.port}\r\n" +
             "Ntrip-Version: Ntrip/2.0\r\nUser-Agent: NTRIP PPP-NTRIP/1.0\r\n" +
             "Accept: gnss/data, application/octet-stream\r\nAccept-Encoding: identity\r\n" +
             authorization + "Connection: close\r\n\r\n").toByteArray(StandardCharsets.US_ASCII)
@@ -157,14 +168,15 @@ class NtripClient(
                     onStatus("CONNECTING")
                     val plain = Socket(); socket = plain
                     if (!active) { plain.close(); break }
-                    val endpoint = InetSocketAddress(java.net.InetAddress.getByName(settings.host), settings.port)
+                    val caster = settings.endpointFor(mount)
+                    val endpoint = InetSocketAddress(java.net.InetAddress.getByName(caster.host), caster.port)
                     stage = "TCP_CONNECT"
                     plain.connect(endpoint, 10000)
                     plain.soTimeout = 15000
-                    val streamSocket = if (settings.tls) {
+                    val streamSocket = if (caster.tls) {
                         stage = "TLS_HANDSHAKE"
                         (SSLSocketFactory.getDefault() as SSLSocketFactory)
-                            .createSocket(plain, settings.host, settings.port, true).let { it as SSLSocket }.apply {
+                            .createSocket(plain, caster.host, caster.port, true).let { it as SSLSocket }.apply {
                                 sslParameters = sslParameters.apply { endpointIdentificationAlgorithm = "HTTPS" }
                                 socket = this
                                 if (!active) { close(); throw InterruptedException() }
@@ -176,10 +188,13 @@ class NtripClient(
                         write(NtripProtocol.request(settings, mount, credentials)); flush()
                     }
                     stage = "STATUS_LINE"
+                    // Allow a slow caster admission while keeping the live stream idle check short.
+                    streamSocket.soTimeout = 60_000
                     val body = NtripProtocol.body(BufferedInputStream(streamSocket.getInputStream())) {
                         stage = "RESPONSE_HEADERS"
                     }
                     stage = "BODY_READ"
+                    streamSocket.soTimeout = 15_000
                     onConnect(); onStatus("CONNECTED_WAITING_RTCM")
                     val buffer = ByteArray(8192)
                     while (active) {

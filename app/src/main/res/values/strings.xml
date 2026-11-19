@@ -149,6 +149,7 @@
     <string name="ntrip_host">Caster 地址</string>
     <string name="ntrip_port">端口</string>
     <string name="ntrip_ssr_mount">SSR 挂载点（含轨道、钟差、码偏差）</string>
+    <string name="ntrip_public_nav">使用 SNIP 独立广播星历</string>
     <string name="ntrip_nav_mount">广播星历挂载点</string>
     <string name="ntrip_user">账号</string>
     <string name="ntrip_password">密码</string>

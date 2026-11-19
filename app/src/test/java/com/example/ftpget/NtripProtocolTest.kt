@@ -93,6 +93,21 @@ class NtripProtocolTest {
         assertFalse(credentials.toString().contains(credentials.password))
         fails { NtripProtocol.request(NtripSettings(), "SSRA00BKG0", NtripCredentials("a\r\nb", "x")) }
     }
+    @Test fun independentNavigationUsesPublicHostWithoutSharingCredentials() {
+        val settings = NtripSettings(correctionMount="SSRC00WHU0", biasMount="OSBC00WHU1",
+            useSnipBroadcast=true)
+        val auth = NtripCredentials("test-user", "test-password")
+        val nav = NtripProtocol.request(settings, settings.activeNavigationMount, auth).decodeToString()
+        assertTrue(nav.startsWith("GET /RTCM3EPH HTTP/1.1\r\nHost: ntrip.use-snip.com:2101\r\n"))
+        assertFalse(nav.contains("Authorization:"))
+        for (mount in listOf(settings.correctionMount, settings.biasMount)) {
+            val req = NtripProtocol.request(settings, mount, auth).decodeToString()
+            assertTrue(req.contains("Host: ntrip.gnsslab.cn:2101\r\n"))
+            assertTrue(req.contains("Authorization: Basic "))
+        }
+        fails { settings.copy(correctionMount=SNIP_MOUNT).validate() }
+        assertEquals(settings.navigationMount, settings.copy(useSnipBroadcast=false).activeNavigationMount)
+    }
     @Test fun settingsRejectInjectionAndAmbiguousEndpoints() {
         for (s in listOf(NtripSettings(host="http://example.com"), NtripSettings(port=0),
             NtripSettings(correctionMount="foo\r\nX: bar"), NtripSettings(navigationMount="SSRA00BKG0"))) {

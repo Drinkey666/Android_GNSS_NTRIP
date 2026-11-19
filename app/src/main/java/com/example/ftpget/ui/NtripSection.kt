@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.example.ftpget.NtripSettings
 import com.example.ftpget.MAX_NTRIP_CAPTURE_MINUTES
 import com.example.ftpget.R
+import com.example.ftpget.SNIP_MOUNT
 
 @Composable
 internal fun NtripSection(state: MainUiState) {
@@ -110,7 +111,7 @@ internal fun NtripSection(state: MainUiState) {
                 DetailText(stringResource(R.string.capture_ssr_label,
                     state.ntripSettings.correctionMount))
                 DetailText(stringResource(R.string.capture_nav_label,
-                    state.ntripSettings.navigationMount))
+                    state.ntripSettings.activeNavigationMount))
                 DetailText(stringResource(R.string.capture_bias_label,
                     state.ntripSettings.biasMount))
                 DetailText(stringResource(R.string.capture_bytes, state.captureBytes / 1024.0))
@@ -187,6 +188,7 @@ private fun NtripEditor(state: MainUiState, onDismiss: () -> Unit) {
     var port by remember { mutableStateOf(initial.port.toString()) }
     var ssr by remember { mutableStateOf(initial.correctionMount) }
     var bias by remember { mutableStateOf(initial.biasMount) }
+    var useSnip by remember { mutableStateOf(initial.useSnipBroadcast) }
     var nav by remember { mutableStateOf(initial.navigationMount) }
     var tls by remember { mutableStateOf(initial.tls) }
     var com by remember { mutableStateOf(initial.centerOfMass) }
@@ -195,7 +197,7 @@ private fun NtripEditor(state: MainUiState, onDismiss: () -> Unit) {
     var password by remember { mutableStateOf(state.ntripPassword) }
     var invalid by remember { mutableStateOf(false) }
     val save = {
-            val proposed = NtripSettings(host.trim(), port.toIntOrNull() ?: 0, ssr.trim(), nav.trim(), tls, com, bias.trim())
+            val proposed = NtripSettings(host.trim(), port.toIntOrNull() ?: 0, ssr.trim(), nav.trim(), tls, com, bias.trim(), useSnip)
             if (runCatching { proposed.validate() }.isFailure || user.contains(':') ||
                 user.any { it == '\r' || it == '\n' } || password.any { it == '\r' || it == '\n' }) {
                 invalid = true
@@ -225,7 +227,14 @@ private fun NtripEditor(state: MainUiState, onDismiss: () -> Unit) {
                 label = { Text(stringResource(R.string.ntrip_ssr_mount)) }, singleLine = true)
             OutlinedTextField(bias, { bias = it }, modifier = Modifier.fillMaxWidth(),
                 label = { Text(stringResource(R.string.ntrip_bias_mount)) }, singleLine = true)
-            OutlinedTextField(nav, { nav = it }, modifier = Modifier.fillMaxWidth(),
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically) {
+                Text(stringResource(R.string.ntrip_public_nav), modifier = Modifier.weight(1f),
+                    style = MaterialTheme.typography.bodyMedium)
+                Switch(useSnip, { useSnip = it })
+            }
+            OutlinedTextField(if (useSnip) SNIP_MOUNT else nav,
+                { nav = it }, enabled = !useSnip, modifier = Modifier.fillMaxWidth(),
                 label = { Text(stringResource(R.string.ntrip_nav_mount)) }, singleLine = true)
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             Text(stringResource(R.string.ntrip_account_group),

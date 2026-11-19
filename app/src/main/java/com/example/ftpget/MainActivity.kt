@@ -233,6 +233,7 @@ class MainActivity : AppCompatActivity() {
             port=ntripPrefs.getInt("port", 2101),
             correctionMount=ntripPrefs.getString("ssr_whu", "SSRC00WHU0")!!,
             biasMount=ntripPrefs.getString("bias_whu", "OSBC00WHU1")!!,
+            useSnipBroadcast=ntripPrefs.getBoolean("snip_nav", false),
             navigationMount=ntripPrefs.getString("nav", "BCEP00BKG0")!!,
             tls=ntripPrefs.getBoolean("tls", false), centerOfMass=ntripPrefs.getBoolean("com_whu", true))
         if(ui.ntripSettings.correctionMount=="SSRC00BKG1" && ui.ntripSettings.host=="ntrip.gnsslab.cn") {
@@ -241,6 +242,7 @@ class MainActivity : AppCompatActivity() {
         }
         ui.onNtripSettingsChanged = { value ->
             ntripPrefs.edit().putString("host", value.host).putInt("port", value.port)
+                .putBoolean("snip_nav", value.useSnipBroadcast)
                 .putString("ssr_whu", value.correctionMount).putString("bias_whu",value.biasMount).putString("nav", value.navigationMount)
                 .putBoolean("tls", value.tls).putBoolean("com_whu", value.centerOfMass).apply()
         }

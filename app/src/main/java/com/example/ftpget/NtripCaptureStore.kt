@@ -217,10 +217,14 @@ internal class NtripCaptureStore(
         closed=true
         fun info(file: File) = mapOf("bytes" to file.length(),"sha256" to captureDigest(file))
         val config=mutableMapOf("host" to settings.host,"port" to settings.port,"tls" to settings.tls,
-            "ssr_mount" to settings.correctionMount,"broadcast_mount" to settings.navigationMount,
+            "ssr_mount" to settings.correctionMount,"broadcast_mount" to settings.activeNavigationMount,
             "bias_mount" to settings.biasMount,
             "orbit_reference" to if(settings.centerOfMass)"COM" else "APC",
             "reference_pairs" to mapOf("GPS" to listOf("1W","2W"),"GAL" to listOf("1C","5Q"),"BDS" to listOf("2I","6I")))
+        if (settings.useSnipBroadcast) {
+            config["anonymous_broadcast_endpoint"] = mapOf("host" to SNIP_ENDPOINT.host,
+                "port" to SNIP_ENDPOINT.port, "tls" to SNIP_ENDPOINT.tls)
+        }
         if(settings.biasMount.isEmpty())config.remove("bias_mount")
         if(settings.correctionMount=="SSRC00WHU0" && settings.biasMount=="OSBC00WHU1" && settings.centerOfMass)
             config["ssr_profile"]=WHU_SSR_PROFILE
@@ -252,7 +256,7 @@ internal class NtripCaptureStore(
             "stop_reason" to stopReason,"transport_received_both" to scanner.all { it.frames>0 },
             "files" to (rawNames+"arrivals.csv").associateWith { info(File(directory,it)) },
             "attachments" to directory.listFiles()!!.filter { it.isFile && it.name !in rawNames+listOf("arrivals.csv","capture.json",txt?.name,"clock_anchors.csv") && !it.name.endsWith(".part") }.associate { it.name to info(it) },
-            "streams" to scanner.mapIndexed { i,s -> mapOf("mount" to listOf(settings.correctionMount,settings.navigationMount,settings.biasMount)[i],
+            "streams" to scanner.mapIndexed { i,s -> mapOf("mount" to listOf(settings.correctionMount,settings.activeNavigationMount,settings.biasMount)[i],
                 "http_status" to if(httpOk[i])200 else null,"bytes" to offset[i],"valid_rtcm_frames" to s.frames,
                 "crc_failures" to s.crcFailures,"message_types" to s.types,"igs_subtypes" to s.subtypes,
                 "connection_count" to connections[i],"first_valid_rtcm_elapsed_ns" to firstValidRtcmElapsedNs[i]) },

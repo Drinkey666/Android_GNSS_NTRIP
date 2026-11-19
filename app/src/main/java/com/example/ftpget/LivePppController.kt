@@ -50,7 +50,7 @@ class LivePppController(
     private fun startStreams() {
         synchronized(lifecycleLock) {
         if (!running) return
-        listOf(ntripSettings.correctionMount, ntripSettings.navigationMount).forEachIndexed { channel, mount ->
+        listOf(ntripSettings.correctionMount, ntripSettings.activeNavigationMount).forEachIndexed { channel, mount ->
             val client = NtripClient(ntripSettings, mount, ntripCredentials,
                 onConnect = { if (running) LivePppNative.nativeResetTransport(channel) },
                 onBytes = { bytes ->

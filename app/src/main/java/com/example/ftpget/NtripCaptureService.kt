@@ -106,7 +106,7 @@ class NtripCaptureService:Service() {
             recording.beginAcquisition()
             publish { it.copy(active=true,message=getString(R.string.capture_active),
                 remainingSeconds=recording.durationLimitSeconds) }
-            (listOf(request.settings.correctionMount,request.settings.navigationMount)+listOf(request.settings.biasMount).filter {it.isNotEmpty()}).forEachIndexed { channel,mount ->
+            (listOf(request.settings.correctionMount,request.settings.activeNavigationMount)+listOf(request.settings.biasMount).filter {it.isNotEmpty()}).forEachIndexed { channel,mount ->
                 val client=NtripClient(request.settings,mount,request.credentials,
                     onConnect={if(!stopping.get())try { synchronized(gateway) {
                         if(!stopping.get())for(event in listOf("RESET","CONNECTED")) {

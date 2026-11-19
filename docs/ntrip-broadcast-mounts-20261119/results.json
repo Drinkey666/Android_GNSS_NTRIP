@@ -1,0 +1,556 @@
+{
+  "mobile_cas": [
+    {
+      "host": "ntrip.gnsslab.cn",
+      "mount": "BCEP00CAS0",
+      "start": "2026-11-19T21:28:35.672+08:00",
+      "end": "2026-11-19T21:29:23.790+08:00",
+      "status": null,
+      "valid_rtcm_frames": 0,
+      "crc_failures": 0,
+      "message_types": {},
+      "toe": {}
+    },
+    {
+      "host": "ntrip.gnsslab.cn",
+      "mount": "SSRC00WHU0",
+      "start": "2026-11-19T21:28:35.672+08:00",
+      "end": "2026-11-19T21:29:23.779+08:00",
+      "status": null,
+      "valid_rtcm_frames": 0,
+      "crc_failures": 0,
+      "message_types": {},
+      "toe": {}
+    },
+    {
+      "host": "ntrip.gnsslab.cn",
+      "mount": "OSBC00WHU1",
+      "start": "2026-11-19T21:28:35.673+08:00",
+      "end": "2026-11-19T21:29:23.780+08:00",
+      "status": null,
+      "valid_rtcm_frames": 0,
+      "crc_failures": 0,
+      "message_types": {},
+      "toe": {}
+    }
+  ],
+  "mobile_bkg": [
+    {
+      "host": "ntrip.gnsslab.cn",
+      "mount": "BCEP00BKG0",
+      "start": "2026-11-19T21:29:23.791+08:00",
+      "end": "2026-11-19T21:30:11.910+08:00",
+      "status": "200",
+      "valid_rtcm_frames": 90,
+      "crc_failures": 0,
+      "message_types": {
+        "1019": 24,
+        "1042": 6,
+        "1045": 30,
+        "1046": 30
+      },
+      "toe": {
+        "1042": {
+          "sats": 6,
+          "min_age_h": 0.504,
+          "median_age_h": 0.504,
+          "max_age_h": 0.504,
+          "within_2h": 6
+        },
+        "1045": {
+          "sats": 30,
+          "min_age_h": 0.342,
+          "median_age_h": 0.342,
+          "max_age_h": 1.342,
+          "within_2h": 30
+        },
+        "1046": {
+          "sats": 30,
+          "min_age_h": 0.342,
+          "median_age_h": 0.342,
+          "max_age_h": 1.342,
+          "within_2h": 30
+        },
+        "1019": {
+          "sats": 24,
+          "min_age_h": -0.492,
+          "median_age_h": -0.492,
+          "max_age_h": -0.487,
+          "within_2h": 24
+        }
+      }
+    },
+    {
+      "host": "ntrip.gnsslab.cn",
+      "mount": "SSRC00WHU0",
+      "start": "2026-11-19T21:29:23.791+08:00",
+      "end": "2026-11-19T21:30:11.897+08:00",
+      "status": "200",
+      "valid_rtcm_frames": 1,
+      "crc_failures": 0,
+      "message_types": {
+        "1066": 1
+      },
+      "toe": {}
+    },
+    {
+      "host": "ntrip.gnsslab.cn",
+      "mount": "OSBC00WHU1",
+      "start": "2026-11-19T21:29:23.791+08:00",
+      "end": "2026-11-19T21:30:11.863+08:00",
+      "status": "200",
+      "valid_rtcm_frames": 2,
+      "crc_failures": 0,
+      "message_types": {
+        "1267": 1,
+        "1270": 1
+      },
+      "toe": {}
+    }
+  ],
+  "mobile_snip": [
+    {
+      "host": "ntrip.use-snip.com",
+      "mount": "RTCM3EPH",
+      "start": "2026-11-19T21:30:11.912+08:00",
+      "end": "2026-11-19T21:31:00.159+08:00",
+      "status": "200",
+      "valid_rtcm_frames": 1698,
+      "crc_failures": 0,
+      "message_types": {
+        "1019": 320,
+        "1020": 260,
+        "1041": 40,
+        "1042": 358,
+        "1043": 60,
+        "1044": 60,
+        "1045": 300,
+        "1046": 300
+      },
+      "toe": {
+        "1042": {
+          "sats": 36,
+          "min_age_h": 0.518,
+          "median_age_h": 0.518,
+          "max_age_h": 0.518,
+          "within_2h": 36
+        },
+        "1045": {
+          "sats": 30,
+          "min_age_h": 0.355,
+          "median_age_h": 0.355,
+          "max_age_h": 1.355,
+          "within_2h": 30
+        },
+        "1046": {
+          "sats": 30,
+          "min_age_h": 0.188,
+          "median_age_h": 0.27149999999999996,
+          "max_age_h": 1.355,
+          "within_2h": 30
+        },
+        "1019": {
+          "sats": 32,
+          "min_age_h": -0.478,
+          "median_age_h": -0.478,
+          "max_age_h": -0.474,
+          "within_2h": 32
+        }
+      }
+    },
+    {
+      "host": "ntrip.gnsslab.cn",
+      "mount": "SSRC00WHU0",
+      "start": "2026-11-19T21:30:11.912+08:00",
+      "end": "2026-11-19T21:31:00.054+08:00",
+      "status": "200",
+      "valid_rtcm_frames": 0,
+      "crc_failures": 0,
+      "message_types": {},
+      "toe": {}
+    },
+    {
+      "host": "ntrip.gnsslab.cn",
+      "mount": "OSBC00WHU1",
+      "start": "2026-11-19T21:30:11.912+08:00",
+      "end": "2026-11-19T21:30:59.989+08:00",
+      "status": "200",
+      "valid_rtcm_frames": 6,
+      "crc_failures": 0,
+      "message_types": {
+        "1065": 1,
+        "1242": 1,
+        "1260": 1,
+        "1265": 1,
+        "1267": 1,
+        "1270": 1
+      },
+      "toe": {}
+    }
+  ],
+  "mobile_split_long": [
+    {
+      "host": "ntrip.use-snip.com",
+      "mount": "RTCM3EPH",
+      "start": "2026-11-19T21:35:42.539+08:00",
+      "end": "2026-11-19T21:37:39.001+08:00",
+      "status": "200",
+      "valid_rtcm_frames": 3856,
+      "crc_failures": 0,
+      "message_types": {
+        "1019": 724,
+        "1020": 572,
+        "1041": 88,
+        "1042": 828,
+        "1043": 132,
+        "1044": 132,
+        "1045": 690,
+        "1046": 690
+      },
+      "toe": {
+        "1042": {
+          "sats": 36,
+          "min_age_h": 0.629,
+          "median_age_h": 0.629,
+          "max_age_h": 0.629,
+          "within_2h": 36
+        },
+        "1045": {
+          "sats": 30,
+          "min_age_h": 0.299,
+          "median_age_h": 0.299,
+          "max_age_h": 1.299,
+          "within_2h": 30
+        },
+        "1046": {
+          "sats": 30,
+          "min_age_h": 0.299,
+          "median_age_h": 0.299,
+          "max_age_h": 1.299,
+          "within_2h": 30
+        },
+        "1019": {
+          "sats": 32,
+          "min_age_h": -0.368,
+          "median_age_h": -0.368,
+          "max_age_h": -0.363,
+          "within_2h": 32
+        }
+      }
+    },
+    {
+      "host": "ntrip.gnsslab.cn",
+      "mount": "SSRC00WHU0",
+      "start": "2026-11-19T21:35:42.540+08:00",
+      "end": "2026-11-19T21:37:40.867+08:00",
+      "status": "200",
+      "valid_rtcm_frames": 93,
+      "crc_failures": 0,
+      "message_types": {
+        "1059": 3,
+        "1060": 20,
+        "1065": 3,
+        "1066": 21,
+        "1242": 3,
+        "1243": 20,
+        "1260": 3,
+        "1261": 20
+      },
+      "toe": {}
+    },
+    {
+      "host": "ntrip.gnsslab.cn",
+      "mount": "OSBC00WHU1",
+      "start": "2026-11-19T21:35:42.540+08:00",
+      "end": "2026-11-19T21:37:40.811+08:00",
+      "status": "200",
+      "valid_rtcm_frames": 97,
+      "crc_failures": 0,
+      "message_types": {
+        "1059": 13,
+        "1065": 14,
+        "1242": 14,
+        "1260": 14,
+        "1265": 14,
+        "1267": 14,
+        "1270": 14
+      },
+      "toe": {}
+    }
+  ],
+  "long_cas_three": [
+    {
+      "mount": "BCEP00CAS0",
+      "start_local": "2026-11-19T21:24:31.855+08:00",
+      "end_local": "2026-11-19T21:25:57.823+08:00",
+      "status": "200",
+      "valid_rtcm_frames": 226,
+      "crc_failures": 0,
+      "message_types": {
+        "1019": 37,
+        "1020": 37,
+        "1042": 38,
+        "1044": 38,
+        "1045": 38,
+        "1046": 38
+      },
+      "first_valid_frame_s": 27.21657600000617
+    },
+    {
+      "mount": "SSRC00WHU0",
+      "start_local": "2026-11-19T21:24:31.855+08:00",
+      "end_local": "2026-11-19T21:25:57.824+08:00",
+      "status": "200",
+      "valid_rtcm_frames": 43,
+      "crc_failures": 0,
+      "message_types": {
+        "1059": 1,
+        "1060": 9,
+        "1065": 1,
+        "1066": 10,
+        "1242": 1,
+        "1243": 10,
+        "1260": 1,
+        "1261": 10
+      },
+      "first_valid_frame_s": 30.44857610001054
+    },
+    {
+      "mount": "OSBC00WHU1",
+      "start_local": "2026-11-19T21:24:31.855+08:00",
+      "end_local": "2026-11-19T21:25:57.854+08:00",
+      "status": "200",
+      "valid_rtcm_frames": 78,
+      "crc_failures": 0,
+      "message_types": {
+        "1059": 11,
+        "1065": 12,
+        "1242": 11,
+        "1260": 11,
+        "1265": 11,
+        "1267": 11,
+        "1270": 11
+      },
+      "first_valid_frame_s": 30.808869899992715
+    }
+  ],
+  "long_bkg_three": [
+    {
+      "mount": "BCEP00BKG0",
+      "start_local": "2026-11-19T21:27:35.076+08:00",
+      "end_local": "2026-11-19T21:28:35.108+08:00",
+      "status": null,
+      "valid_rtcm_frames": 0,
+      "crc_failures": 0,
+      "message_types": {},
+      "first_valid_frame_s": null
+    },
+    {
+      "mount": "SSRC00WHU0",
+      "start_local": "2026-11-19T21:27:35.076+08:00",
+      "end_local": "2026-11-19T21:28:35.078+08:00",
+      "status": null,
+      "valid_rtcm_frames": 0,
+      "crc_failures": 0,
+      "message_types": {},
+      "first_valid_frame_s": null
+    },
+    {
+      "mount": "OSBC00WHU1",
+      "start_local": "2026-11-19T21:27:35.076+08:00",
+      "end_local": "2026-11-19T21:28:35.078+08:00",
+      "status": null,
+      "valid_rtcm_frames": 0,
+      "crc_failures": 0,
+      "message_types": {},
+      "first_valid_frame_s": null
+    }
+  ],
+  "pc_split": {
+    "actual_seconds": 125.5416816,
+    "connection_elapsed_s": {
+      "1": 1.751,
+      "0": 42.027,
+      "2": 47.413
+    },
+    "config": {
+      "host": "ntrip.gnsslab.cn",
+      "port": 2101,
+      "tls": false,
+      "ssr_mount": "SSRC00WHU0",
+      "broadcast_mount": "RTCM3EPH",
+      "bias_mount": "OSBC00WHU1",
+      "ssr_profile": "WHU_OSB_CONTINUITY_V1",
+      "orbit_reference": "COM",
+      "reference_pairs": {
+        "GPS": [
+          "1W",
+          "2W"
+        ],
+        "GAL": [
+          "1C",
+          "5Q"
+        ],
+        "BDS": [
+          "2I",
+          "6I"
+        ]
+      },
+      "anonymous_broadcast_endpoint": {
+        "host": "ntrip.use-snip.com",
+        "port": 2101,
+        "tls": false
+      }
+    },
+    "streams": [
+      {
+        "http_status": 200,
+        "mount": "SSRC00WHU0",
+        "valid_rtcm_frames": 61,
+        "crc_failures": 0,
+        "discarded_bytes": 457,
+        "message_types": {
+          "1059": 3,
+          "1060": 12,
+          "1065": 3,
+          "1066": 13,
+          "1242": 2,
+          "1243": 13,
+          "1260": 2,
+          "1261": 13
+        },
+        "igs_subtypes": {},
+        "bytes": 42900
+      },
+      {
+        "http_status": 200,
+        "mount": "RTCM3EPH",
+        "valid_rtcm_frames": 4080,
+        "crc_failures": 0,
+        "discarded_bytes": 0,
+        "message_types": {
+          "1019": 768,
+          "1020": 624,
+          "1041": 96,
+          "1042": 864,
+          "1043": 144,
+          "1044": 144,
+          "1045": 720,
+          "1046": 720
+        },
+        "igs_subtypes": {},
+        "bytes": 263520
+      },
+      {
+        "http_status": 200,
+        "mount": "OSBC00WHU1",
+        "valid_rtcm_frames": 109,
+        "crc_failures": 0,
+        "discarded_bytes": 486,
+        "message_types": {
+          "1059": 15,
+          "1065": 16,
+          "1242": 16,
+          "1260": 16,
+          "1265": 16,
+          "1267": 15,
+          "1270": 15
+        },
+        "igs_subtypes": {},
+        "bytes": 57680
+      }
+    ],
+    "failures": [],
+    "capture_files_rehashed": 4,
+    "iod": {
+      "C": {
+        "whu_distinct_sat_issue": 35,
+        "matched_at_least_once": 35,
+        "never_matched": 0,
+        "ever_missing_at_arrival": 0
+      },
+      "E": {
+        "whu_distinct_sat_issue": 29,
+        "matched_at_least_once": 29,
+        "never_matched": 0,
+        "ever_missing_at_arrival": 0
+      },
+      "G": {
+        "whu_distinct_sat_issue": 32,
+        "matched_at_least_once": 29,
+        "never_matched": 3,
+        "ever_missing_at_arrival": 3
+      }
+    },
+    "native_v1": {
+      "profile": "WHU_OSB_CONTINUITY_V1",
+      "first_ready_elapsed_s": -1.0,
+      "max_ready_GEC": 0,
+      "GPS_code_epoch_count": 2,
+      "blocked": false
+    }
+  },
+  "catalog": [
+    {
+      "host": "ntrip.gnsslab.cn",
+      "port": 2101,
+      "tls": false,
+      "time": "2026-11-19T21:12:24.943955+08:00",
+      "complete": true,
+      "entries": 325,
+      "mounts": [
+        "BCEP00BKG0",
+        "BCEP00CAS0",
+        "SSRC00WHU0"
+      ]
+    },
+    {
+      "host": "products.igs-ip.net",
+      "port": 2101,
+      "tls": false,
+      "time": "2026-11-19T21:12:24.944184+08:00",
+      "complete": true,
+      "entries": 91,
+      "mounts": [
+        "BCEP00BKG0",
+        "BCEP00CAS0",
+        "BCEP00CHC0",
+        "OSBC00WHU1",
+        "SSRC00WHU0"
+      ]
+    },
+    {
+      "host": "products.igs-ip.net",
+      "port": 443,
+      "tls": true,
+      "time": "2026-11-19T21:12:24.944875+08:00",
+      "complete": true,
+      "entries": 91,
+      "mounts": [
+        "BCEP00BKG0",
+        "BCEP00CAS0",
+        "BCEP00CHC0",
+        "OSBC00WHU1",
+        "SSRC00WHU0"
+      ]
+    }
+  ],
+  "bkg_anonymous_http": [
+    {
+      "host": "products.igs-ip.net",
+      "port": 443,
+      "tls": true,
+      "mount": "BCEP00CAS0",
+      "time": "2026-11-19T21:18:53+08:00",
+      "status": 401
+    },
+    {
+      "host": "products.igs-ip.net",
+      "port": 443,
+      "tls": true,
+      "mount": "BCEP00CHC0",
+      "time": "2026-11-19T21:18:53+08:00",
+      "status": 401
+    }
+  ]
+}

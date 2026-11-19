@@ -1,0 +1,29 @@
+{
+  "host": "ntrip.gnsslab.cn",
+  "port": 2101,
+  "tls": false,
+  "ssr_mount": "SSRC00WHU0",
+  "broadcast_mount": "RTCM3EPH",
+  "bias_mount": "OSBC00WHU1",
+  "ssr_profile": "WHU_OSB_CONTINUITY_V1",
+  "orbit_reference": "COM",
+  "reference_pairs": {
+    "GPS": [
+      "1W",
+      "2W"
+    ],
+    "GAL": [
+      "1C",
+      "5Q"
+    ],
+    "BDS": [
+      "2I",
+      "6I"
+    ]
+  },
+  "anonymous_broadcast_endpoint": {
+    "host": "ntrip.use-snip.com",
+    "port": 2101,
+    "tls": false
+  }
+}
