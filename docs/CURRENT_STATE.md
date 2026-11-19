@@ -15,6 +15,8 @@
 
 ## 当前任务
 
+11/19 Android 每个 NTRIP 通道在首次收流前遇到 HTTP 404 也最多重试三次。重试期间其他通道继续运行，耗尽后按原流程保存。JVM 测试和 Debug 构建通过，新 APK 待真机部署与采集验收。
+
 11/18 当前真机安装核验。2026-11-18 实查 vivo V2507A，com.example.pppntrip 最后更新 2026-11-18 15:09:06。手机 arm64 版与本地最新多 ABI APK 的全部 DEX、资源、资产和 arm64 原生库逐项一致。整体 APK SHA 不同，手机 Manifest 额外设置 testOnly=true，本地额外包含其他三种 ABI 共九个库。安装内容与当前最新本地程序内容一致，实时 PPP 采集验收待执行。 [核验报告](ntrip-device-apk-check-20261118/REPORT.md)
 
 

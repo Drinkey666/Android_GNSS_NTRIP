@@ -9,8 +9,10 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
 
 class NtripProtocolTest {
-    @Test fun initial404IsStillTerminal() {
-        assertEquals("NTRIP_HTTP_404",NtripReconnectPolicy().failure("NTRIP_HTTP_404"))
+    @Test fun initial404RetriesAreBounded() {
+        val policy = NtripReconnectPolicy()
+        for (attempt in 1..3) assertEquals("RETRY_HTTP_404_$attempt", policy.failure("NTRIP_HTTP_404"))
+        assertEquals("NTRIP_HTTP_404", policy.failure("NTRIP_HTTP_404"))
     }
     @Test fun workingMount404RetriesAreBounded() {
         val p=NtripReconnectPolicy();p.received()
@@ -25,7 +27,7 @@ class NtripProtocolTest {
         val p=NtripReconnectPolicy();p.received()
         for(s in listOf("NTRIP_HTTP_401","NTRIP_HTTP_403"))assertEquals(s,p.failure(s))
     }
-    @Test fun socketRecoversAfterEstablishedStreamReturns404() {
+    @Test fun socketRecoversFromInitialAndLater404() {
         ServerSocket(0).use { server ->
             val done=CountDownLatch(1)
             val error=AtomicReference<Throwable?>()
@@ -33,11 +35,11 @@ class NtripProtocolTest {
             val statuses=java.util.concurrent.CopyOnWriteArrayList<String>()
             val peer=Thread {
                 try {
-                    repeat(3) { attempt -> server.accept().use { socket ->
+                    repeat(4) { attempt -> server.accept().use { socket ->
                         val reader=socket.getInputStream().bufferedReader()
                         while(!reader.readLine().isNullOrEmpty()) { }
                         socket.getOutputStream().apply {
-                            if(attempt==1)write("HTTP/1.1 404 Not Found\r\n\r\n".toByteArray())
+                            if(attempt==0 || attempt==2)write("HTTP/1.1 404 Not Found\r\n\r\n".toByteArray())
                             else {write("HTTP/1.1 200 OK\r\n\r\n".toByteArray());write(payload)}
                             flush()
                         }
@@ -49,7 +51,7 @@ class NtripProtocolTest {
             try {client.start();assertTrue(done.await(9,TimeUnit.SECONDS))}
             finally {client.stop();assertTrue(client.awaitStopped(2500))}
             peer.join(1000);assertNull(error.get());assertEquals(2,counts.get())
-            assertTrue(statuses.contains("RETRY_HTTP_404_1"))
+            assertEquals(2, statuses.count { it == "RETRY_HTTP_404_1" })
             assertFalse(statuses.contains("NTRIP_HTTP_404"))
         }
     }

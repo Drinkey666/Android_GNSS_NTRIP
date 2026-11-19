@@ -122,14 +122,12 @@ internal object NtripProtocol {
     }
 }
 
-/** A known working mount may return transient 404 on reconnect. Bounded transport
- * retries never extend SSR validity and never retry authentication failures. */
+/** Each stream has its own 404 retry budget, including before its first payload. */
 internal class NtripReconnectPolicy(private val max404Retries:Int=3) {
-    private var receivedData=false
     private var retries=0
-    fun received() {receivedData=true;retries=0}
+    fun received() { retries=0 }
     fun failure(status:String):String {
-        if(status=="NTRIP_HTTP_404" && receivedData && retries<max404Retries)
+        if(status=="NTRIP_HTTP_404" && retries<max404Retries)
             return "RETRY_HTTP_404_${++retries}"
         return status
     }
