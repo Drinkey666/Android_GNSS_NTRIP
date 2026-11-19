@@ -1,0 +1,53 @@
+{
+  "archive": "ftp://bdspride.com/wum/2445/",
+  "processing": "postprocessed file comparison",
+  "time": "GPST",
+  "file_orbit": {
+    "first": "2026-11-19 00:00:00",
+    "last": "2026-11-19 14:55:00",
+    "timestamps": 171,
+    "local_interval_seconds": {
+      "300": 7
+    },
+    "min_sats_in_local_window": {
+      "G": 32,
+      "E": 24,
+      "C": 32
+    }
+  },
+  "file_clock": {
+    "first": "2026-11-19 00:00:00",
+    "last": "2026-11-19 14:58:30",
+    "timestamps": 1715,
+    "local_interval_seconds": {
+      "30": 75,
+      "60": 1
+    },
+    "min_sats_in_local_window": {
+      "G": 32,
+      "E": 24,
+      "C": 32
+    }
+  },
+  "older_mirror_clock_last": "2026-11-19 12:58:30",
+  "earlier_and_later_code_bias": {
+    "records": 861,
+    "intervals": [
+      [
+        "2026:323:00000",
+        "2026:323:86400"
+      ]
+    ],
+    "identical_record_keys": true,
+    "max_change_ns": 0.0
+  },
+  "clock_header_model_fields": [
+    "igs20.atx"
+  ],
+  "antenna_source": "https://files.igs.org/pub/station/general/igs20.atx.gz",
+  "nav_source": "https://igs.bkg.bund.de/root_ftp/IGS/BRDC/2026/323/BRDC00WRD_S_20263230000_01D_MN.rnx.gz",
+  "early_bias_receipt_utc": "2026-11-19T11:01:10.789868Z",
+  "file_code_bias_used": true,
+  "file_phase_bias_applied": false,
+  "signal_clock_pairs_in_rts_bia_header": false
+}

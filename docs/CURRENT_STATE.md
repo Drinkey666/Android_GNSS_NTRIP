@@ -5,6 +5,8 @@
 
 ## 路径和版本
 
+11/19 小米 22:21 与 22:36 两包首次复核。武大码偏差估计未推进造成连续 10／54 期缺解，PC 以采集前已有的同日偏差文件独立补回，原有 Q6 可逐期保留。冻结 EMA 定权后，22:36 原 830 期水平／高程 RMS 从 1.354／2.382 降至 1.270／2.090 米，22:21 高程仅改善 0.0025 米。完整同批武大文件在第二段高程更好，第一段两项均退步。手机维持原版。 [报告与误差曲线](ntrip-xiaomi-2221-2236-20261119/REPORT.md)
+
 11/19 已验证匿名广播星历 `ntrip.use-snip.com:2101/RTCM3EPH` 与原 WHU 轨钟、偏差分服并发。vivo 蜂窝网约 118 秒收到 3,856／93／97 帧（广播／轨钟／偏差），CRC 错误均为零。21:45 已在 vivo V2507A 保留数据覆盖安装新版，已启动 App 并保存「使用 SNIP 独立广播星历」设置，两条 WHU 挂载已核对；PC 使用 `config/caster_whu_snip.json`。本轮只核验收流和产品期号，未评估定位精度。 [实测与切换](ntrip-broadcast-mounts-20261119/REPORT.md)
 - Android根目录 E:/android/test/PPP_NTRIP，PC根目录 E:/GNSS/PPP_NTRIP_PC。
 - Git 分支 main。11/17 修复与后续交付规则见 [GitHub 当前版本](https://github.com/Drinkey666/Android_GNSS_NTRIP/commits/main/)。

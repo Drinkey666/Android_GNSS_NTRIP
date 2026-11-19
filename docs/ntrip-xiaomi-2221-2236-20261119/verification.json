@@ -1,0 +1,1274 @@
+{
+  "sessions": {
+    "2221": {
+      "archive": "Capture_20261119_222100_084646ac.zip",
+      "archive_sha256": "6022a7b6d96511441ae9fe45e4d2025fa543f4857e948853c8ab31aff0751ba5",
+      "device_model": "2407FRK8EC",
+      "apk_sha256": "324a2a52983582d3c7812f80e21d8d1b0acc71b7f36d9f4791976cd1a755fa30",
+      "raw_epochs": 758,
+      "phone_q": {
+        "0": 16,
+        "5": 3,
+        "6": 739
+      },
+      "q5_q6_keys_match": true,
+      "q0_from_epoch_ledger": true,
+      "phone_max_q6_xyz_delta_m": 1.0908516205912833e-06,
+      "formal_inputs_checked": 26,
+      "release_prefix_checks": 758,
+      "observation_bytes_match": true,
+      "formal_control_position_fields_equal": true,
+      "frozen_ema_observations_and_corrections_sha_match": true,
+      "clock_header_change_position_fields_equal": true,
+      "metrics": {
+        "live": {
+          "all": {
+            "n": 739,
+            "h": 1.5422,
+            "u": 1.4133,
+            "mean_enu": [
+              0.744,
+              -1.2101,
+              -1.1383
+            ]
+          },
+          "common_all_methods": {
+            "n": 737,
+            "h": 1.5433,
+            "u": 1.4121,
+            "mean_enu": [
+              0.7442,
+              -1.2115,
+              -1.1365
+            ]
+          },
+          "paired": {
+            "n": 739,
+            "h": 1.5422,
+            "u": 1.4133,
+            "mean_enu": [
+              0.744,
+              -1.2101,
+              -1.1383
+            ]
+          },
+          "live_on_same_keys": {
+            "n": 739,
+            "h": 1.5422,
+            "u": 1.4133,
+            "mean_enu": [
+              0.744,
+              -1.2101,
+              -1.1383
+            ]
+          },
+          "tail60s": {
+            "n": 59,
+            "h": 1.7401,
+            "u": 2.4083,
+            "mean_enu": [
+              1.1472,
+              -1.3082,
+              -2.4082
+            ]
+          },
+          "added": {
+            "n": 0
+          }
+        },
+        "gap_primary": {
+          "all": {
+            "n": 749,
+            "h": 1.5432,
+            "u": 1.4168,
+            "mean_enu": [
+              0.7472,
+              -1.2111,
+              -1.1451
+            ]
+          },
+          "common_all_methods": {
+            "n": 737,
+            "h": 1.5433,
+            "u": 1.4121,
+            "mean_enu": [
+              0.7442,
+              -1.2115,
+              -1.1365
+            ]
+          },
+          "paired": {
+            "n": 739,
+            "h": 1.5422,
+            "u": 1.4133,
+            "mean_enu": [
+              0.744,
+              -1.2101,
+              -1.1383
+            ]
+          },
+          "live_on_same_keys": {
+            "n": 739,
+            "h": 1.5422,
+            "u": 1.4133,
+            "mean_enu": [
+              0.744,
+              -1.2101,
+              -1.1383
+            ]
+          },
+          "tail60s": {
+            "n": 59,
+            "h": 1.7401,
+            "u": 2.4083,
+            "mean_enu": [
+              1.1472,
+              -1.3082,
+              -2.4082
+            ]
+          },
+          "added": {
+            "n": 10,
+            "h": 1.6198,
+            "u": 1.6535,
+            "mean_enu": [
+              0.9833,
+              -1.2872,
+              -1.6535
+            ]
+          }
+        },
+        "ema": {
+          "all": {
+            "n": 739,
+            "h": 1.5178,
+            "u": 1.4108,
+            "mean_enu": [
+              0.7533,
+              -1.1536,
+              -1.1512
+            ]
+          },
+          "common_all_methods": {
+            "n": 737,
+            "h": 1.519,
+            "u": 1.4102,
+            "mean_enu": [
+              0.7536,
+              -1.1553,
+              -1.15
+            ]
+          },
+          "paired": {
+            "n": 739,
+            "h": 1.5178,
+            "u": 1.4108,
+            "mean_enu": [
+              0.7533,
+              -1.1536,
+              -1.1512
+            ]
+          },
+          "live_on_same_keys": {
+            "n": 739,
+            "h": 1.5422,
+            "u": 1.4133,
+            "mean_enu": [
+              0.744,
+              -1.2101,
+              -1.1383
+            ]
+          },
+          "tail60s": {
+            "n": 59,
+            "h": 1.8048,
+            "u": 2.3288,
+            "mean_enu": [
+              1.1949,
+              -1.3526,
+              -2.3288
+            ]
+          },
+          "added": {
+            "n": 0
+          }
+        },
+        "ema_gap": {
+          "all": {
+            "n": 749,
+            "h": 1.5206,
+            "u": 1.4147,
+            "mean_enu": [
+              0.7573,
+              -1.1564,
+              -1.1582
+            ]
+          },
+          "common_all_methods": {
+            "n": 737,
+            "h": 1.519,
+            "u": 1.4102,
+            "mean_enu": [
+              0.7536,
+              -1.1553,
+              -1.15
+            ]
+          },
+          "paired": {
+            "n": 739,
+            "h": 1.5178,
+            "u": 1.4108,
+            "mean_enu": [
+              0.7533,
+              -1.1536,
+              -1.1512
+            ]
+          },
+          "live_on_same_keys": {
+            "n": 739,
+            "h": 1.5422,
+            "u": 1.4133,
+            "mean_enu": [
+              0.744,
+              -1.2101,
+              -1.1383
+            ]
+          },
+          "tail60s": {
+            "n": 59,
+            "h": 1.8048,
+            "u": 2.3288,
+            "mean_enu": [
+              1.1949,
+              -1.3526,
+              -2.3288
+            ]
+          },
+          "added": {
+            "n": 10,
+            "h": 1.7205,
+            "u": 1.6774,
+            "mean_enu": [
+              1.0552,
+              -1.359,
+              -1.6773
+            ]
+          }
+        },
+        "full_file": {
+          "all": {
+            "n": 753,
+            "h": 2.9873,
+            "u": 1.9763,
+            "mean_enu": [
+              2.5977,
+              -0.5065,
+              -1.3908
+            ]
+          },
+          "common_all_methods": {
+            "n": 737,
+            "h": 2.8903,
+            "u": 1.9258,
+            "mean_enu": [
+              2.5638,
+              -0.5437,
+              -1.4366
+            ]
+          },
+          "paired": {
+            "n": 737,
+            "h": 2.8903,
+            "u": 1.9258,
+            "mean_enu": [
+              2.5638,
+              -0.5437,
+              -1.4366
+            ]
+          },
+          "live_on_same_keys": {
+            "n": 737,
+            "h": 1.5433,
+            "u": 1.4121,
+            "mean_enu": [
+              0.7442,
+              -1.2115,
+              -1.1365
+            ]
+          },
+          "tail60s": {
+            "n": 59,
+            "h": 1.9949,
+            "u": 2.7486,
+            "mean_enu": [
+              1.7637,
+              -0.9317,
+              -2.7486
+            ]
+          },
+          "added": {
+            "n": 16,
+            "h": 5.9298,
+            "u": 3.6044,
+            "mean_enu": [
+              4.1588,
+              1.2108,
+              0.7202
+            ]
+          }
+        },
+        "file_same_start": {
+          "all": {
+            "n": 747,
+            "h": 2.7083,
+            "u": 1.9603,
+            "mean_enu": [
+              2.3049,
+              -0.833,
+              -1.5769
+            ]
+          },
+          "common_all_methods": {
+            "n": 737,
+            "h": 2.7169,
+            "u": 1.9593,
+            "mean_enu": [
+              2.312,
+              -0.8326,
+              -1.5706
+            ]
+          },
+          "paired": {
+            "n": 737,
+            "h": 2.7169,
+            "u": 1.9593,
+            "mean_enu": [
+              2.312,
+              -0.8326,
+              -1.5706
+            ]
+          },
+          "live_on_same_keys": {
+            "n": 737,
+            "h": 1.5433,
+            "u": 1.4121,
+            "mean_enu": [
+              0.7442,
+              -1.2115,
+              -1.1365
+            ]
+          },
+          "tail60s": {
+            "n": 59,
+            "h": 1.9886,
+            "u": 2.7699,
+            "mean_enu": [
+              1.7442,
+              -0.9547,
+              -2.7699
+            ]
+          },
+          "added": {
+            "n": 10,
+            "h": 1.9768,
+            "u": 2.0366,
+            "mean_enu": [
+              1.778,
+              -0.864,
+              -2.0366
+            ]
+          }
+        },
+        "replace_code": {
+          "all": {
+            "n": 749,
+            "h": 1.5561,
+            "u": 1.4237,
+            "mean_enu": [
+              0.7493,
+              -1.2235,
+              -1.1524
+            ]
+          },
+          "common_all_methods": {
+            "n": 737,
+            "h": 1.5564,
+            "u": 1.419,
+            "mean_enu": [
+              0.7464,
+              -1.2241,
+              -1.1439
+            ]
+          },
+          "paired": {
+            "n": 739,
+            "h": 1.5552,
+            "u": 1.4202,
+            "mean_enu": [
+              0.7462,
+              -1.2226,
+              -1.1456
+            ]
+          },
+          "live_on_same_keys": {
+            "n": 739,
+            "h": 1.5422,
+            "u": 1.4133,
+            "mean_enu": [
+              0.744,
+              -1.2101,
+              -1.1383
+            ]
+          },
+          "tail60s": {
+            "n": 59,
+            "h": 1.7773,
+            "u": 2.4115,
+            "mean_enu": [
+              1.1584,
+              -1.3479,
+              -2.4115
+            ]
+          },
+          "added": {
+            "n": 10,
+            "h": 1.6174,
+            "u": 1.6581,
+            "mean_enu": [
+              0.9805,
+              -1.2862,
+              -1.6581
+            ]
+          }
+        },
+        "gap_inline": {
+          "all": {
+            "n": 749,
+            "h": 1.5581,
+            "u": 1.4199,
+            "mean_enu": [
+              0.752,
+              -1.2245,
+              -1.1476
+            ]
+          },
+          "common_all_methods": {
+            "n": 737,
+            "h": 1.5585,
+            "u": 1.4153,
+            "mean_enu": [
+              0.7491,
+              -1.2251,
+              -1.139
+            ]
+          },
+          "paired": {
+            "n": 739,
+            "h": 1.5573,
+            "u": 1.4165,
+            "mean_enu": [
+              0.7489,
+              -1.2236,
+              -1.1407
+            ]
+          },
+          "live_on_same_keys": {
+            "n": 739,
+            "h": 1.5422,
+            "u": 1.4133,
+            "mean_enu": [
+              0.744,
+              -1.2101,
+              -1.1383
+            ]
+          },
+          "tail60s": {
+            "n": 59,
+            "h": 1.7799,
+            "u": 2.4077,
+            "mean_enu": [
+              1.1612,
+              -1.3488,
+              -2.4076
+            ]
+          },
+          "added": {
+            "n": 10,
+            "h": 1.6198,
+            "u": 1.6535,
+            "mean_enu": [
+              0.9833,
+              -1.2872,
+              -1.6535
+            ]
+          }
+        },
+        "checkpoint": {
+          "all": {
+            "n": 739,
+            "h": 1.3138,
+            "u": 2.8419,
+            "mean_enu": [
+              0.7833,
+              -0.8615,
+              -2.4381
+            ]
+          },
+          "common_all_methods": {
+            "n": 737,
+            "h": 1.3145,
+            "u": 2.8442,
+            "mean_enu": [
+              0.7836,
+              -0.862,
+              -2.4399
+            ]
+          },
+          "paired": {
+            "n": 739,
+            "h": 1.3138,
+            "u": 2.8419,
+            "mean_enu": [
+              0.7833,
+              -0.8615,
+              -2.4381
+            ]
+          },
+          "live_on_same_keys": {
+            "n": 739,
+            "h": 1.5422,
+            "u": 1.4133,
+            "mean_enu": [
+              0.744,
+              -1.2101,
+              -1.1383
+            ]
+          },
+          "tail60s": {
+            "n": 59,
+            "h": 1.5299,
+            "u": 4.1649,
+            "mean_enu": [
+              1.2395,
+              -0.896,
+              -4.1648
+            ]
+          },
+          "added": {
+            "n": 0
+          }
+        }
+      },
+      "transport": {
+        "SSRC00WHU0": {
+          "connection_count": 1,
+          "crc_failures": 0,
+          "valid_rtcm_frames": 703
+        },
+        "RTCM3EPH": {
+          "connection_count": 1,
+          "crc_failures": 0,
+          "valid_rtcm_frames": 25665
+        },
+        "OSBC00WHU1": {
+          "connection_count": 1,
+          "crc_failures": 0,
+          "valid_rtcm_frames": 1053
+        }
+      },
+      "transport_issues": [],
+      "filled_intervals": [
+        {
+          "start_s": 532.002,
+          "last_s": 541.002,
+          "n": 10
+        }
+      ],
+      "osb_gap_phone_message_counts": {
+        "SSR_WAIT: WHU_OSB_ESTIMATE_NOT_ADVANCING": 10
+      },
+      "osb_gap_observed_satellite_reason_counts": {
+        "WHU_OSB_ESTIMATE_NOT_ADVANCING": 283,
+        "MISSING_ORBIT_CLOCK_CODE_BIAS": 30
+      },
+      "osb_gap_received_bytes_in_prefixes": [
+        6286,
+        20896,
+        6744
+      ],
+      "confirmed_code_bias_difference_m": {
+        "rows": 34409,
+        "median_abs": 0.003069,
+        "max_abs": 0.032289
+      },
+      "switch_3d_m": {
+        "ema_gap": [
+          0.021782,
+          0.038418
+        ],
+        "gap_primary": [
+          0.025538,
+          0.052921
+        ]
+      },
+      "max_kv_closure_m": {
+        "B1_ema_only_v2": 5.140125883793485e-10,
+        "ema_gap_v2": 5.157673727228437e-10
+      }
+    },
+    "2236": {
+      "archive": "Capture_20261119_223633_99faa3d9.zip",
+      "archive_sha256": "d46aa83a210673a6025b14d91041b21fd09f6198787d6b05708169344112957c",
+      "device_model": "2407FRK8EC",
+      "apk_sha256": "324a2a52983582d3c7812f80e21d8d1b0acc71b7f36d9f4791976cd1a755fa30",
+      "raw_epochs": 900,
+      "phone_q": {
+        "0": 65,
+        "5": 5,
+        "6": 830
+      },
+      "q5_q6_keys_match": true,
+      "q0_from_epoch_ledger": true,
+      "phone_max_q6_xyz_delta_m": 7.019698342048841e-07,
+      "formal_inputs_checked": 26,
+      "release_prefix_checks": 900,
+      "observation_bytes_match": true,
+      "formal_control_position_fields_equal": true,
+      "frozen_ema_observations_and_corrections_sha_match": true,
+      "clock_header_change_position_fields_equal": true,
+      "metrics": {
+        "live": {
+          "all": {
+            "n": 830,
+            "h": 1.3538,
+            "u": 2.3816,
+            "mean_enu": [
+              0.9584,
+              -0.5994,
+              -2.3189
+            ]
+          },
+          "common_all_methods": {
+            "n": 830,
+            "h": 1.3538,
+            "u": 2.3816,
+            "mean_enu": [
+              0.9584,
+              -0.5994,
+              -2.3189
+            ]
+          },
+          "paired": {
+            "n": 830,
+            "h": 1.3538,
+            "u": 2.3816,
+            "mean_enu": [
+              0.9584,
+              -0.5994,
+              -2.3189
+            ]
+          },
+          "live_on_same_keys": {
+            "n": 830,
+            "h": 1.3538,
+            "u": 2.3816,
+            "mean_enu": [
+              0.9584,
+              -0.5994,
+              -2.3189
+            ]
+          },
+          "tail60s": {
+            "n": 59,
+            "h": 1.3501,
+            "u": 1.7897,
+            "mean_enu": [
+              1.1656,
+              -0.6806,
+              -1.789
+            ]
+          },
+          "added": {
+            "n": 0
+          }
+        },
+        "gap_primary": {
+          "all": {
+            "n": 884,
+            "h": 1.3636,
+            "u": 2.3777,
+            "mean_enu": [
+              0.974,
+              -0.6171,
+              -2.3187
+            ]
+          },
+          "common_all_methods": {
+            "n": 830,
+            "h": 1.3538,
+            "u": 2.3816,
+            "mean_enu": [
+              0.9584,
+              -0.5994,
+              -2.3189
+            ]
+          },
+          "paired": {
+            "n": 830,
+            "h": 1.3538,
+            "u": 2.3816,
+            "mean_enu": [
+              0.9584,
+              -0.5994,
+              -2.3189
+            ]
+          },
+          "live_on_same_keys": {
+            "n": 830,
+            "h": 1.3538,
+            "u": 2.3816,
+            "mean_enu": [
+              0.9584,
+              -0.5994,
+              -2.3189
+            ]
+          },
+          "tail60s": {
+            "n": 59,
+            "h": 1.3501,
+            "u": 1.7897,
+            "mean_enu": [
+              1.1656,
+              -0.6806,
+              -1.789
+            ]
+          },
+          "added": {
+            "n": 54,
+            "h": 1.5056,
+            "u": 2.3174,
+            "mean_enu": [
+              1.2143,
+              -0.8901,
+              -2.3168
+            ]
+          }
+        },
+        "ema": {
+          "all": {
+            "n": 830,
+            "h": 1.27,
+            "u": 2.0903,
+            "mean_enu": [
+              0.8621,
+              -0.4985,
+              -2.0332
+            ]
+          },
+          "common_all_methods": {
+            "n": 830,
+            "h": 1.27,
+            "u": 2.0903,
+            "mean_enu": [
+              0.8621,
+              -0.4985,
+              -2.0332
+            ]
+          },
+          "paired": {
+            "n": 830,
+            "h": 1.27,
+            "u": 2.0903,
+            "mean_enu": [
+              0.8621,
+              -0.4985,
+              -2.0332
+            ]
+          },
+          "live_on_same_keys": {
+            "n": 830,
+            "h": 1.3538,
+            "u": 2.3816,
+            "mean_enu": [
+              0.9584,
+              -0.5994,
+              -2.3189
+            ]
+          },
+          "tail60s": {
+            "n": 59,
+            "h": 1.2878,
+            "u": 1.714,
+            "mean_enu": [
+              1.0889,
+              -0.6873,
+              -1.7138
+            ]
+          },
+          "added": {
+            "n": 0
+          }
+        },
+        "ema_gap": {
+          "all": {
+            "n": 884,
+            "h": 1.276,
+            "u": 2.0872,
+            "mean_enu": [
+              0.878,
+              -0.5156,
+              -2.0336
+            ]
+          },
+          "common_all_methods": {
+            "n": 830,
+            "h": 1.27,
+            "u": 2.0903,
+            "mean_enu": [
+              0.8621,
+              -0.4985,
+              -2.0332
+            ]
+          },
+          "paired": {
+            "n": 830,
+            "h": 1.27,
+            "u": 2.0903,
+            "mean_enu": [
+              0.8621,
+              -0.4985,
+              -2.0332
+            ]
+          },
+          "live_on_same_keys": {
+            "n": 830,
+            "h": 1.3538,
+            "u": 2.3816,
+            "mean_enu": [
+              0.9584,
+              -0.5994,
+              -2.3189
+            ]
+          },
+          "tail60s": {
+            "n": 59,
+            "h": 1.2878,
+            "u": 1.714,
+            "mean_enu": [
+              1.0889,
+              -0.6873,
+              -1.7138
+            ]
+          },
+          "added": {
+            "n": 54,
+            "h": 1.3649,
+            "u": 2.04,
+            "mean_enu": [
+              1.1216,
+              -0.7777,
+              -2.039
+            ]
+          }
+        },
+        "full_file": {
+          "all": {
+            "n": 895,
+            "h": 1.4806,
+            "u": 1.9163,
+            "mean_enu": [
+              1.3234,
+              -0.2811,
+              -1.8616
+            ]
+          },
+          "common_all_methods": {
+            "n": 830,
+            "h": 1.4704,
+            "u": 1.9295,
+            "mean_enu": [
+              1.319,
+              -0.2783,
+              -1.8728
+            ]
+          },
+          "paired": {
+            "n": 830,
+            "h": 1.4704,
+            "u": 1.9295,
+            "mean_enu": [
+              1.319,
+              -0.2783,
+              -1.8728
+            ]
+          },
+          "live_on_same_keys": {
+            "n": 830,
+            "h": 1.3538,
+            "u": 2.3816,
+            "mean_enu": [
+              0.9584,
+              -0.5994,
+              -2.3189
+            ]
+          },
+          "tail60s": {
+            "n": 59,
+            "h": 1.5304,
+            "u": 1.4704,
+            "mean_enu": [
+              1.4911,
+              -0.3435,
+              -1.4701
+            ]
+          },
+          "added": {
+            "n": 65,
+            "h": 1.6055,
+            "u": 1.7399,
+            "mean_enu": [
+              1.3786,
+              -0.3163,
+              -1.7187
+            ]
+          }
+        },
+        "file_same_start": {
+          "all": {
+            "n": 887,
+            "h": 1.5322,
+            "u": 2.0034,
+            "mean_enu": [
+              1.3704,
+              -0.3034,
+              -1.9254
+            ]
+          },
+          "common_all_methods": {
+            "n": 830,
+            "h": 1.5198,
+            "u": 2.0193,
+            "mean_enu": [
+              1.3538,
+              -0.2891,
+              -1.9387
+            ]
+          },
+          "paired": {
+            "n": 830,
+            "h": 1.5198,
+            "u": 2.0193,
+            "mean_enu": [
+              1.3538,
+              -0.2891,
+              -1.9387
+            ]
+          },
+          "live_on_same_keys": {
+            "n": 830,
+            "h": 1.3538,
+            "u": 2.3816,
+            "mean_enu": [
+              0.9584,
+              -0.5994,
+              -2.3189
+            ]
+          },
+          "tail60s": {
+            "n": 59,
+            "h": 1.5494,
+            "u": 1.4772,
+            "mean_enu": [
+              1.5088,
+              -0.3515,
+              -1.477
+            ]
+          },
+          "added": {
+            "n": 57,
+            "h": 1.7025,
+            "u": 1.7556,
+            "mean_enu": [
+              1.612,
+              -0.511,
+              -1.732
+            ]
+          }
+        },
+        "replace_code": {
+          "all": {
+            "n": 884,
+            "h": 1.3566,
+            "u": 2.4097,
+            "mean_enu": [
+              0.9703,
+              -0.61,
+              -2.3572
+            ]
+          },
+          "common_all_methods": {
+            "n": 830,
+            "h": 1.3465,
+            "u": 2.4157,
+            "mean_enu": [
+              0.9546,
+              -0.5919,
+              -2.36
+            ]
+          },
+          "paired": {
+            "n": 830,
+            "h": 1.3465,
+            "u": 2.4157,
+            "mean_enu": [
+              0.9546,
+              -0.5919,
+              -2.36
+            ]
+          },
+          "live_on_same_keys": {
+            "n": 830,
+            "h": 1.3538,
+            "u": 2.3816,
+            "mean_enu": [
+              0.9584,
+              -0.5994,
+              -2.3189
+            ]
+          },
+          "tail60s": {
+            "n": 59,
+            "h": 1.34,
+            "u": 1.8764,
+            "mean_enu": [
+              1.1564,
+              -0.6764,
+              -1.8758
+            ]
+          },
+          "added": {
+            "n": 54,
+            "h": 1.5023,
+            "u": 2.315,
+            "mean_enu": [
+              1.2111,
+              -0.8889,
+              -2.3145
+            ]
+          }
+        },
+        "gap_inline": {
+          "all": {
+            "n": 884,
+            "h": 1.3594,
+            "u": 2.4109,
+            "mean_enu": [
+              0.9734,
+              -0.6115,
+              -2.3586
+            ]
+          },
+          "common_all_methods": {
+            "n": 830,
+            "h": 1.3493,
+            "u": 2.4168,
+            "mean_enu": [
+              0.9578,
+              -0.5933,
+              -2.3613
+            ]
+          },
+          "paired": {
+            "n": 830,
+            "h": 1.3493,
+            "u": 2.4168,
+            "mean_enu": [
+              0.9578,
+              -0.5933,
+              -2.3613
+            ]
+          },
+          "live_on_same_keys": {
+            "n": 830,
+            "h": 1.3538,
+            "u": 2.3816,
+            "mean_enu": [
+              0.9584,
+              -0.5994,
+              -2.3189
+            ]
+          },
+          "tail60s": {
+            "n": 59,
+            "h": 1.3436,
+            "u": 1.88,
+            "mean_enu": [
+              1.1598,
+              -0.6777,
+              -1.8794
+            ]
+          },
+          "added": {
+            "n": 54,
+            "h": 1.5056,
+            "u": 2.3174,
+            "mean_enu": [
+              1.2143,
+              -0.8901,
+              -2.3168
+            ]
+          }
+        },
+        "checkpoint": {
+          "all": {
+            "n": 830,
+            "h": 1.6575,
+            "u": 2.5546,
+            "mean_enu": [
+              0.8976,
+              -1.0367,
+              -2.4763
+            ]
+          },
+          "common_all_methods": {
+            "n": 830,
+            "h": 1.6575,
+            "u": 2.5546,
+            "mean_enu": [
+              0.8976,
+              -1.0367,
+              -2.4763
+            ]
+          },
+          "paired": {
+            "n": 830,
+            "h": 1.6575,
+            "u": 2.5546,
+            "mean_enu": [
+              0.8976,
+              -1.0367,
+              -2.4763
+            ]
+          },
+          "live_on_same_keys": {
+            "n": 830,
+            "h": 1.3538,
+            "u": 2.3816,
+            "mean_enu": [
+              0.9584,
+              -0.5994,
+              -2.3189
+            ]
+          },
+          "tail60s": {
+            "n": 59,
+            "h": 1.4007,
+            "u": 1.9981,
+            "mean_enu": [
+              0.9979,
+              -0.9699,
+              -1.9976
+            ]
+          },
+          "added": {
+            "n": 0
+          }
+        }
+      },
+      "transport": {
+        "SSRC00WHU0": {
+          "connection_count": 1,
+          "crc_failures": 0,
+          "valid_rtcm_frames": 835
+        },
+        "RTCM3EPH": {
+          "connection_count": 2,
+          "crc_failures": 0,
+          "valid_rtcm_frames": 29816
+        },
+        "OSBC00WHU1": {
+          "connection_count": 3,
+          "crc_failures": 0,
+          "valid_rtcm_frames": 1136
+        }
+      },
+      "transport_issues": [
+        {
+          "channel": 2,
+          "elapsed_s": 72.4,
+          "event": "NETWORK_DISCONNECTED_BODY_READ_SocketTimeoutException"
+        },
+        {
+          "channel": 2,
+          "elapsed_s": 76.61,
+          "event": "RETRY_HTTP_404_1"
+        },
+        {
+          "channel": 2,
+          "elapsed_s": 86.27,
+          "event": "RETRY_HTTP_404_2"
+        },
+        {
+          "channel": 1,
+          "elapsed_s": 773.48,
+          "event": "NETWORK_DISCONNECTED_BODY_READ_EOFException"
+        },
+        {
+          "channel": 2,
+          "elapsed_s": 804.92,
+          "event": "NETWORK_DISCONNECTED_BODY_READ_SocketTimeoutException"
+        }
+      ],
+      "filled_intervals": [
+        {
+          "start_s": 514.002,
+          "last_s": 567.003,
+          "n": 54
+        }
+      ],
+      "osb_gap_phone_message_counts": {
+        "SSR_WAIT: MISSING_ORBIT_CLOCK_CODE_BIAS": 54
+      },
+      "osb_gap_observed_satellite_reason_counts": {
+        "WHU_OSB_ESTIMATE_NOT_ADVANCING": 1389,
+        "MISSING_ORBIT_CLOCK_CODE_BIAS": 162
+      },
+      "osb_gap_received_bytes_in_prefixes": [
+        39140,
+        117668,
+        36720
+      ],
+      "confirmed_code_bias_difference_m": {
+        "rows": 33568,
+        "median_abs": 0.003034,
+        "max_abs": 0.032289
+      },
+      "switch_3d_m": {
+        "ema_gap": [
+          0.014682,
+          0.202889
+        ],
+        "gap_primary": [
+          0.012551,
+          0.161606
+        ]
+      },
+      "max_kv_closure_m": {
+        "B1_ema_only_v2": 5.245943506637935e-10,
+        "ema_gap_v2": 5.239103315975719e-10
+      }
+    }
+  },
+  "product_sha256": {
+    "pride_WUM0MGXRTS_20263230000_01D_05S_CLK.CLK": "ce54fb6591741b0d6e969dd0fce133c6dc6be5ec5c94728733a682e6271c8990",
+    "pride_WUM0MGXRTS_20263230000_01D_05M_OSB.BIA": "34fbfafe155a8bca268867b105087f409405b8db3ff3b67766d42fd302dcb9d8",
+    "pride_WUM0MGXRTS_20263230000_01D_05M_ORB.SP3": "8de4cc6b553c5c466962936234144c97134a9c3323aaf45a526f3e584b22ede6",
+    "WUM0MGXRTS_20263230000_01D_05M_OSB.BIA": "16a197c8e4429cbd4c76fcc8850b27d78c559116909011a7f147996c3001ceb8",
+    "igs20.atx": "abdda8adc1cfdb3dae1f25fa22843365be2a33747d9131835c3117a559cd035a",
+    "BRDC00WRD_S_20263230000_01D_MN.rnx": "f16832a82c69678f01a413018e03ce1119068ee57b8eef142102037c24d9c45e"
+  },
+  "formal_bin_sha256_checked": 9,
+  "reference_use": "post_solution_ENU_only",
+  "algorithm": "B_VERIFIED, uncombined ionosphere estimation, float ambiguities, Joseph",
+  "scope": "PC private replay"
+}
