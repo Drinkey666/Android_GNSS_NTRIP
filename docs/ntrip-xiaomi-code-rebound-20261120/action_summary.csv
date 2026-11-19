@@ -1,0 +1,11 @@
+session,arm,all_affected_rows,late_affected_rows,late_affected_epochs,late_C13,late_G06,late_C33
+2221,original,0,0,0,0,0,0
+2221,ema,0,0,0,0,0,0
+2221,new_sat,0,0,0,0,0,0
+2221,selective,1352,508,291,82,126,0
+2221,carry,0,0,0,0,0,0
+2236,original,0,0,0,0,0,0
+2236,ema,0,0,0,0,0,0
+2236,new_sat,0,0,0,0,0,0
+2236,selective,1361,596,325,0,160,0
+2236,carry,0,0,0,0,0,0

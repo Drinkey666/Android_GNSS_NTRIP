@@ -1,0 +1,12 @@
+{
+  "2221": {
+    "ambiguities": 10,
+    "max_state_difference": 1.1652900866465643e-12,
+    "max_scaled_covariance_difference": 1.052989034120698e-15
+  },
+  "2236": {
+    "ambiguities": 18,
+    "max_state_difference": 1.0409451078885468e-12,
+    "max_scaled_covariance_difference": 1.4727126533894507e-15
+  }
+}

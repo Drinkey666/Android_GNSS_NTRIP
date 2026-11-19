@@ -1,0 +1,187 @@
+{
+  "guards": 146,
+  "guard_digest": "0e63d1973b43c7cefe00c07a79c0cfa775ca7b2b57768c58dffee70d33535a07",
+  "probe_digest": "e4f2984a135861402a060f1dbd675ca0c78e3e7e4a335f583ccd71e4c428dc31",
+  "sessions": {
+    "2221": {
+      "original": {
+        "max_closure_m": 5.224657686244087e-10,
+        "max_row_Kv_difference_m": 4.440892098500626e-16,
+        "paired_real_rows": 48497,
+        "raw": 758,
+        "q6": 739,
+        "common_q6": 739,
+        "changed_Q": 0,
+        "first_q6_after_s": 6.0,
+        "events": [],
+        "lifts": [],
+        "archived_control_match": true,
+        "obs_corrections_match": true
+      },
+      "ema": {
+        "max_closure_m": 5.140125883793485e-10,
+        "max_row_Kv_difference_m": 4.440892098500626e-16,
+        "paired_real_rows": 48496,
+        "raw": 758,
+        "q6": 739,
+        "common_q6": 739,
+        "changed_Q": 0,
+        "first_q6_after_s": 6.0,
+        "events": [],
+        "lifts": [],
+        "archived_control_match": true,
+        "obs_corrections_match": true
+      },
+      "new_sat": {
+        "max_closure_m": 5.179174161251094e-10,
+        "max_row_Kv_difference_m": 8.881784197001252e-16,
+        "paired_real_rows": 48497,
+        "raw": 758,
+        "q6": 739,
+        "common_q6": 739,
+        "changed_Q": 0,
+        "first_q6_after_s": 6.0,
+        "events": [
+          {
+            "week": "2445",
+            "tow": "397286.999999936",
+            "trial": 1,
+            "n": 5,
+            "shift": 0.795940318364377
+          }
+        ],
+        "lifts": [],
+        "archived_control_match": true,
+        "obs_corrections_match": true
+      },
+      "selective": {
+        "max_closure_m": 5.191368991578829e-10,
+        "max_row_Kv_difference_m": 4.440892098500626e-16,
+        "paired_real_rows": 48498,
+        "raw": 758,
+        "q6": 739,
+        "common_q6": 739,
+        "changed_Q": 0,
+        "first_q6_after_s": 6.0,
+        "events": [],
+        "lifts": [],
+        "archived_control_match": false,
+        "obs_corrections_match": true
+      },
+      "carry": {
+        "max_closure_m": 5.130441308244915e-10,
+        "max_row_Kv_difference_m": 8.881784197001252e-16,
+        "paired_real_rows": 48497,
+        "raw": 758,
+        "q6": 739,
+        "common_q6": 739,
+        "changed_Q": 0,
+        "first_q6_after_s": 6.0,
+        "events": [
+          {
+            "week": "2445",
+            "tow": "397286.999999936",
+            "trial": 1,
+            "n": 5,
+            "shift": 0.795940318364377
+          }
+        ],
+        "lifts": [
+          10
+        ],
+        "archived_control_match": false,
+        "obs_corrections_match": true
+      }
+    },
+    "2236": {
+      "original": {
+        "max_closure_m": 5.124854439229935e-10,
+        "max_row_Kv_difference_m": 4.440892098500626e-16,
+        "paired_real_rows": 47628,
+        "raw": 900,
+        "q6": 830,
+        "common_q6": 830,
+        "changed_Q": 0,
+        "first_q6_after_s": 8.0,
+        "events": [],
+        "lifts": [],
+        "archived_control_match": true,
+        "obs_corrections_match": true
+      },
+      "ema": {
+        "max_closure_m": 5.245943506637935e-10,
+        "max_row_Kv_difference_m": 4.440892098500626e-16,
+        "paired_real_rows": 47629,
+        "raw": 900,
+        "q6": 830,
+        "common_q6": 830,
+        "changed_Q": 0,
+        "first_q6_after_s": 8.0,
+        "events": [],
+        "lifts": [],
+        "archived_control_match": true,
+        "obs_corrections_match": true
+      },
+      "new_sat": {
+        "max_closure_m": 5.12418425031923e-10,
+        "max_row_Kv_difference_m": 8.881784197001252e-16,
+        "paired_real_rows": 47616,
+        "raw": 900,
+        "q6": 830,
+        "common_q6": 830,
+        "changed_Q": 0,
+        "first_q6_after_s": 8.0,
+        "events": [
+          {
+            "week": "2445",
+            "tow": "398222.000999872",
+            "trial": 12,
+            "n": 6,
+            "shift": 1.89241330096945
+          }
+        ],
+        "lifts": [],
+        "archived_control_match": true,
+        "obs_corrections_match": true
+      },
+      "selective": {
+        "max_closure_m": 5.154636780143473e-10,
+        "max_row_Kv_difference_m": 4.440892098500626e-16,
+        "paired_real_rows": 47628,
+        "raw": 900,
+        "q6": 830,
+        "common_q6": 830,
+        "changed_Q": 0,
+        "first_q6_after_s": 8.0,
+        "events": [],
+        "lifts": [],
+        "archived_control_match": false,
+        "obs_corrections_match": true
+      },
+      "carry": {
+        "max_closure_m": 5.183707700721675e-10,
+        "max_row_Kv_difference_m": 1.7763568394002505e-15,
+        "paired_real_rows": 47628,
+        "raw": 900,
+        "q6": 830,
+        "common_q6": 830,
+        "changed_Q": 0,
+        "first_q6_after_s": 8.0,
+        "events": [
+          {
+            "week": "2445",
+            "tow": "398222.000999872",
+            "trial": 0,
+            "n": 6,
+            "shift": 1.8902055473548
+          }
+        ],
+        "lifts": [
+          18
+        ],
+        "archived_control_match": false,
+        "obs_corrections_match": true
+      }
+    }
+  }
+}
