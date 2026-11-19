@@ -1,0 +1,31 @@
+{
+  "previous": "../../ntrip-ppp-step12-20261117/pc-docs/PPP_INVESTIGATION_LEDGER.json",
+  "entries": [
+    {
+      "id": "E40-A",
+      "parent_id": "E40",
+      "date": "2026-11-19",
+      "title": "手机实时非组合 PPP 粗差、随机模型与浮点模糊度退火隔离实验",
+      "scheme_verdicts": {
+        "A1": "PARTIAL_TRADEOFF",
+        "A2": "PARTIAL_TRADEOFF",
+        "A3": "PARTIAL_TRADEOFF",
+        "A4": "NEGATIVE_NOT_FIX"
+      },
+      "evidence": "validation/brain_step12_adaptive_ppp",
+      "report": "../REPORT.md",
+      "new_replays": 24,
+      "baseline_reused": 6,
+      "output_epochs": 24808,
+      "q6_closures": 18812,
+      "same_q_sequence": true,
+      "observations_corrections_byte_identical": true,
+      "reference_feedback": false,
+      "default_promotion": false,
+      "max_kv_closure_m": 4.656528704294338e-10,
+      "max_kv_closure_l2_m": 5.294901871020958e-10,
+      "verification_sha256": "923afb5444fc06d6f69786b86132f3fb7609a56dddb8253cc7cc7b425eb5c5f9",
+      "summary": "A1/A3 将 11:20 vivo 前20期 U RMS 从 2.560 降到 2.016/1.851 m。A2/A3 令 10/31 V2 全段 U RMS 从 0.469 升到 1.067/0.995 m。A4 使 10:04 小米末60 s U RMS 从 2.964 升到 3.292 m。"
+    }
+  ]
+}

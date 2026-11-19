@@ -1,12 +1,14 @@
 # 当前项目状态
 
-核验日期 2026-11-17（Asia/Shanghai）。本文件用于跨会话接手。长期约束见 [AGENTS.md](AGENTS.md)。
+核验日期 2026-11-19（Asia/Shanghai）。本文件用于跨会话接手。长期约束见 [AGENTS.md](AGENTS.md)。
 
 ## 当前目标和停点
 
+Step 12 自适应隔离实验 E40-A 已完成。六组保存基线、24 组新回放的原始历元和 Q 序列逐包相同，观测与改正文件哈希逐包相同。A1/A2/A3 为 PARTIAL_TRADEOFF，A4 为 NEGATIVE_NOT_FIX。11:20 vivo 前 20 期 U RMS 从 2.560 降到 A1 的 2.016 m、A3 的 1.851 m；10/31 V2 全段 U RMS 从 0.469 升到 A2 的 1.067 m、A3 的 0.995 m。纯退火使 10:04 小米末窗 U RMS 增加 0.328 m。实验暂留 PC。 [报告](../ntrip-ppp-step12-20261119/REPORT.md) · [六包对照](../ntrip-ppp-step12-20261119/TERMINAL_TABLES.md)
+
 用 Android 手机原始 GNSS 观测与实时 NTRIP 产品实现非组合浮点 PPP，缩短首解并降低不同会话的水平偏差；PC 按原三流到达顺序因果回放，复现 Android 并评估候选。当前重点是首解前的系统性东偏和部分会话的码更新偏差。
 
-最后完成 Step 12 参考坐标框架与历元审计，归属判定为 PARTIAL。复用 Step 5 的六组坐标，正式估计器与既有参考保持原样。本轮停在审计和归档。 [Step 12 报告](../ntrip-ppp-step12-20261117/REPORT.md)
+此前 E40 完成 Step 12 参考坐标框架与历元审计，归属判定为 PARTIAL。复用 Step 5 的六组坐标，正式估计器与既有参考保持原样。 [Step 12 报告](../ntrip-ppp-step12-20261117/REPORT.md)
 
 ## 工程与 Git
 
@@ -15,11 +17,11 @@
 |工程|根目录|核验版本与工作区|
 |---|---|---|
 |PC 因果回放| `E:/GNSS/PPP_NTRIP_PC` | 当前无 `.git`，`git rev-parse` 无仓库，分支、HEAD 和相对 HEAD 的修改列表均不适用。|
-|Android 在线采集和 PPP| `E:/android/test/PPP_NTRIP` | `main`，发布前 HEAD 与 `origin/main` 为 `a417b7ec9513580723f07eb8061d265b40bb70cc`；已暂存和已跟踪工作区差异均为空。|
+|Android 在线采集和 PPP| `E:/android/test/PPP_NTRIP` | E40-A 归档前本地及远端 `main` 为 `78912ccabebf288553b87f16e962079da022a796`。接手时暂存区为空，两份交接文档有在先未暂存编辑。|
 
 Android 当时未跟踪项为 `.agents/`、`.idea/`、`AGENTS.pre_live_ssr_20261024.md`、`docs/Android_GNSS原始数据采集学习手册.docx`、`docs/CODEX_HANDOFF_SNAPSHOT_20261018.json`、`docs/PPP_INVESTIGATION_LEDGER.json`、`docs/ntrip/`。这些属于已有本地内容。
 
-- 最近业务提交是 `18be1550a3df422654c82d7f6af9b971c5e30eec`，同步两端 WHU OSB 来源隔离和回归。此前的 `1932fdabb607412d89fe60615032320a14278e57` 包含启动提速、相位 OSB、定时采集与地图。 [正式修复提交](https://github.com/Drinkey666/Android_GNSS_NTRIP/commit/18be1550a3df422654c82d7f6af9b971c5e30eec)
+- 此前的共享估计器修复提交是 `18be1550a3df422654c82d7f6af9b971c5e30eec`，同步两端 WHU OSB 来源隔离和回归。此前的 `1932fdabb607412d89fe60615032320a14278e57` 包含启动提速、相位 OSB、定时采集与地图。 [正式修复提交](https://github.com/Drinkey666/Android_GNSS_NTRIP/commit/18be1550a3df422654c82d7f6af9b971c5e30eec)
 - Step 4–10 的 Android 提交 `1c62f47`、`691dcea`、`9acd4a7`、`7b1574c`、`d2eb9c0`、`e28c9e0`、`98b681f` 归档 PC 隔离实验与交接。 [Step 10 归档](https://github.com/Drinkey666/Android_GNSS_NTRIP/blob/98b681fdbb84644a3754d644c13c1dd087dd63f3/docs/ntrip-ppp-step10-20261117/README.md)
 - `E:/GNSS/rtklib_only/rtklib_only/rtklib_Project2` 是旧工程。原 PPP_only、FTPGet 仅供参考。PC 根目录 README 和首次集成设计中关于 BKG 默认、仅采集或尚无 PPP 解的叙述属于历史。 `docs/ANDROID_WHU_SSR_FORECAST_INTEGRATION.md`
 
@@ -69,12 +71,16 @@ Android 当时未跟踪项为 `.agents/`、`.idea/`、`AGENTS.pre_live_ssr_20261
 
 ## 下一步及验收（待用户启动）
 
+E40-A 后续可先复用 10/31 V2 的垂向反号和 11:20 同时段双机结果定位机制。验收需分别覆盖启动、全段、末窗及独立会话的 H/U，并复核 Q 时序与观测、改正守卫。
+
 1. 优先向原 RTK/CORS 服务商核实两次实测的网络产品、基站实现、坐标历元及速度场／地方转换。取得书面证据后，分别评估与现历元 ITRF2020 的偏移，保留原参考与可复核并列口径。两个参考点的相对差和双机互差均无法单独辨认绝对公共框架平移。
 2. 在参考归属未认证前，同时报告原参考和 Step 12 候选口径。针对两点去重后仍在的 +0.389 m 东向量、10:04 两机的互差及高度退化，优先复用 Step 10/11 的观测/产品证据分析低频或准静态码残差与连续相位弧历史。跨包评价使用首解、前 20/60、全段、末窗及共有 Q6，保持原回放准入，参考值仅用于解后评价。
 
 ## 核验记录与最小阅读索引
 
-- **本次 Step 12 核验**：前后 9/9 正式二进制、245/245 Step 11 守卫和 62/62 本轮依赖匹配。原参考统计复算最大差 1.78×10⁻¹⁵ m，对 4,703 条 Q6 仅做解后评价；旧回放和生产源码未写入。 [核验清单](../ntrip-ppp-step12-20261117/verification.json)
+- **自适应实验 E40-A**。前后 9/9 正式二进制、248/248 扩展守卫、89/89 补充依赖匹配。18,812 个最终 Q6 的最大单轴／三维闭合差为 4.657/5.295×10⁻¹⁰ m。本轮只运行私有构建、回放和针对性验收。 [核验清单](../ntrip-ppp-step12-20261119/verification.json)
+
+- **参考框架审计 E40 核验**：前后 9/9 正式二进制、245/245 Step 11 守卫和 62/62 本轮依赖匹配。原参考统计复算最大差 1.78×10⁻¹⁵ m，对 4,703 条 Q6 仅做解后评价；旧回放和生产源码未写入。 [核验清单](../ntrip-ppp-step12-20261117/verification.json)
 - **上一轮 Step 11 核验**：私有重编译 `ppp.c`、`rtkcmn.c` 与 `src/gnss_replay.c`，完成 24 组隔离回放（`S1_O1_robust`、`S2_Q0_presmooth`、`S3_presmooth_cmd`、`S4_joint` × 6 包）并只读切片 6 组 Step 5 基线。24 组全部保持同历元 Q 序列、`observations.csv` 和 `corrections.csv` 逐字节一致；`K·v` ECEF 最大闭合差 `4.66e-10 m`。正式二进制 9/9、两端共享内核 33/33 及 245 项守卫哈希全部匹配。详见 [验证清单](../ntrip-ppp-step11-20261117/verification.json)。本轮未重跑正式原生、Python 或 Android 全套回归。
 - **沿用的正式修复测试证据**：PC 原生 963 项计数断言，另通过诊断窗口和 V1 实录夹具。Python 59 通过，4 项 IF 未执行。Android x86_64 模拟器 Native 617 项通过，arm64 Native 已编译，App 四 ABI 已构建。JVM 165 通过、3 项外网冒烟跳过、0 失败。正式报告的“未提交”是报告生成时状态，之后的 Git 记录确认 Android 正式源码已发布。 [测试明细](../ntrip-ppp-closure-20261117/validation/whu_osb_formal_fix_20261117/verification.json) · [发布提交](https://github.com/Drinkey666/Android_GNSS_NTRIP/commit/18be1550a3df422654c82d7f6af9b971c5e30eec)
 - 启动/SPP 优先读 Step 9 与四组 Step 6 旧先验表；末段和星座消融读 Step 5；判断是否重做定权或定锚先看 Step 7、8；WHU 可用性先看正式修复及第三轮准入表。其余历史按编号查 [实验索引](../ntrip-ppp-step12-20261117/pc-docs/PPP_INVESTIGATION_INDEX.md)、[证据台账](../ntrip-ppp-step12-20261117/pc-docs/PPP_INVESTIGATION_LEDGER.json)。旧规则快照在 `docs/handoff_archive/20261107`。

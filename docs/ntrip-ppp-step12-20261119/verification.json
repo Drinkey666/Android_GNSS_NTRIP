@@ -1,0 +1,804 @@
+{
+  "new_replays": 24,
+  "reused_baselines": 6,
+  "all_same_week_tow": true,
+  "all_same_observations": true,
+  "all_same_corrections": true,
+  "all_same_q_sequence": true,
+  "max_kv_closure_m": 4.656528704294338e-10,
+  "max_kv_closure_l2_m": 5.294901871020958e-10,
+  "baseline_summary_max_difference": 4.440892098500626e-16,
+  "candidate_offsets_sha256": "eb2a969b2dd6837ffaacf724c418ce6b1380c9199579f8215de09484d8cf4b46",
+  "baseline_candidate_approximation_max_difference_m": 5.273379602765971e-06,
+  "formal_binary_sha256": {
+    "filter_diagnostic_window_test.exe": "ba6de37b69b14d0a2df8efe812a946129262b1c365af22deeefeb269cc42615c",
+    "filter_safety_test.exe": "4dcaa56082e4a5f858799b00050b2fe07ccc48a8dd7e1cbaf2e3e4b89104ffda",
+    "ionex_geometry_test.exe": "e81f1e177e5c4586db479fce7e019d8df75cd6bd72f0a1143a40e1c46077d029",
+    "ntrip_phase_osb_test.exe": "4c12c1d5c74de40aa559ab6fc6a4a470ced3180ee9ca81eb6a868facf981897b",
+    "ntrip_ssr_test.exe": "c47c5bef9bab4ebc7066f4f51c6dd1489b1f534e1970d704818e305142c721c3",
+    "ppp_ssr_replay.exe": "ade219b70ceedfab089e74d95ae1af92ae80cb981887d905c90f5942b51def7a",
+    "replay_timeline_test.exe": "4f858a5e594b11edece06eab14ba5c786f0295dd118da67c85a07618f93e0ef6",
+    "ssr_bias_reference_test.exe": "93cfe6ca757e3cf8d98697548fba8bf8ebaa2f22f1de93d1ed75dae142ab5de9",
+    "whu_policy_capture_test.exe": "6de4724b4a292f78f8b06ce70ac7610eebc4693e8024d19a4ae9f68506f3bede"
+  },
+  "extended_step11_sha256": {
+    "input_guard_sha256.json": "48c2a3f8f3928bfd58b4ade1df22ef027cb120eaf9b9b8938709ef729987e13a",
+    "verification.json": "a5721c48ea627674d85a5e34fa3eaa78cc3152d0815cbaa9c8b14660c3890c54",
+    "REPORT.md": "c084721c6e58048b0dee4909be8afe4d33058014845f76a7c8647af14e4f74e6",
+    "TERMINAL_TABLES.md": "d80cac0656fa221b17c21d4f607b833e44ed6692c13068d215330d30b77991ff"
+  },
+  "private_guard_manifest_sha256": "a081539a2c8b46aed1e31b7d141c87a26e194ca2820f6c56526ee35ddfba0274",
+  "local_dependency_guard_sha256": "e7839383ddc4e86d3e19e7a051263cc976c98e85e58b85df0ab1ee8ba82c3b3a",
+  "before": {
+    "binary": {
+      "checked": 9,
+      "failures": []
+    },
+    "step11_extended": {
+      "checked": 248,
+      "failures": []
+    },
+    "dependencies": {
+      "checked": 89,
+      "failures": []
+    }
+  },
+  "after": {
+    "binary": {
+      "checked": 9,
+      "failures": []
+    },
+    "step11_extended": {
+      "checked": 248,
+      "failures": []
+    },
+    "dependencies": {
+      "checked": 89,
+      "failures": []
+    }
+  },
+  "cases": [
+    {
+      "dataset": "1120_xiaomi",
+      "scheme": "A1_outlier_gim_mad",
+      "epochs": 629,
+      "q_counts": {
+        "0": 280,
+        "6": 349
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "84d44aa49cd8b35bb5f264ccc8e356b70ea59e1e8a4014fd8226bc732176678d",
+        "corrections.csv": "fb8863c46b861c59418628a7e1978cc97f7cd13ced6302080b2e625be048d146"
+      },
+      "q6_closure_rows": 349,
+      "max_kv_closure_m": 4.626794251547106e-10,
+      "max_kv_closure_l2_m": 4.817201146019177e-10,
+      "committed": 349,
+      "commits_after_retry": 0,
+      "code_rows": 11409,
+      "a1_inflated_rows": 242,
+      "a2_inflated_rows": 0,
+      "anneal_arcs": 0,
+      "anneal_variance_m2": 0.0,
+      "a3_single_freq_ion_q_halved": 0,
+      "cmc_boost_rows": 0,
+      "max_f_out": 20.951027132213312,
+      "max_f_stoch": 1
+    },
+    {
+      "dataset": "1120_xiaomi",
+      "scheme": "A2_stoch_ema_r",
+      "epochs": 629,
+      "q_counts": {
+        "0": 280,
+        "6": 349
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "84d44aa49cd8b35bb5f264ccc8e356b70ea59e1e8a4014fd8226bc732176678d",
+        "corrections.csv": "fb8863c46b861c59418628a7e1978cc97f7cd13ced6302080b2e625be048d146"
+      },
+      "q6_closure_rows": 349,
+      "max_kv_closure_m": 4.6555137522830137e-10,
+      "max_kv_closure_l2_m": 5.121845893231918e-10,
+      "committed": 349,
+      "commits_after_retry": 0,
+      "code_rows": 11409,
+      "a1_inflated_rows": 0,
+      "a2_inflated_rows": 1731,
+      "anneal_arcs": 0,
+      "anneal_variance_m2": 0.0,
+      "a3_single_freq_ion_q_halved": 0,
+      "cmc_boost_rows": 1380,
+      "max_f_out": 1,
+      "max_f_stoch": 8.390021865766828
+    },
+    {
+      "dataset": "1120_xiaomi",
+      "scheme": "A3_kf_amb_anneal",
+      "epochs": 629,
+      "q_counts": {
+        "0": 280,
+        "6": 349
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "84d44aa49cd8b35bb5f264ccc8e356b70ea59e1e8a4014fd8226bc732176678d",
+        "corrections.csv": "fb8863c46b861c59418628a7e1978cc97f7cd13ced6302080b2e625be048d146"
+      },
+      "q6_closure_rows": 349,
+      "max_kv_closure_m": 4.640289031927064e-10,
+      "max_kv_closure_l2_m": 5.2866435606361e-10,
+      "committed": 349,
+      "commits_after_retry": 0,
+      "code_rows": 11409,
+      "a1_inflated_rows": 242,
+      "a2_inflated_rows": 1735,
+      "anneal_arcs": 5098,
+      "anneal_variance_m2": 44.66060021679356,
+      "a3_single_freq_ion_q_halved": 50,
+      "cmc_boost_rows": 1380,
+      "max_f_out": 21.130030615973272,
+      "max_f_stoch": 8.390022875454637
+    },
+    {
+      "dataset": "1120_xiaomi",
+      "scheme": "A4_pure_kf_anneal",
+      "epochs": 629,
+      "q_counts": {
+        "0": 280,
+        "6": 349
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "84d44aa49cd8b35bb5f264ccc8e356b70ea59e1e8a4014fd8226bc732176678d",
+        "corrections.csv": "fb8863c46b861c59418628a7e1978cc97f7cd13ced6302080b2e625be048d146"
+      },
+      "q6_closure_rows": 349,
+      "max_kv_closure_m": 4.6555137522830137e-10,
+      "max_kv_closure_l2_m": 5.067399621177954e-10,
+      "committed": 349,
+      "commits_after_retry": 0,
+      "code_rows": 11409,
+      "a1_inflated_rows": 0,
+      "a2_inflated_rows": 0,
+      "anneal_arcs": 5098,
+      "anneal_variance_m2": 44.66060021679356,
+      "a3_single_freq_ion_q_halved": 0,
+      "cmc_boost_rows": 0,
+      "max_f_out": 1,
+      "max_f_stoch": 1
+    },
+    {
+      "dataset": "1120_vivo",
+      "scheme": "A1_outlier_gim_mad",
+      "epochs": 635,
+      "q_counts": {
+        "0": 273,
+        "6": 362
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "9bbe81262f6f479d2b07ec13a6aa6481b165fab0d646e7a8f649e8587dba743b",
+        "corrections.csv": "b07b3fce25e194e4cec9ddde8ec71471187d560ae3df10383904572090d77990"
+      },
+      "q6_closure_rows": 362,
+      "max_kv_closure_m": 4.613196916483653e-10,
+      "max_kv_closure_l2_m": 5.019240409660489e-10,
+      "committed": 362,
+      "commits_after_retry": 2,
+      "code_rows": 8657,
+      "a1_inflated_rows": 475,
+      "a2_inflated_rows": 0,
+      "anneal_arcs": 0,
+      "anneal_variance_m2": 0.0,
+      "a3_single_freq_ion_q_halved": 0,
+      "cmc_boost_rows": 0,
+      "max_f_out": 36.0,
+      "max_f_stoch": 1
+    },
+    {
+      "dataset": "1120_vivo",
+      "scheme": "A2_stoch_ema_r",
+      "epochs": 635,
+      "q_counts": {
+        "0": 273,
+        "6": 362
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "9bbe81262f6f479d2b07ec13a6aa6481b165fab0d646e7a8f649e8587dba743b",
+        "corrections.csv": "b07b3fce25e194e4cec9ddde8ec71471187d560ae3df10383904572090d77990"
+      },
+      "q6_closure_rows": 362,
+      "max_kv_closure_m": 4.6550589771765516e-10,
+      "max_kv_closure_l2_m": 5.182621277718275e-10,
+      "committed": 362,
+      "commits_after_retry": 2,
+      "code_rows": 8657,
+      "a1_inflated_rows": 0,
+      "a2_inflated_rows": 1943,
+      "anneal_arcs": 0,
+      "anneal_variance_m2": 0.0,
+      "a3_single_freq_ion_q_halved": 0,
+      "cmc_boost_rows": 1566,
+      "max_f_out": 1,
+      "max_f_stoch": 11.273260822218315
+    },
+    {
+      "dataset": "1120_vivo",
+      "scheme": "A3_kf_amb_anneal",
+      "epochs": 635,
+      "q_counts": {
+        "0": 273,
+        "6": 362
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "9bbe81262f6f479d2b07ec13a6aa6481b165fab0d646e7a8f649e8587dba743b",
+        "corrections.csv": "b07b3fce25e194e4cec9ddde8ec71471187d560ae3df10383904572090d77990"
+      },
+      "q6_closure_rows": 362,
+      "max_kv_closure_m": 4.6564987803143776e-10,
+      "max_kv_closure_l2_m": 5.137408923305431e-10,
+      "committed": 362,
+      "commits_after_retry": 2,
+      "code_rows": 8657,
+      "a1_inflated_rows": 463,
+      "a2_inflated_rows": 1953,
+      "anneal_arcs": 1264,
+      "anneal_variance_m2": 9.57537744256024,
+      "a3_single_freq_ion_q_halved": 259,
+      "cmc_boost_rows": 1566,
+      "max_f_out": 36.0,
+      "max_f_stoch": 12.920052686878583
+    },
+    {
+      "dataset": "1120_vivo",
+      "scheme": "A4_pure_kf_anneal",
+      "epochs": 635,
+      "q_counts": {
+        "0": 273,
+        "6": 362
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "9bbe81262f6f479d2b07ec13a6aa6481b165fab0d646e7a8f649e8587dba743b",
+        "corrections.csv": "b07b3fce25e194e4cec9ddde8ec71471187d560ae3df10383904572090d77990"
+      },
+      "q6_closure_rows": 362,
+      "max_kv_closure_m": 4.656085135501531e-10,
+      "max_kv_closure_l2_m": 5.278555767889597e-10,
+      "committed": 362,
+      "commits_after_retry": 2,
+      "code_rows": 8657,
+      "a1_inflated_rows": 0,
+      "a2_inflated_rows": 0,
+      "anneal_arcs": 1264,
+      "anneal_variance_m2": 9.57537744256024,
+      "a3_single_freq_ion_q_halved": 0,
+      "cmc_boost_rows": 0,
+      "max_f_out": 1,
+      "max_f_stoch": 1
+    },
+    {
+      "dataset": "1004_xiaomi",
+      "scheme": "A1_outlier_gim_mad",
+      "epochs": 1800,
+      "q_counts": {
+        "0": 337,
+        "6": 1459,
+        "5": 4
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "a95260c8b5606eb76a01aeaa5b07c76a6f2ff2bd0e5fb7c09de3666dc65986c4",
+        "corrections.csv": "1ed780fba695db363d16871ae80f0f441e19e99dadd8ed709c87838e310ff5d9"
+      },
+      "q6_closure_rows": 1459,
+      "max_kv_closure_m": 4.647243310659799e-10,
+      "max_kv_closure_l2_m": 5.11910747976165e-10,
+      "committed": 1463,
+      "commits_after_retry": 0,
+      "code_rows": 45198,
+      "a1_inflated_rows": 1589,
+      "a2_inflated_rows": 0,
+      "anneal_arcs": 0,
+      "anneal_variance_m2": 0.0,
+      "a3_single_freq_ion_q_halved": 0,
+      "cmc_boost_rows": 0,
+      "max_f_out": 36.0,
+      "max_f_stoch": 1
+    },
+    {
+      "dataset": "1004_xiaomi",
+      "scheme": "A2_stoch_ema_r",
+      "epochs": 1800,
+      "q_counts": {
+        "0": 337,
+        "6": 1459,
+        "5": 4
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "a95260c8b5606eb76a01aeaa5b07c76a6f2ff2bd0e5fb7c09de3666dc65986c4",
+        "corrections.csv": "1ed780fba695db363d16871ae80f0f441e19e99dadd8ed709c87838e310ff5d9"
+      },
+      "q6_closure_rows": 1459,
+      "max_kv_closure_m": 4.656130256743343e-10,
+      "max_kv_closure_l2_m": 5.269066101323624e-10,
+      "committed": 1463,
+      "commits_after_retry": 0,
+      "code_rows": 45198,
+      "a1_inflated_rows": 0,
+      "a2_inflated_rows": 7031,
+      "anneal_arcs": 0,
+      "anneal_variance_m2": 0.0,
+      "a3_single_freq_ion_q_halved": 0,
+      "cmc_boost_rows": 5104,
+      "max_f_out": 1,
+      "max_f_stoch": 25.0
+    },
+    {
+      "dataset": "1004_xiaomi",
+      "scheme": "A3_kf_amb_anneal",
+      "epochs": 1800,
+      "q_counts": {
+        "0": 337,
+        "6": 1459,
+        "5": 4
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "a95260c8b5606eb76a01aeaa5b07c76a6f2ff2bd0e5fb7c09de3666dc65986c4",
+        "corrections.csv": "1ed780fba695db363d16871ae80f0f441e19e99dadd8ed709c87838e310ff5d9"
+      },
+      "q6_closure_rows": 1459,
+      "max_kv_closure_m": 4.6505512028144347e-10,
+      "max_kv_closure_l2_m": 5.171618917197442e-10,
+      "committed": 1463,
+      "commits_after_retry": 0,
+      "code_rows": 45198,
+      "a1_inflated_rows": 1575,
+      "a2_inflated_rows": 7027,
+      "anneal_arcs": 18889,
+      "anneal_variance_m2": 162.20271785562602,
+      "a3_single_freq_ion_q_halved": 828,
+      "cmc_boost_rows": 5104,
+      "max_f_out": 36.0,
+      "max_f_stoch": 25.0
+    },
+    {
+      "dataset": "1004_xiaomi",
+      "scheme": "A4_pure_kf_anneal",
+      "epochs": 1800,
+      "q_counts": {
+        "0": 337,
+        "6": 1459,
+        "5": 4
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "a95260c8b5606eb76a01aeaa5b07c76a6f2ff2bd0e5fb7c09de3666dc65986c4",
+        "corrections.csv": "1ed780fba695db363d16871ae80f0f441e19e99dadd8ed709c87838e310ff5d9"
+      },
+      "q6_closure_rows": 1459,
+      "max_kv_closure_m": 4.6564632835352504e-10,
+      "max_kv_closure_l2_m": 5.253754553612007e-10,
+      "committed": 1463,
+      "commits_after_retry": 0,
+      "code_rows": 45198,
+      "a1_inflated_rows": 0,
+      "a2_inflated_rows": 0,
+      "anneal_arcs": 18889,
+      "anneal_variance_m2": 162.20271785562602,
+      "a3_single_freq_ion_q_halved": 0,
+      "cmc_boost_rows": 0,
+      "max_f_out": 1,
+      "max_f_stoch": 1
+    },
+    {
+      "dataset": "1004_vivo",
+      "scheme": "A1_outlier_gim_mad",
+      "epochs": 1800,
+      "q_counts": {
+        "0": 12,
+        "6": 1786,
+        "5": 2
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "141859efd9264ed4ec56034e4603228dfbf2f8f3e4e91c8a90562c791e8791ba",
+        "corrections.csv": "279f37fd001b060d4148a36fd3dbf215a9921f5a44db47dc5668a2d4cf43c7a3"
+      },
+      "q6_closure_rows": 1786,
+      "max_kv_closure_m": 4.6553512206195385e-10,
+      "max_kv_closure_l2_m": 5.149434911683549e-10,
+      "committed": 1788,
+      "commits_after_retry": 12,
+      "code_rows": 44062,
+      "a1_inflated_rows": 3066,
+      "a2_inflated_rows": 0,
+      "anneal_arcs": 0,
+      "anneal_variance_m2": 0.0,
+      "a3_single_freq_ion_q_halved": 0,
+      "cmc_boost_rows": 0,
+      "max_f_out": 36.0,
+      "max_f_stoch": 1
+    },
+    {
+      "dataset": "1004_vivo",
+      "scheme": "A2_stoch_ema_r",
+      "epochs": 1800,
+      "q_counts": {
+        "0": 12,
+        "6": 1786,
+        "5": 2
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "141859efd9264ed4ec56034e4603228dfbf2f8f3e4e91c8a90562c791e8791ba",
+        "corrections.csv": "279f37fd001b060d4148a36fd3dbf215a9921f5a44db47dc5668a2d4cf43c7a3"
+      },
+      "q6_closure_rows": 1786,
+      "max_kv_closure_m": 4.655942133571789e-10,
+      "max_kv_closure_l2_m": 5.294901871020958e-10,
+      "committed": 1788,
+      "commits_after_retry": 12,
+      "code_rows": 44062,
+      "a1_inflated_rows": 0,
+      "a2_inflated_rows": 9382,
+      "anneal_arcs": 0,
+      "anneal_variance_m2": 0.0,
+      "a3_single_freq_ion_q_halved": 0,
+      "cmc_boost_rows": 6879,
+      "max_f_out": 1,
+      "max_f_stoch": 25.0
+    },
+    {
+      "dataset": "1004_vivo",
+      "scheme": "A3_kf_amb_anneal",
+      "epochs": 1800,
+      "q_counts": {
+        "0": 12,
+        "6": 1786,
+        "5": 2
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "141859efd9264ed4ec56034e4603228dfbf2f8f3e4e91c8a90562c791e8791ba",
+        "corrections.csv": "279f37fd001b060d4148a36fd3dbf215a9921f5a44db47dc5668a2d4cf43c7a3"
+      },
+      "q6_closure_rows": 1786,
+      "max_kv_closure_m": 4.653208063006356e-10,
+      "max_kv_closure_l2_m": 5.210739048089348e-10,
+      "committed": 1788,
+      "commits_after_retry": 12,
+      "code_rows": 44062,
+      "a1_inflated_rows": 3046,
+      "a2_inflated_rows": 9397,
+      "anneal_arcs": 3368,
+      "anneal_variance_m2": 26.947232658370396,
+      "a3_single_freq_ion_q_halved": 1873,
+      "cmc_boost_rows": 6879,
+      "max_f_out": 36.0,
+      "max_f_stoch": 25.0
+    },
+    {
+      "dataset": "1004_vivo",
+      "scheme": "A4_pure_kf_anneal",
+      "epochs": 1800,
+      "q_counts": {
+        "0": 12,
+        "6": 1786,
+        "5": 2
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "141859efd9264ed4ec56034e4603228dfbf2f8f3e4e91c8a90562c791e8791ba",
+        "corrections.csv": "279f37fd001b060d4148a36fd3dbf215a9921f5a44db47dc5668a2d4cf43c7a3"
+      },
+      "q6_closure_rows": 1786,
+      "max_kv_closure_m": 4.654154834964064e-10,
+      "max_kv_closure_l2_m": 5.242226149025543e-10,
+      "committed": 1788,
+      "commits_after_retry": 12,
+      "code_rows": 44062,
+      "a1_inflated_rows": 0,
+      "a2_inflated_rows": 0,
+      "anneal_arcs": 3368,
+      "anneal_variance_m2": 26.947232658370396,
+      "a3_single_freq_ion_q_halved": 0,
+      "cmc_boost_rows": 0,
+      "max_f_out": 1,
+      "max_f_stoch": 1
+    },
+    {
+      "dataset": "1031_xiaomi_V1",
+      "scheme": "A1_outlier_gim_mad",
+      "epochs": 669,
+      "q_counts": {
+        "0": 585,
+        "6": 84
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "536496cda4bb3382426200472a4e00ee4665e581353cb0c7720f00250eb02f6f",
+        "corrections.csv": "f7dc59b10ca1c3b6fa7f8d687573e8de2c3b7fd04b23d417ae9d3623dbf9e775"
+      },
+      "q6_closure_rows": 84,
+      "max_kv_closure_m": 4.6347036538468833e-10,
+      "max_kv_closure_l2_m": 4.98384740135124e-10,
+      "committed": 84,
+      "commits_after_retry": 4,
+      "code_rows": 2688,
+      "a1_inflated_rows": 121,
+      "a2_inflated_rows": 0,
+      "anneal_arcs": 0,
+      "anneal_variance_m2": 0.0,
+      "a3_single_freq_ion_q_halved": 0,
+      "cmc_boost_rows": 0,
+      "max_f_out": 34.55813216304683,
+      "max_f_stoch": 1
+    },
+    {
+      "dataset": "1031_xiaomi_V1",
+      "scheme": "A2_stoch_ema_r",
+      "epochs": 669,
+      "q_counts": {
+        "0": 585,
+        "6": 84
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "536496cda4bb3382426200472a4e00ee4665e581353cb0c7720f00250eb02f6f",
+        "corrections.csv": "f7dc59b10ca1c3b6fa7f8d687573e8de2c3b7fd04b23d417ae9d3623dbf9e775"
+      },
+      "q6_closure_rows": 84,
+      "max_kv_closure_m": 4.6116699348175416e-10,
+      "max_kv_closure_l2_m": 4.852295616055109e-10,
+      "committed": 84,
+      "commits_after_retry": 4,
+      "code_rows": 2688,
+      "a1_inflated_rows": 0,
+      "a2_inflated_rows": 450,
+      "anneal_arcs": 0,
+      "anneal_variance_m2": 0.0,
+      "a3_single_freq_ion_q_halved": 0,
+      "cmc_boost_rows": 321,
+      "max_f_out": 1,
+      "max_f_stoch": 15.179314535399728
+    },
+    {
+      "dataset": "1031_xiaomi_V1",
+      "scheme": "A3_kf_amb_anneal",
+      "epochs": 669,
+      "q_counts": {
+        "0": 585,
+        "6": 84
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "536496cda4bb3382426200472a4e00ee4665e581353cb0c7720f00250eb02f6f",
+        "corrections.csv": "f7dc59b10ca1c3b6fa7f8d687573e8de2c3b7fd04b23d417ae9d3623dbf9e775"
+      },
+      "q6_closure_rows": 84,
+      "max_kv_closure_m": 4.5727653087690445e-10,
+      "max_kv_closure_l2_m": 5.089839991874363e-10,
+      "committed": 84,
+      "commits_after_retry": 4,
+      "code_rows": 2688,
+      "a1_inflated_rows": 127,
+      "a2_inflated_rows": 451,
+      "anneal_arcs": 914,
+      "anneal_variance_m2": 6.944815495271035,
+      "a3_single_freq_ion_q_halved": 112,
+      "cmc_boost_rows": 321,
+      "max_f_out": 33.56612938178118,
+      "max_f_stoch": 15.413469742644137
+    },
+    {
+      "dataset": "1031_xiaomi_V1",
+      "scheme": "A4_pure_kf_anneal",
+      "epochs": 669,
+      "q_counts": {
+        "0": 585,
+        "6": 84
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "536496cda4bb3382426200472a4e00ee4665e581353cb0c7720f00250eb02f6f",
+        "corrections.csv": "f7dc59b10ca1c3b6fa7f8d687573e8de2c3b7fd04b23d417ae9d3623dbf9e775"
+      },
+      "q6_closure_rows": 84,
+      "max_kv_closure_m": 4.5376510318315133e-10,
+      "max_kv_closure_l2_m": 4.906268666423307e-10,
+      "committed": 84,
+      "commits_after_retry": 4,
+      "code_rows": 2688,
+      "a1_inflated_rows": 0,
+      "a2_inflated_rows": 0,
+      "anneal_arcs": 914,
+      "anneal_variance_m2": 6.944815495271035,
+      "a3_single_freq_ion_q_halved": 0,
+      "cmc_boost_rows": 0,
+      "max_f_out": 1,
+      "max_f_stoch": 1
+    },
+    {
+      "dataset": "1031_xiaomi_V2",
+      "scheme": "A1_outlier_gim_mad",
+      "epochs": 669,
+      "q_counts": {
+        "0": 5,
+        "6": 663,
+        "5": 1
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "1583b9394a359e60a01dc59925dc0c33a2147c04ea5cd5e6c966a352564f9c43",
+        "corrections.csv": "0708ca28d7715cf358bcae27d42d7f62ef2af4f663c9c974534e1df95efdba16"
+      },
+      "q6_closure_rows": 663,
+      "max_kv_closure_m": 4.656528704294338e-10,
+      "max_kv_closure_l2_m": 5.203432292626646e-10,
+      "committed": 664,
+      "commits_after_retry": 4,
+      "code_rows": 21967,
+      "a1_inflated_rows": 900,
+      "a2_inflated_rows": 0,
+      "anneal_arcs": 0,
+      "anneal_variance_m2": 0.0,
+      "a3_single_freq_ion_q_halved": 0,
+      "cmc_boost_rows": 0,
+      "max_f_out": 36.0,
+      "max_f_stoch": 1
+    },
+    {
+      "dataset": "1031_xiaomi_V2",
+      "scheme": "A2_stoch_ema_r",
+      "epochs": 669,
+      "q_counts": {
+        "0": 5,
+        "6": 663,
+        "5": 1
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "1583b9394a359e60a01dc59925dc0c33a2147c04ea5cd5e6c966a352564f9c43",
+        "corrections.csv": "0708ca28d7715cf358bcae27d42d7f62ef2af4f663c9c974534e1df95efdba16"
+      },
+      "q6_closure_rows": 663,
+      "max_kv_closure_m": 4.649589654265318e-10,
+      "max_kv_closure_l2_m": 5.157533318245111e-10,
+      "committed": 664,
+      "commits_after_retry": 4,
+      "code_rows": 21967,
+      "a1_inflated_rows": 0,
+      "a2_inflated_rows": 3485,
+      "anneal_arcs": 0,
+      "anneal_variance_m2": 0.0,
+      "a3_single_freq_ion_q_halved": 0,
+      "cmc_boost_rows": 2263,
+      "max_f_out": 1,
+      "max_f_stoch": 25.0
+    },
+    {
+      "dataset": "1031_xiaomi_V2",
+      "scheme": "A3_kf_amb_anneal",
+      "epochs": 669,
+      "q_counts": {
+        "0": 5,
+        "6": 663,
+        "5": 1
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "1583b9394a359e60a01dc59925dc0c33a2147c04ea5cd5e6c966a352564f9c43",
+        "corrections.csv": "0708ca28d7715cf358bcae27d42d7f62ef2af4f663c9c974534e1df95efdba16"
+      },
+      "q6_closure_rows": 663,
+      "max_kv_closure_m": 4.6490833752188543e-10,
+      "max_kv_closure_l2_m": 4.945402477320245e-10,
+      "committed": 664,
+      "commits_after_retry": 4,
+      "code_rows": 21967,
+      "a1_inflated_rows": 955,
+      "a2_inflated_rows": 3482,
+      "anneal_arcs": 3607,
+      "anneal_variance_m2": 28.961140390771973,
+      "a3_single_freq_ion_q_halved": 569,
+      "cmc_boost_rows": 2263,
+      "max_f_out": 36.0,
+      "max_f_stoch": 25.0
+    },
+    {
+      "dataset": "1031_xiaomi_V2",
+      "scheme": "A4_pure_kf_anneal",
+      "epochs": 669,
+      "q_counts": {
+        "0": 5,
+        "6": 663,
+        "5": 1
+      },
+      "same_week_tow": true,
+      "q_changes": [],
+      "same_q_sequence": true,
+      "hashes_match_baseline": {
+        "observations.csv": "1583b9394a359e60a01dc59925dc0c33a2147c04ea5cd5e6c966a352564f9c43",
+        "corrections.csv": "0708ca28d7715cf358bcae27d42d7f62ef2af4f663c9c974534e1df95efdba16"
+      },
+      "q6_closure_rows": 663,
+      "max_kv_closure_m": 4.6188715135606073e-10,
+      "max_kv_closure_l2_m": 5.051409238145645e-10,
+      "committed": 664,
+      "commits_after_retry": 4,
+      "code_rows": 21967,
+      "a1_inflated_rows": 0,
+      "a2_inflated_rows": 0,
+      "anneal_arcs": 3607,
+      "anneal_variance_m2": 28.961140390771973,
+      "a3_single_freq_ion_q_halved": 0,
+      "cmc_boost_rows": 0,
+      "max_f_out": 1,
+      "max_f_stoch": 1
+    }
+  ],
+  "sha256": {
+    "step12_probe.exe": "4562f3d33995986310c7608c3abe53dbd383115a8188b9af8e0b5bdcb36a169b",
+    "step12_private.patch": "2d8e1665286e0d812304db969945f9148bef1d7dfaddeb16a9886b252ac9557c",
+    "core/ppp.c": "e8d546635523cdd06d80721c58fb5e0cf105098e199230555d64dac54438471d",
+    "core/rtkcmn.c": "cbcc285dd54086809f993cbae586cad17cd73c9bf7ae9a1e040bb5a0ccc93296",
+    "partB_accuracy_summary.csv": "ea51e69366a93024c879758bddbf20821bbffa5a6ac20e3554ab5149ec4d6d96",
+    "partB_adaptive_action_stats.csv": "c5c498635c8c221b62477dec247c9d315c57278e3cd9cd99a9134a6ae94752f6",
+    "partB_paired_common_q6.csv": "a60798c40a7d5e9873fba6152dd18d0fcb7bd5bf4ce9d74e2d4ae7999a0a89d0",
+    "partB_candidate_frame_sensitivity.csv": "7e1c32fcae7aedcfe97c61b94911405fec7eb18461de83f520251638933cbf54"
+  }
+}
